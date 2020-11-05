@@ -497,7 +497,7 @@ float4 getStratus(float3 pos, float3 dir) : SV_TARGET
 //	return min(fade_weight.x * fade_weight.y * fade_weight.y * fade_weight.z, 1);
 //}
 
-static const float base_num_steps = 50;
+static const float base_num_steps = 10;
 static const float step_size = 0.2f;
 
 float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
@@ -505,8 +505,8 @@ float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
 	float density = 0;
 	dir = normalize(dir);
 
-	//float3 p = float3(pos.x, pos.y, pos.z);
-	float3 p = 0;
+	float3 p = normalize(float3(pos.x, pos.y, pos.z)) * 10;
+	//float3 p = 0;
 	float sample_vp, sample_v_l, sample_v_m, sample_v_s, mix_sample;
 	float concentration;
 
@@ -526,13 +526,13 @@ float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
 
 		//mix_sample = (sample_vp + sample_v_l + sample_v_m + sample_v_s);
 
-		mix_sample = Texture.SampleLevel(TextureSampler, (p / 10) / m_sampling_resolution.x, 0).x * m_sampling_weight.x;
-
+		mix_sample = Texture.SampleLevel(TextureSampler, (p) / m_sampling_resolution.x, 0).x * m_sampling_weight.x;
+		
 		//mix_sample *= fadeMod(p, m_cloud_position.xyz, m_cloud_size.xyz, fade_dist);
 
-		mix_sample *= (mix_sample > m_per_sample_fade_threshhold);
+		//mix_sample *= (mix_sample > m_per_sample_fade_threshhold);
 
-		density += mix_sample * m_cloud_density;
+		density += mix_sample;// *m_cloud_density;
 
 		p += dir * step_size;
 	}
@@ -582,29 +582,31 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//=================================================================
 	//	Cloud retrieval
 	//=================================================================
-	float4 cloud_color = 0;
+	float cloud_color = 0;
 	float4 cloud = 0;
 	if (n.y > 0.1)
 	{
 		cloud = getStratus(input.world_pos, n);
-		if (cloud.w > 0)
-		{
+		//if (cloud.w > 0)
+		//{
 			float dist = length(cloud.xyz);
 
 			//cloud.xyz = cloud.xyz * (100 / dist);
-			//cloud_color = raymarchCloud(input.world_pos, n, cloud.w);
-			cloud_color = cloud;
+			cloud_color = raymarchCloud(cloud.xyz, n, cloud.w);
+			//cloud_color = cloud;
 
 			//float cloud_transparency = min(((n.y - 0.1) / 0.3), 1);
 			//cloud_color *= cloud_transparency;
 
 
-		}
+		//}
 	}
 
 	//=================================================================
 
 
-	float3 final_color = final_sky_color + cloud_color.xyz;
-	return float4(final_color, 1);
+	//float3 final_color = final_sky_color * (1.0 - cloud_color.w) + cloud.w;
+	//float3 final_color = cloud.w;
+	//return float4(final_color, 1);
+	return float4(1, 1, 1, cloud_color);
 }

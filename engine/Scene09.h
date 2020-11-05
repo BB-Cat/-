@@ -29,6 +29,7 @@ private:
     cb_noise m_noise;
     cb_cloud m_cloud_props;
     Texture3DPtr m_tex3D;
+    bool m_show_tex3D = false;
 
     float m_seed = 1.0f;
 public:

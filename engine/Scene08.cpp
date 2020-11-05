@@ -150,19 +150,6 @@ void Scene08::shadowRenderPass(float delta)
 
 void Scene08::mainRenderPass(float delta)
 {
-	//static float forward = 0.0f;
-	//static float rightward = 0.0f;
-	//static float upward = 0.0f;
-
-	//if (AppWindow::getKeyState('I')) forward += 0.15f;
-	//if (AppWindow::getKeyState('K')) forward -= 0.15f;
-
-	//if (AppWindow::getKeyState('L')) rightward += 0.15f;
-	//if (AppWindow::getKeyState('J')) rightward -= 0.15f;
-
-	//if (AppWindow::getKeyState('U')) upward += 0.15f;
-	//if (AppWindow::getKeyState('O')) upward -= 0.15f;
-
 
 	//m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
 

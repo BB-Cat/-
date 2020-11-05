@@ -167,11 +167,10 @@ float raymarchCloud(float3 pos, float3 dir)
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-	//float3 dir = normalize(input.world_pos.xyz - m_camera_position.xyz);
-	//float3 pos = float3(input.world_pos.xyz);
+	float3 dir = normalize(input.world_pos.xyz - m_camera_position.xyz);
+	float3 pos = float3(input.world_pos.xyz);
 
 
-	//float noise = raymarchCloud(pos, dir);
-	//return float4(1, 1, 1, noise);
-	return 1;
+	float noise = raymarchCloud(pos, dir);
+	return float4(1, 1, 1, noise);
 }
