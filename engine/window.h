@@ -1,0 +1,40 @@
+#pragma once
+#include <Windows.h>
+#include <memory>
+#include <assert.h>
+#include <tchar.h>
+
+class Window
+{
+public:
+	static const LONG SCREEN_WIDTH = 1280;
+	static const LONG SCREEN_HEIGHT = 720;
+
+	//initialize the window
+	Window();
+	~Window();
+
+
+
+	//release the window
+	bool release();
+	bool isRun();
+
+	RECT getClientWindowRect();
+
+	//events
+	virtual void onCreate()=0;
+	virtual void onUpdate()=0;
+	virtual void onFocus() = 0;
+	virtual void onKillFocus() = 0;
+	virtual void onDestroy()=0;
+
+private:
+	bool broadcast();
+protected:
+	HWND  m_hwnd;
+	bool m_is_run;
+	bool m_is_init = false;
+protected:
+	friend class TextRenderer;
+};

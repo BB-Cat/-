@@ -1,0 +1,1142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a629d3af-e715-4986-89a0-f6494058df2f}</UniqueIdentifier>
+      <Extensions>hlsl;hlsli</Extensions>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Sources\App">
+      <UniqueIdentifier>{82c69117-86d3-4e4b-ab09-a733cf4d2161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine">
+      <UniqueIdentifier>{2b5870a3-39de-4bd1-9216-9ea13f2a6795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\WindowingSystem">
+      <UniqueIdentifier>{42c41e44-26f9-490e-a7e9-48f0a734ac91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine">
+      <UniqueIdentifier>{c3ea27b6-6494-4a32-ad17-44082c36bc08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Math">
+      <UniqueIdentifier>{b8e0adc3-33e8-4044-bda9-96e6d20b8375}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Primitives">
+      <UniqueIdentifier>{08a36be1-f45d-404c-b656-e4daf0824987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Primitives\Cube">
+      <UniqueIdentifier>{2aa3d893-b7b8-4075-88b1-f41183a43282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Primitives\Sphere">
+      <UniqueIdentifier>{72bad377-5def-4b75-806b-d1f1d22fe36c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Primitives\Capsule">
+      <UniqueIdentifier>{4ae787c4-aa97-4f34-9aec-b3686e770513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Primitives\Cylinder">
+      <UniqueIdentifier>{1ff8850e-4211-4960-b00f-6c789b61693f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager">
+      <UniqueIdentifier>{718956c4-4bb2-490c-b435-74d1813baaa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem">
+      <UniqueIdentifier>{6364f848-2d38-4afe-af51-d694bb000edf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer">
+      <UniqueIdentifier>{b4d72d79-cd90-428d-9dfb-75862e6919e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\DeviceContext">
+      <UniqueIdentifier>{b1ca11fe-5546-4ec6-b82c-e57f75697957}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\IndexBuffer">
+      <UniqueIdentifier>{5dcd048e-fcaf-48f2-b2b2-15ddb1bcb59b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\SwapChain">
+      <UniqueIdentifier>{8d827bff-5e3e-4490-beba-37c9c66297b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\VertexBuffer">
+      <UniqueIdentifier>{76c2f004-9ab5-462d-82f5-9ad6e12bcb86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\VertexShader">
+      <UniqueIdentifier>{b49648bc-690c-4831-b649-cd85a654962d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\InputSystem">
+      <UniqueIdentifier>{ebc5ca1a-dc20-40c8-b9a8-05d53f4facf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\TextureManager">
+      <UniqueIdentifier>{105f1ce7-d132-47aa-b3a0-f4048d36d8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager">
+      <UniqueIdentifier>{6cdb7165-00c7-4343-affe-d5ed405d14f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh">
+      <UniqueIdentifier>{ed5b1a77-4454-4877-b3af-9ce80b94ad84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\StaticMesh">
+      <UniqueIdentifier>{759ae27c-3cd3-49e8-b624-02fce20e3100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh">
+      <UniqueIdentifier>{22d954a2-7feb-4168-a556-ccff745be22c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\Subsets">
+      <UniqueIdentifier>{6d7d0ea2-d2fe-4457-8b5d-7da08efdcfa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh\FbxManager">
+      <UniqueIdentifier>{40b5ff31-1c59-44a8-942e-b92af4981e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\Sampler">
+      <UniqueIdentifier>{c07c0f6b-a82f-4fd1-8352-83f9049e0750}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\PixelShader">
+      <UniqueIdentifier>{a0b931cb-7a1c-4fa3-a779-bec55ad8921b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh\Skeleton">
+      <UniqueIdentifier>{ca22c975-906c-44b3-9ec0-b64ebc7f3c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ShaderManager">
+      <UniqueIdentifier>{7ff23a29-0172-48cd-ade7-0c194e2b46fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBufferSystem">
+      <UniqueIdentifier>{87125d35-595f-4ae8-883c-08282bd174d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld">
+      <UniqueIdentifier>{c5513984-e793-4164-b35a-762d3a9f21ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Actors">
+      <UniqueIdentifier>{8655305c-56a9-472d-b662-b7873d959bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\BlendState">
+      <UniqueIdentifier>{a8aec7d4-c40e-42df-b84e-e27c87e11a35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes">
+      <UniqueIdentifier>{c03c4459-c7c5-49e7-877e-375c3582493e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\Lighting">
+      <UniqueIdentifier>{7b0964e2-97e3-41d3-a9fe-d19e93fc4059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\Camera">
+      <UniqueIdentifier>{99a14b54-a74b-4027-acf5-0d8b7826c2de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Actors\Player">
+      <UniqueIdentifier>{50c4eca6-051a-4d23-868d-bddfdce1e3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Actors\Enemy">
+      <UniqueIdentifier>{5ce69f32-c5b9-4ad4-bd31-09fafb1bdc2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Actors\PowerUp">
+      <UniqueIdentifier>{a10b8403-3516-4a79-b308-96e5cbce96e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Audio">
+      <UniqueIdentifier>{1f15d9a3-3eb9-4a99-a3d6-75c3b229828f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\Text">
+      <UniqueIdentifier>{a79ad2a4-9ada-45b1-94ad-2070be51349d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\SpriteManager">
+      <UniqueIdentifier>{d36a9cc1-4782-43e6-9ec9-a312b987a27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles">
+      <UniqueIdentifier>{d9a2929c-51ec-4af3-afbd-2526e328937f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles\Emitters">
+      <UniqueIdentifier>{b08cef6d-1cbf-44a3-acff-8d41f2802c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles\Particles">
+      <UniqueIdentifier>{c14dcb4b-e797-461d-8585-1a40656c00db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Objects">
+      <UniqueIdentifier>{d9b4e47c-77ce-4593-bc04-782af7e903b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles\Particles\SpriteParticles">
+      <UniqueIdentifier>{1a3bcb4b-9054-42f1-8025-c5c6ba4de8a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles\Particles\SpriteParticles\Types">
+      <UniqueIdentifier>{698c5716-c315-4d4b-9c3b-abd00ae7fae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Particles\Emitters\Types">
+      <UniqueIdentifier>{649fce84-a64e-451a-964d-8adbff655e18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\01">
+      <UniqueIdentifier>{53f54ba5-dacf-48e4-9e3b-fea2b5373c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\ConstantBufferIncludes">
+      <UniqueIdentifier>{2d4175cc-fbba-4641-89b5-873b9052d8cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\1 Flat">
+      <UniqueIdentifier>{2e1614f6-e09f-436f-96d5-cd6a0dda8dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\2 Lambert">
+      <UniqueIdentifier>{d746681a-d363-434c-af5e-5e58b8232497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\3 Specular">
+      <UniqueIdentifier>{31a54dd0-5dd9-4462-b665-22a387d2badd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\4 Rimlight">
+      <UniqueIdentifier>{c48c1ee1-d4eb-43af-b49c-7336d455e503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\5 TexturedRimlight">
+      <UniqueIdentifier>{ec6c975a-cfdc-465d-97a2-7a431b18b801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\6 TexturedNormalMap">
+      <UniqueIdentifier>{db200355-ee69-4d44-ae9f-cedfbd56d325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\7 TexNormSpecMap">
+      <UniqueIdentifier>{f2400ccd-e34e-457b-86d9-af227cb6454d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\8 EnvironTexMap">
+      <UniqueIdentifier>{c798e7e8-1e42-460e-94a7-fc4ef240028c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\GeometryShader">
+      <UniqueIdentifier>{72b5e460-729a-4e86-8631-50dbb63c674c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\GeometryTest1">
+      <UniqueIdentifier>{f2a4df60-e236-4c08-966c-f44461168644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\GeometryTest2">
+      <UniqueIdentifier>{a4002fdf-fb09-4696-8994-3b6fe1470f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\HullShader">
+      <UniqueIdentifier>{b38f705e-6c28-447d-a54f-cd8ded35e1d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\DomainShader">
+      <UniqueIdentifier>{1955d6c4-91f6-47f9-b1b3-5d5d078da7cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\9 AutoTess TexDisplacementMap">
+      <UniqueIdentifier>{456b0246-104a-4c3c-a7ab-11995f750e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain">
+      <UniqueIdentifier>{df5e6df5-5f0a-4fa9-ac1f-0aaa1ffdf1f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\10 GrassShader">
+      <UniqueIdentifier>{b6d93b60-22e1-4a34-8310-141f645b9949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\DeferredRenderer">
+      <UniqueIdentifier>{d0bdd895-841a-4e6c-ad8f-7c03d8428892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\11 DeferredRendering">
+      <UniqueIdentifier>{22ff15be-65d5-4790-a060-de44890bc485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\11 DeferredRendering\Final passes">
+      <UniqueIdentifier>{004f54b9-a4f3-4dd2-ae6e-416dab629b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\12 ShadowMapping">
+      <UniqueIdentifier>{73495f83-7a39-48cb-8086-3e791b13e656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\12 ShadowMapping\DirectionalShadowMapTess">
+      <UniqueIdentifier>{ae35da60-e88b-4848-b4e1-e417dd9e9afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\12 ShadowMapping\DirectionalShadowMap">
+      <UniqueIdentifier>{13621619-a20d-4f13-a4b1-f893cd6e8c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\13 TerrainSplatting">
+      <UniqueIdentifier>{df7a45fc-cc2f-41a5-b21a-5b414266de10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Foliage">
+      <UniqueIdentifier>{f48e57c4-41b2-48b7-bc13-82474a69454e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ImGui">
+      <UniqueIdentifier>{b5c358b2-0b88-407d-b8da-1b9014b4486b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\02">
+      <UniqueIdentifier>{6e6a78d4-c4e1-43c6-b753-c55729283dfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\03">
+      <UniqueIdentifier>{111dd3df-0f27-4c8b-b250-01e379296157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\SceneSelect">
+      <UniqueIdentifier>{e6de6a8b-af49-46dd-ae66-295bfbea7e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\TerrainTest">
+      <UniqueIdentifier>{7401133d-4611-46ac-8277-a3aeffa13ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Terrain Manager">
+      <UniqueIdentifier>{d015e3da-19bc-4e36-b7aa-62e2d9ab2c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\Terrain Manager\Terrain">
+      <UniqueIdentifier>{a6c32cb2-9447-4cb4-b85b-4851fb9579cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\04">
+      <UniqueIdentifier>{096d5bca-d6fd-4c10-bbe2-36bc707e2490}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\14 LOD Terrain">
+      <UniqueIdentifier>{2cda0d24-ad3c-4e62-b831-5345e3a83b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\14 LOD Terrain\LD Terrain">
+      <UniqueIdentifier>{d340e8f6-fc41-41bf-9ee4-e14e1be5d49e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\14 LOD Terrain\MD Terrain">
+      <UniqueIdentifier>{66052b5b-b040-40f2-99d8-af1cfe3efed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\15 LOD Terrain Toon">
+      <UniqueIdentifier>{55e26e5c-286f-48fa-a25c-652167bfbd3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\16 Sky">
+      <UniqueIdentifier>{1d7acc9a-240a-4b39-94d0-150f0846dc2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\05">
+      <UniqueIdentifier>{51962fb6-ffd3-4247-b91c-1b748cc95324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\06">
+      <UniqueIdentifier>{ebb0fbb0-7640-49ee-b07f-f5a2f96166cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\17 Instanced Flat">
+      <UniqueIdentifier>{005c557a-39d6-44e2-a7f6-df3f60f3e3d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation">
+      <UniqueIdentifier>{2dbc9b30-d367-4305-a932-505c567151e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\07">
+      <UniqueIdentifier>{97860048-0280-4255-88e7-8ccbbe2ceaaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise">
+      <UniqueIdentifier>{5a4ec570-0e17-47c6-9b8e-e23d9f6e48e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise\White">
+      <UniqueIdentifier>{f47e6748-6834-4ee9-994d-34f07b85f8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise\Value">
+      <UniqueIdentifier>{9d736dda-bc38-4ab1-9ac5-44498a926928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise\Perlin">
+      <UniqueIdentifier>{f002094e-0f96-45de-abb8-6fd729d9d16c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise\PerlinVoronoi">
+      <UniqueIdentifier>{7db7a264-a0d1-4ad1-af82-55850f1ecd7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds">
+      <UniqueIdentifier>{9c19ae2d-d9d5-455e-9ada-10df8b38a4d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\08">
+      <UniqueIdentifier>{747635d1-a8f2-4d90-a0c7-23e2449d7f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\Texture3D">
+      <UniqueIdentifier>{68d2914f-b76b-49ec-a237-af44746d5149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\20 3DTexTest">
+      <UniqueIdentifier>{95a7d044-01f0-4d2b-9d32-c384c852112e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\CubeClouds">
+      <UniqueIdentifier>{1f6a50b9-4efc-483e-8cad-edf25e4a356a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap">
+      <UniqueIdentifier>{6efc0a6a-f1ea-41a2-b980-0d925e994a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky">
+      <UniqueIdentifier>{4666aa79-48e7-47cd-845e-3a7bf2b3e459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat">
+      <UniqueIdentifier>{3a0edb4e-ba2d-4c6b-b93c-04b22d10afc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\18 Noise\Dynamic">
+      <UniqueIdentifier>{43a4b30b-3fc8-496d-904f-38e20541ba51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\09">
+      <UniqueIdentifier>{7513d340-4082-43a6-8233-848b02e26a17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppWindow.cpp">
+      <Filter>Sources\App</Filter>
+    </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Sources\GameEngine\WindowingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapChain.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceContext.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
+    </ClCompile>
+    <ClCompile Include="MyConstantBuffer.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGeometricPrimitive.cpp">
+      <Filter>Sources\GameEngine\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveCube.cpp">
+      <Filter>Sources\GameEngine\Primitives\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveSphere.cpp">
+      <Filter>Sources\GameEngine\Primitives\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveCapsule.cpp">
+      <Filter>Sources\GameEngine\Primitives\Capsule</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveCylinder.cpp">
+      <Filter>Sources\GameEngine\Primitives\Cylinder</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Sources\GameEngine\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFbxManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh\FbxManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMeshmanager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\StaticMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBufferSystem.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBufferSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleHB.cpp">
+      <Filter>Sources\GameWorld\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Sources\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Blend.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\BlendState</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Sources\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Sources\GameWorld\Actors\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Sources\GameWorld\Actors\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorManager.cpp">
+      <Filter>Sources\GameWorld\Actors</Filter>
+    </ClCompile>
+    <ClCompile Include="Powerup.cpp">
+      <Filter>Sources\GameWorld\Actors\PowerUp</Filter>
+    </ClCompile>
+    <ClCompile Include="MyAudio.cpp">
+      <Filter>Sources\GameEngine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteManager.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Sources\GameWorld\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Emitter.cpp">
+      <Filter>Sources\GameWorld\Particles\Emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshParticles.cpp">
+      <Filter>Sources\GameWorld\Particles\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteParticles.cpp">
+      <Filter>Sources\GameWorld\Particles\Particles\SpriteParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="SP_Bubble.cpp">
+      <Filter>Sources\GameWorld\Particles\Particles\SpriteParticles\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleEmitter.cpp">
+      <Filter>Sources\GameWorld\Particles\Emitters\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene01.cpp">
+      <Filter>Sources\Scenes\01</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene02.cpp">
+      <Filter>Sources\Scenes\02</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene03.cpp">
+      <Filter>Sources\Scenes\03</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\GeometryShader</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\HullShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DomainShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DomainShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\SpriteManager</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DeferredRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Sources\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Foliage.cpp">
+      <Filter>Sources\GameWorld\Foliage</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneSelect.cpp">
+      <Filter>Sources\Scenes\SceneSelect</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Sources\GameWorld\Terrain Manager\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainManager.cpp">
+      <Filter>Sources\GameWorld\Terrain Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene04.cpp">
+      <Filter>Sources\Scenes\04</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene05.cpp">
+      <Filter>Sources\Scenes\05</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene06.cpp">
+      <Filter>Sources\Scenes\06</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxAnm.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene07.cpp">
+      <Filter>Sources\Scenes\07</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene08.cpp">
+      <Filter>Sources\Scenes\08</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture3D.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\Texture3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene09.cpp">
+      <Filter>Sources\Scenes\09</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="high_resolution_timer.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="misc.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AppWindow.h">
+      <Filter>Sources\App</Filter>
+    </ClInclude>
+    <ClInclude Include="window.h">
+      <Filter>Sources\GameEngine\WindowingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>Sources\GameEngine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapChain.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceContext.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DeviceContext</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\VertexShader</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\PixelShader</Filter>
+    </ClInclude>
+    <ClInclude Include="MyConstantBuffer.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3D.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4X4.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\IndexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGeometricPrimitive.h">
+      <Filter>Sources\GameEngine\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveCube.h">
+      <Filter>Sources\GameEngine\Primitives\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveSphere.h">
+      <Filter>Sources\GameEngine\Primitives\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="MathConstants.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveCapsule.h">
+      <Filter>Sources\GameEngine\Primitives\Capsule</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveCylinder.h">
+      <Filter>Sources\GameEngine\Primitives\Cylinder</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Prerequisites.h">
+      <Filter>Sources\GameEngine\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Sources\GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InputListener.h">
+      <Filter>Sources\GameEngine\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector4D.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexMesh.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Subset.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\Subsets</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferFormats.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFbxManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh\FbxManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMeshManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\StaticMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferSystem.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ConstantBufferSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Mesh\SkinnedMesh\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleHB.h">
+      <Filter>Sources\GameWorld\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Sources\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Blend.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\BlendState</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Sources\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Sources\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Sources\GameWorld\Actors\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Sources\GameWorld\Actors\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorManager.h">
+      <Filter>Sources\GameWorld\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Sources\GameWorld\Actors</Filter>
+    </ClInclude>
+    <ClInclude Include="Powerup.h">
+      <Filter>Sources\GameWorld\Actors\PowerUp</Filter>
+    </ClInclude>
+    <ClInclude Include="MyAudio.h">
+      <Filter>Sources\GameEngine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteManager.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\SpriteManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Sources\GameWorld\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter.h">
+      <Filter>Sources\GameWorld\Particles\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshParticles.h">
+      <Filter>Sources\GameWorld\Particles\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Sources\GameWorld\Particles\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteParticles.h">
+      <Filter>Sources\GameWorld\Particles\Particles\SpriteParticles</Filter>
+    </ClInclude>
+    <ClInclude Include="SP_Bubble.h">
+      <Filter>Sources\GameWorld\Particles\Particles\SpriteParticles\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleEmitter.h">
+      <Filter>Sources\GameWorld\Particles\Emitters\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticlePrerequisites.h">
+      <Filter>Sources\GameWorld\Particles\Particles\SpriteParticles</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene01.h">
+      <Filter>Sources\Scenes\01</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene02.h">
+      <Filter>Sources\Scenes\02</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene03.h">
+      <Filter>Sources\Scenes\03</Filter>
+    </ClInclude>
+    <ClInclude Include="functions.fx">
+      <Filter>Shaders\ConstantBufferIncludes</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardPixelCB.fx">
+      <Filter>Shaders\ConstantBufferIncludes</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardVertexCB.fx">
+      <Filter>Shaders\ConstantBufferIncludes</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\GeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\HullShader</Filter>
+    </ClInclude>
+    <ClInclude Include="DomainShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DomainShader</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\DeferredRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Foliage.h">
+      <Filter>Sources\GameWorld\Foliage</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorToArray.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneSelect.h">
+      <Filter>Sources\Scenes\SceneSelect</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Sources\GameWorld\Terrain Manager\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainManager.h">
+      <Filter>Sources\GameWorld\Terrain Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene04.h">
+      <Filter>Sources\Scenes\04</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene05.h">
+      <Filter>Sources\Scenes\05</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene06.h">
+      <Filter>Sources\Scenes\06</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxAnm.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AnmEnumeration.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene07.h">
+      <Filter>Sources\Scenes\07</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene08.h">
+      <Filter>Sources\Scenes\08</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture3D.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\Texture3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise.h">
+      <Filter>Sources\GameEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene09.h">
+      <Filter>Sources\Scenes\09</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexMeshLayoutShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="FlatShaderVS.hlsl">
+      <Filter>Shaders\1 Flat</Filter>
+    </FxCompile>
+    <FxCompile Include="FlatShaderPS.hlsl">
+      <Filter>Shaders\1 Flat</Filter>
+    </FxCompile>
+    <FxCompile Include="LambertVS.hlsl">
+      <Filter>Shaders\2 Lambert</Filter>
+    </FxCompile>
+    <FxCompile Include="LambertPS.hlsl">
+      <Filter>Shaders\2 Lambert</Filter>
+    </FxCompile>
+    <FxCompile Include="SpecularPS.hlsl">
+      <Filter>Shaders\3 Specular</Filter>
+    </FxCompile>
+    <FxCompile Include="SpecularVS.hlsl">
+      <Filter>Shaders\3 Specular</Filter>
+    </FxCompile>
+    <FxCompile Include="RimlightPS.hlsl">
+      <Filter>Shaders\4 Rimlight</Filter>
+    </FxCompile>
+    <FxCompile Include="RimlightVS.hlsl">
+      <Filter>Shaders\4 Rimlight</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedRimlightPS.hlsl">
+      <Filter>Shaders\5 TexturedRimlight</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedRimlightVS.hlsl">
+      <Filter>Shaders\5 TexturedRimlight</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedNormalMapPS.hlsl">
+      <Filter>Shaders\6 TexturedNormalMap</Filter>
+    </FxCompile>
+    <FxCompile Include="TexturedNormalMapVS.hlsl">
+      <Filter>Shaders\6 TexturedNormalMap</Filter>
+    </FxCompile>
+    <FxCompile Include="GlossPS.hlsl">
+      <Filter>Shaders\7 TexNormSpecMap</Filter>
+    </FxCompile>
+    <FxCompile Include="GlossVS.hlsl">
+      <Filter>Shaders\7 TexNormSpecMap</Filter>
+    </FxCompile>
+    <FxCompile Include="EnvironmentTexMapPS.hlsl">
+      <Filter>Shaders\8 EnvironTexMap</Filter>
+    </FxCompile>
+    <FxCompile Include="EnvironmentTexMapVS.hlsl">
+      <Filter>Shaders\8 EnvironTexMap</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader.hlsl">
+      <Filter>Shaders\GeometryTest1</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryTestPS.hlsl">
+      <Filter>Shaders\GeometryTest1</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryTestVS.hlsl">
+      <Filter>Shaders\GeometryTest1</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryTestPS2.hlsl">
+      <Filter>Shaders\GeometryTest2</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryTestVS2.hlsl">
+      <Filter>Shaders\GeometryTest2</Filter>
+    </FxCompile>
+    <FxCompile Include="GeometryShader2.hlsl">
+      <Filter>Shaders\GeometryTest2</Filter>
+    </FxCompile>
+    <FxCompile Include="DefaultDS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+    </FxCompile>
+    <FxCompile Include="DefaultHS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+    </FxCompile>
+    <FxCompile Include="TessModelVS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+    </FxCompile>
+    <FxCompile Include="TessModelPS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+    </FxCompile>
+    <FxCompile Include="TessTerrainPS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="TessTerrainVS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="TessFluidTerrainVS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="2DisplacementDS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="2DisplacementHS.hlsl">
+      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="GrassShaderGS.hlsl">
+      <Filter>Shaders\10 GrassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="FlatTexShaderPS.hlsl">
+      <Filter>Shaders\1 Flat</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVS.hlsl">
+      <Filter>Shaders\11 DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPS.hlsl">
+      <Filter>Shaders\11 DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredDS.hlsl">
+      <Filter>Shaders\11 DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredHS.hlsl">
+      <Filter>Shaders\11 DeferredRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="FinalPassBasicVS.hlsl">
+      <Filter>Shaders\11 DeferredRendering\Final passes</Filter>
+    </FxCompile>
+    <FxCompile Include="FinalPassBasicPS.hlsl">
+      <Filter>Shaders\11 DeferredRendering\Final passes</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightShadowMapVS.hlsl">
+      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightShadowMapPS.hlsl">
+      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightShadowMapTessVS.hlsl">
+      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightShadowMapTessDS.hlsl">
+      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+    </FxCompile>
+    <FxCompile Include="DirLightShadowMapTessHS.hlsl">
+      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain3SplatDS.hlsl">
+      <Filter>Shaders\13 TerrainSplatting</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain3SplatPS.hlsl">
+      <Filter>Shaders\13 TerrainSplatting</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain3SplatHS.hlsl">
+      <Filter>Shaders\13 TerrainSplatting</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain3SplatVS.hlsl">
+      <Filter>Shaders\13 TerrainSplatting</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainTestVS.hlsl">
+      <Filter>Shaders\TerrainTest</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainTestPS.hlsl">
+      <Filter>Shaders\TerrainTest</Filter>
+    </FxCompile>
+    <FxCompile Include="LDTerrainPS.hlsl">
+      <Filter>Shaders\14 LOD Terrain\LD Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="LDTerrainVS.hlsl">
+      <Filter>Shaders\14 LOD Terrain\LD Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="MDTerrainPS.hlsl">
+      <Filter>Shaders\14 LOD Terrain\MD Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="MDTerrainVS.hlsl">
+      <Filter>Shaders\14 LOD Terrain\MD Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="HDTerrainPSToon.hlsl">
+      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="MDTerrainPSToon.hlsl">
+      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="LDTerrainVSToon.hlsl">
+      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="AtmosphericShaderPS.hlsl">
+      <Filter>Shaders\16 Sky</Filter>
+    </FxCompile>
+    <FxCompile Include="AtmosphericShaderVS.hlsl">
+      <Filter>Shaders\16 Sky</Filter>
+    </FxCompile>
+    <FxCompile Include="Terrain3SplatDemoVS.hlsl">
+      <Filter>Shaders\13 TerrainSplatting</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancedFlatPS.hlsl">
+      <Filter>Shaders\17 Instanced Flat</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancedFlatVS.hlsl">
+      <Filter>Shaders\17 Instanced Flat</Filter>
+    </FxCompile>
+    <FxCompile Include="WhiteNoisePS.hlsl">
+      <Filter>Shaders\18 Noise\White</Filter>
+    </FxCompile>
+    <FxCompile Include="WhiteNoiseVS.hlsl">
+      <Filter>Shaders\18 Noise\White</Filter>
+    </FxCompile>
+    <FxCompile Include="ValueNoisePS.hlsl">
+      <Filter>Shaders\18 Noise\Value</Filter>
+    </FxCompile>
+    <FxCompile Include="ValueNoiseVS.hlsl">
+      <Filter>Shaders\18 Noise\Value</Filter>
+    </FxCompile>
+    <FxCompile Include="PerlinNoisePS.hlsl">
+      <Filter>Shaders\18 Noise\Perlin</Filter>
+    </FxCompile>
+    <FxCompile Include="PerlinNoiseVS.hlsl">
+      <Filter>Shaders\18 Noise\Perlin</Filter>
+    </FxCompile>
+    <FxCompile Include="PerlinVoronoiNoisePS.hlsl">
+      <Filter>Shaders\18 Noise\PerlinVoronoi</Filter>
+    </FxCompile>
+    <FxCompile Include="PerlinVoronoiNoiseVS.hlsl">
+      <Filter>Shaders\18 Noise\PerlinVoronoi</Filter>
+    </FxCompile>
+    <FxCompile Include="3DTexTestPS.hlsl">
+      <Filter>Shaders\20 3DTexTest</Filter>
+    </FxCompile>
+    <FxCompile Include="3DTexTestVS.hlsl">
+      <Filter>Shaders\20 3DTexTest</Filter>
+    </FxCompile>
+    <FxCompile Include="CloudPS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\CubeClouds</Filter>
+    </FxCompile>
+    <FxCompile Include="CloudVS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\CubeClouds</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherMapPS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherMapVS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
+    </FxCompile>
+    <FxCompile Include="DynamicNoisePS.hlsl">
+      <Filter>Shaders\18 Noise\Dynamic</Filter>
+    </FxCompile>
+    <FxCompile Include="DynamicNoiseVS.hlsl">
+      <Filter>Shaders\18 Noise\Dynamic</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherAtmospherePS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherAtmosphereVS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="noise.fx">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
