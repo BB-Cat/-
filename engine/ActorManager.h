@@ -7,23 +7,59 @@
 #include "SkinnedMesh.h"
 #include <vector>
 
+class Faction
+{
+public:
+	Faction(std::wstring name) : m_name(name) {}
+private:
+	std::wstring m_name;
+	std::vector<std::shared_ptr<Actor>> m_actors;
+private:
+	friend class ActorManager;
+};
+
 class ActorManager
 {
 private:
 	ActorManager();
-	static ActorManager* am;
+	static ActorManager* instance;
+
+	enum FactionID
+	{
+		PLAYER,
+		ENEMY,
+		AMBIENT,
+	};
 public:
 	static ActorManager* get();
 	~ActorManager();
 
-	//clear all enemies and reset the player
-	void initActors(); 
-	
-	void updateActors(float delta, Terrain* terrain);
-	void renderActors(float delta);
+	//全てのアクターの更新関数を行う
+	void updateAll(float delta);
+	//一つのカテゴリーのアクターの更新を行う
+	void updateFaction(std::wstring name, float delta);
+	//アクターのシェーダーを使ってメッシュを描画する
+	void renderAll(float delta);
+	//一つのカテゴリーのアクターの描画を行う
+	void renderFaction(std::wstring name, float delta);
+	//影ができるメッシュをシャドーマップに描画する
+	void renderShadowsAll(float delta);
+	//一つのカテゴリーのアクターの影を描画する
+	void renderFactionShadows(std::wstring name, float delta);
+
+public:
+	//現在起動状態しているプレイヤーオブジェクトの位置情報を取得
+	Vector3D getActivePlayerPosition();
+	//現在起動状態しているプレイヤーオブジェクトの回転情報を取得
+	Vector3D getActivePlayerDirection();
+
+public:
+	//現在起動状態しているプレイヤーオブジェクトのimguiウインドーを描画する
+	void activePlayerImGui();
+public:
+	Faction* getFaction(std::wstring faction_name);
 
 private:
-	PlayerPtr m_player;
-	std::vector<EnemyPtr> m_enemies;
-	std::vector<PowerUpPtr> m_powerups;
+	std::vector<Faction> m_actor_lists;
+	const float m_active_player = 0;
 };

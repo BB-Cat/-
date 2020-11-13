@@ -40,7 +40,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	bool isInMap2 = (input.shadowpos2.x > 0 && input.shadowpos2.x <= 1.0 && input.shadowpos2.y > 0 && input.shadowpos2.y <= 1.0);
 	bool isInMap3 = (input.shadowpos3.x > 0 && input.shadowpos3.x <= 1.0 && input.shadowpos3.y > 0 && input.shadowpos3.y <= 1.0);
 
-
 	float3 shadow = float3(0.2, 0.2, 0.2);
 	float penumbra = 1.0;
 

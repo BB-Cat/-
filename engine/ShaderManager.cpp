@@ -43,6 +43,7 @@ int shader_settings[][5] =
 	{_3DTEX_VS,						_3DTEX_PS,						HSNONE,					DSNONE,					GSNONE},		//SHADER TO CHECK 3D TEXTURE FUNCTIONALITY
 	{WEATHER_MAP_VS,				WEATHER_MAP_PS,					HSNONE,					DSNONE,					GSNONE},		//SHADER FOR GENERATING WEATHER
 	{WEATHER_ATMOSPHERE_VS,			WEATHER_ATMOSPHERE_PS,			HSNONE,					DSNONE,					GSNONE},		//ATMOSPHERE SHADER WITH WEATHER
+	{SIMPLE_STAGE_VS,				SIMPLE_STAGE_PS,				HSNONE,					DSNONE,					GSNONE},		//SHADER FOR PLAYER MOVEMENT SCENE GROUND
 };
 
 ShaderManager::ShaderManager() : m_tess_active(false)
@@ -370,6 +371,16 @@ void ShaderManager::compileShaders()
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 	//***************************************************************************//
 
+	//Atmosphere shader with added clouds based on the weathermap shader
+	GraphicsEngine::get()->getRenderSystem()->compileVertexShader(L"SimpleStageVS.hlsl", "vsmain", &shader_byte_code, &size_shader);
+	m_SimpleStageVS = GraphicsEngine::get()->getRenderSystem()->createVertexShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	GraphicsEngine::get()->getRenderSystem()->compilePixelShader(L"SimpleStagePS.hlsl", "psmain", &shader_byte_code, &size_shader);
+	m_SimpleStagePS = GraphicsEngine::get()->getRenderSystem()->createPixelShader(shader_byte_code, size_shader);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	//***************************************************************************//
+
 
 	//***************************************************************************//
 	//   GEOMETRY SHADERS							                             //
@@ -564,6 +575,9 @@ void ShaderManager::setPixelShader(int type)
 	case WEATHER_ATMOSPHERE_PS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_WeatherAtmospherePS);
 		break;
+	case SIMPLE_STAGE_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_SimpleStagePS);
+		break;
 	}
 }
 
@@ -663,6 +677,9 @@ void ShaderManager::setVertexShader(int type)
 		break;
 	case WEATHER_ATMOSPHERE_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_WeatherAtmosphereVS);
+		break;
+	case SIMPLE_STAGE_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_SimpleStageVS);
 		break;
 	}
 }

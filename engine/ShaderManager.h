@@ -142,6 +142,9 @@ private:
 	VertexShaderPtr m_3DTexVS;
 	PixelShaderPtr m_3DTexPS;
 
+	VertexShaderPtr m_SimpleStageVS;
+	PixelShaderPtr m_SimpleStagePS;
+
 	//FINAL PASS VS PS SHADERS
 	VertexShaderPtr m_FinalBasicVS;
 	PixelShaderPtr m_FinalBasicPS;

@@ -452,32 +452,106 @@ float3 brownianTiledVoronoi(float3 value, int octaves, int frequency, float gain
 	return result;
 }
 
-float stratus_height = 2000.0;
+float stratus_height = 3150.0;
 
 //returns the xyz position of the cloud and the cloud concentration in w
-float4 getStratus(float3 pos, float3 dir) : SV_TARGET
+float4 getStratus(float3 pos, float3 dir)
 {
 	//get the position in the cloud layers that the eye is looking at
 	//float stratus_relative_height = m_camera_position.y + stratus_height;
 	float steps_to_stratus = stratus_height / dir.y;
 	float3 stratus_pos = dir * steps_to_stratus;
+	float3 move_mod = float3(m_move_dir.x * m_time * m_speed, 0, m_move_dir.z * m_time * m_speed);
 
-	float3 value = float3(stratus_pos.xz + m_time * m_speed * m_move_dir.xz, 0) * m_per_cell_size / 10;
-	//float3 value2 = float3(pos.xy + float3(1000, 1000, 1000) + m_time * m_speed * m_move_dir.xz, 0) * m_per_cell_size;
-	//float3 value3 = float3(pos.xy + float3(2000, 2000, 2000) + m_time * m_speed * m_move_dir.xz, 0) * m_per_cell_size;
+	float3 value = (float3(stratus_pos.x, 0, stratus_pos.z) + move_mod) / m_per_cell_size.x;
 
 	float noise = min(brownianPerlin(value, m_per_octaves, m_per_gain, m_per_lacunarity, m_per_amplitude), 1);
-	//float noise2 = min(brownianPerlin(value2, m_per_octaves, m_per_gain, m_per_lacunarity, m_per_amplitude), 1);
-	//float noise3 = min(brownianPerlin(value3, m_per_octaves, m_per_gain, m_per_lacunarity, m_per_amplitude), 1);
 
-	//float3 final_noise = float3((noise - m_per_pixel_fade_threshhold) * (1 / (1 - m_per_pixel_fade_threshhold)),
-	//	(noise2 - m_per_pixel_fade_threshhold) * (1 / (1 - m_per_pixel_fade_threshhold)),
-	//	(noise3 - m_per_pixel_fade_threshhold) * (1 / (1 - m_per_pixel_fade_threshhold)));
+	//erode the number of clouds in the sky
+	float erosion = min(((noise - 0.3) / 0.3), 1);
+	noise *= erosion;
 
-	//return position of the cloud and the amount of cloud presence
-	//return float4(stratus_pos, (noise - m_per_pixel_fade_threshhold) * (1 / (1 - m_per_pixel_fade_threshhold)));
-	return float4(stratus_pos, (noise - m_per_pixel_fade_threshhold) * (1 / (1 - m_per_pixel_fade_threshhold)));
+	//reduce the cloud transparency on the horizon so they fade into the distance
+	float cloud_transparency = min(((dir.y - 0.15) / 0.15), 1);
+	noise *= cloud_transparency;
+
+	return float4(stratus_pos, noise);
 }
+
+float cumulus_height = 3150.0;
+
+//returns the xyz position of the cloud and the cloud concentration in w
+float4 getCumulus(float3 pos, float3 dir)
+{
+	//get the position in the cloud layers that the eye is looking at
+	float steps_to_cumulus = cumulus_height / dir.y;
+	float3 cumulus_pos = dir * steps_to_cumulus;// +float3(2000, 0, 2000);
+	float3 move_mod = float3(m_move_dir.x * m_time * m_speed, 0, m_move_dir.z * m_time * m_speed);
+
+	float3 value = (float3(cumulus_pos.x, 0, cumulus_pos.z) + move_mod) / m_per_cell_size.x;
+
+	float noise = min(brownianPerlin(value, m_per_octaves, m_per_gain, m_per_lacunarity, m_per_amplitude), 1);
+
+	//erode the number of clouds in the sky
+	float erosion = min(((noise - 0.3) / 0.3), 1);
+	noise *= erosion;
+
+	//reduce the cloud transparency on the horizon so they fade into the distance
+	float cloud_transparency = min(((dir.y - 0.15) / 0.15), 1);
+	noise *= cloud_transparency;
+
+	return float4(cumulus_pos, noise);
+}
+
+//returns the xyz position of the cloud and the cloud concentration in w
+//float4 getStratus(float3 pos, float3 dir) : SV_TARGET
+//{
+//	//get the position in the cloud layers that the eye is looking at
+//	//float stratus_relative_height = m_camera_position.y + stratus_height;
+//	float steps_to_stratus = stratus_height / dir.y;
+//	float3 stratus_pos = dir * steps_to_stratus;
+//	float3 move_mod = float3(m_move_dir.x * m_time * m_speed, 0, m_move_dir.z * m_time * m_speed);
+//	float3 search_pos = stratus_pos + move_mod;
+//	float3 step = dir * 5;
+//
+//	//float3 net_pos = 0;
+//	//float net_noise = 0;
+//	float net_noise = 0;
+//	float noise[5];
+//	float3 pos_list[5];
+//
+//
+//	//find all the noise that is visible
+//	[unroll]
+//	for (int i = 0; i < 5; i++)
+//	{
+//		noise[i] = min(brownianPerlin(search_pos / m_per_cell_size, m_per_octaves, m_per_gain, m_per_lacunarity, m_per_amplitude), 1);
+//		pos_list[i] = search_pos;
+//		net_noise += noise[i];
+//		search_pos += step;
+//	}
+//
+//	float3 final_pos = 0;
+//	float final_noise = 0;
+//
+//	//choose the weighted average position 
+//	[unroll]
+//	for (int i = 0; i < 5; i++)
+//	{
+//		final_pos += pos_list[i] * (noise[i] / net_noise);
+//		//final_noise = final_noise * (final_noise > noise[i]) + noise[i] * (final_noise < noise[i]);
+//	}
+//
+//	//erode the number of clouds in the sky
+//	float erosion = min(((net_noise - 0.3) / 0.3), 1);
+//	net_noise *= erosion;
+//
+//	//reduce the cloud transparency on the horizon so they fade into the distance
+//	float cloud_transparency = min(((dir.y - 0.15) / 0.15), 1);
+//	net_noise *= cloud_transparency;
+//
+//	return float4(final_pos, net_noise);
+//}
 
 //===============================================================//
 //   Cloud raymarching
@@ -497,8 +571,8 @@ float4 getStratus(float3 pos, float3 dir) : SV_TARGET
 //	return min(fade_weight.x * fade_weight.y * fade_weight.y * fade_weight.z, 1);
 //}
 
-static const float base_num_steps = 10;
-static const float step_size = 0.2f;
+static const float base_num_steps = 20;
+static const float step_size = 0.4f;
 
 float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
 {
@@ -510,35 +584,31 @@ float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
 	float sample_vp, sample_v_l, sample_v_m, sample_v_s, mix_sample;
 	float concentration;
 
+	float3 move_mod = float3(m_move_dir.x * m_time * m_speed, 0, m_move_dir.z * m_time * m_speed);
+	float transparency_mod = m_cloud_density * (cloud_presence - m_per_pixel_fade_threshhold) / (1 - m_per_pixel_fade_threshhold);
+	//float3 move_mod = 0;
 	//[unroll]
-	int num_steps = floor(base_num_steps * cloud_presence);
-	for (int i = 0; i < num_steps; i++)
+	//int num_steps = floor(base_num_steps * cloud_presence);
+	[unroll]
+	for (int i = 0; i < base_num_steps; i++)
 	{
 		//sample the cloud
-		//sample_vp = Texture.SampleLevel(TextureSampler, (p + m_move_dir.xyz * m_time * m_speed) / m_sampling_resolution.x, 0).x
-		//	* m_sampling_weight.x;
-		//sample_v_l = Texture.SampleLevel(TextureSampler, (p + m_move_dir.xyz * m_time * m_speed) / m_sampling_resolution.y, 0).y
-		//	* m_sampling_weight.y;
-		//sample_v_m = Texture.SampleLevel(TextureSampler, (p + m_move_dir.xyz * m_time * m_speed) / m_sampling_resolution.z, 0).z
-		//	* m_sampling_weight.z;
-		//sample_v_s = Texture.SampleLevel(TextureSampler, (p + m_move_dir.xyz * m_time * m_speed) / m_sampling_resolution.w, 0).w
-		//	* m_sampling_weight.w;
+		sample_vp = Texture.SampleLevel(TextureSampler,  (p + move_mod) / m_sampling_resolution.x, 0).x	* m_sampling_weight.x;
+		sample_v_l = Texture.SampleLevel(TextureSampler, (p + move_mod) / m_sampling_resolution.y, 0).y	* m_sampling_weight.y;
+		sample_v_m = Texture.SampleLevel(TextureSampler, (p + move_mod) / m_sampling_resolution.z, 0).z	* m_sampling_weight.z;
+		sample_v_s = Texture.SampleLevel(TextureSampler, (p + move_mod) / m_sampling_resolution.w, 0).w	* m_sampling_weight.w;
 
-		//mix_sample = (sample_vp + sample_v_l + sample_v_m + sample_v_s);
+		mix_sample = (sample_vp + sample_v_l + sample_v_m + sample_v_s);
+		mix_sample *= (mix_sample > m_per_sample_fade_threshhold);
 
-		mix_sample = Texture.SampleLevel(TextureSampler, (p) / m_sampling_resolution.x, 0).x * m_sampling_weight.x;
-		
-		//mix_sample *= fadeMod(p, m_cloud_position.xyz, m_cloud_size.xyz, fade_dist);
-
-		//mix_sample *= (mix_sample > m_per_sample_fade_threshhold);
-
-		density += mix_sample;// *m_cloud_density;
+		density += mix_sample * transparency_mod;// *cloud_presence;
 
 		p += dir * step_size;
 	}
 
 
-	return density;// *cloud_presence;//(density * cloud_presence) * ((density * cloud_presence) > m_per_pixel_fade_threshhold);
+	//return (density * cloud_presence) * ((density * cloud_presence) > m_per_pixel_fade_threshhold); //(density * cloud_presence) * ((density * cloud_presence) > m_per_pixel_fade_threshhold);
+	return density * cloud_presence;
 }
 //===============================================================//
 //===============================================================//
@@ -583,30 +653,32 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//	Cloud retrieval
 	//=================================================================
 	float cloud_color = 0;
+	float cloud2_color = 0;
 	float4 cloud = 0;
-	if (n.y > 0.1)
+	float4 cloud2 = 0;
+	if (n.y > 0.15)
 	{
 		cloud = getStratus(input.world_pos, n);
-		//if (cloud.w > 0)
-		//{
-			float dist = length(cloud.xyz);
-
-			//cloud.xyz = cloud.xyz * (100 / dist);
+		if (cloud.w > m_per_pixel_fade_threshhold)
+		{
 			cloud_color = raymarchCloud(cloud.xyz, n, cloud.w);
-			//cloud_color = cloud;
+		}
 
-			//float cloud_transparency = min(((n.y - 0.1) / 0.3), 1);
-			//cloud_color *= cloud_transparency;
-
-
+		//cloud2 = getCumulus(input.world_pos, n);
+		//if (cloud_color < 1.0 && cloud2.w > m_per_pixel_fade_threshhold)
+		//{
+		//	cloud2_color = raymarchCloud(cloud2.xyz, n, cloud2.w);
+		//
 		//}
 	}
 
 	//=================================================================
 
 
-	//float3 final_color = final_sky_color * (1.0 - cloud_color.w) + cloud.w;
+	//return float4(1, 1, 1, cloud_color + cloud2_color);
+	float4 final_color = float4(final_sky_color.xyz + float3(1,1,1) * (cloud_color + cloud2_color), 1);
+	return final_color;
 	//float3 final_color = cloud.w;
 	//return float4(final_color, 1);
-	return float4(1, 1, 1, cloud_color);
+
 }

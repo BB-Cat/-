@@ -103,6 +103,7 @@ enum PS
 	_3DTEX_PS,
 	WEATHER_MAP_PS,
 	WEATHER_ATMOSPHERE_PS,
+	SIMPLE_STAGE_PS,
 };
 //vertex shader enumeration for setting shaders in the pipeline
 enum VS
@@ -141,6 +142,7 @@ enum VS
 	_3DTEX_VS,
 	WEATHER_MAP_VS,
 	WEATHER_ATMOSPHERE_VS,
+	SIMPLE_STAGE_VS,
 };
 
 enum GS
@@ -211,6 +213,7 @@ enum Shaders
 	_3DTEX,
 	WEATHER_MAP,
 	WEATHER_ATMOSPHERE,
+	SIMPLE_STAGE,
 	SHADERMAX
 };
 

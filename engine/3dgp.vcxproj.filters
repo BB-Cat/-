@@ -344,6 +344,15 @@
     <Filter Include="Sources\Scenes\09">
       <UniqueIdentifier>{7513d340-4082-43a6-8233-848b02e26a17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scenes\10">
+      <UniqueIdentifier>{e5924a3d-8d47-4986-8b4d-47ed3fc2c6ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\21 SimpleStage">
+      <UniqueIdentifier>{7ca18538-023a-4f71-9e4a-c7e5b0ea4b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants">
+      <UniqueIdentifier>{4fdbbf5b-28ed-4741-b808-b945a133ac9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -573,6 +582,12 @@
     </ClCompile>
     <ClCompile Include="Scene09.cpp">
       <Filter>Sources\Scenes\09</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene10.cpp">
+      <Filter>Sources\Scenes\10</Filter>
+    </ClCompile>
+    <ClCompile Include="AnmJump.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -888,6 +903,12 @@
     <ClInclude Include="Scene09.h">
       <Filter>Sources\Scenes\09</Filter>
     </ClInclude>
+    <ClInclude Include="Scene10.h">
+      <Filter>Sources\Scenes\10</Filter>
+    </ClInclude>
+    <ClInclude Include="AnmJump.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
@@ -1132,6 +1153,12 @@
     </FxCompile>
     <FxCompile Include="WeatherAtmosphereVS.hlsl">
       <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleStagePS.hlsl">
+      <Filter>Shaders\21 SimpleStage</Filter>
+    </FxCompile>
+    <FxCompile Include="SimpleStageVS.hlsl">
+      <Filter>Shaders\21 SimpleStage</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

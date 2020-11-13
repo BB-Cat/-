@@ -5,6 +5,16 @@
 
 #define NUM_BUFFERS (6)
 
+/*
+
+
+3 -High Res Shadow Map
+4 -Medium Res Shadow Map
+5 -Low Shadow Map
+6 -Weather Map
+
+*/
+
 struct TextureRenderTarget
 {
 	ID3D11Texture2D* texture = nullptr;

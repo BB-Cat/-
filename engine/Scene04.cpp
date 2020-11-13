@@ -6,6 +6,9 @@
 #include "MyAudio.h"
 #include "Terrain.h"
 #include "TerrainManager.h"
+#include "ConstantBufferSystem.h"
+#include "Texture3D.h"
+#include "DeviceContext.h"
 
 //bool Scene03::m_first_time = true;
 
@@ -29,6 +32,30 @@ Scene04::Scene04(SceneManager* sm) : Scene(sm)
 	m_light_color = Vector3D(1.0, 1.0, 1.0);
 	m_ambient_light_color = Vector3D(1.0, 1.0, 1.0);
 
+
+	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
+	m_noise.m_show_rgba = Vector4D(1, 0, 0, 0);
+
+	m_noise.m_per_amplitude = 0.15f;
+	m_noise.m_per_frequency = 4.0f;
+	m_noise.m_per_gain = 0.5f;
+	m_noise.m_per_lacunarity = 2.0f;
+	m_noise.m_per_octaves = 10;
+	m_noise.m_per_cell_size = 25.0f;
+
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSNoiseBuffer(m_noise);
+
+	//initial cloud property settings
+	m_cloud_props.m_cloud_density = 0.25f;
+	m_cloud_props.m_per_pixel_fade_threshhold = 0.0f;
+	m_cloud_props.m_per_sample_fade_threshhold = 0.15f;
+	m_cloud_props.m_sampling_resolution = Vector4D(8, 7, 7, 7);
+	m_cloud_props.m_sampling_weight = Vector4D(0.3, 0.3, 0.2, 0.2);
+	m_cloud_props.m_speed = 0.7f;
+	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
+
+	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
+
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 }
 
@@ -47,6 +74,8 @@ void Scene04::update(float delta, const float& width, const float& height)
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
+	m_cloud_props.m_time += delta;
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSCloudBuffer(m_cloud_props);
 
 	m_timer++;
 }
@@ -109,7 +138,8 @@ void Scene04::shadowRenderPass(float delta)
 
 void Scene04::mainRenderPass(float delta)
 {
-	m_sky->renderMesh(delta, Vector3D(1100, 1100, 1100), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
+	m_sky->renderMesh(delta, Vector3D(1100, 1100, 1100), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE);
 
 	if (m_toggle_norm) m_terrain->render(Shaders::TERRAIN_TEST, m_bump_height, m_rast, m_toggle_HD);
 	else m_terrain->render(Shaders::TEXTURE_TESS_3SPLAT, m_bump_height, m_rast, m_toggle_HD);

@@ -1,43 +1,78 @@
 #pragma once
 #include "MyFbxManager.h"
 
-//TODO: Add a class which inherits from FbxAnm that uses a different update function to allow special animations like jumping
-// which needs to perform a different type of check to see if the animation loops or can be finished.
-
-//probably also need a way for the animation to string into other specific animations for things like jump -> land 
-
 class FbxAnm
 {
 public:
 	FbxAnm() {}
-	FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping = true, bool interruptable = true, int interruptable_frame = 0);
+	FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, 
+		bool looping = true, bool interruptable = true, int interruptable_frame = 0,
+		bool idles = false, int idle_frame = 0);
+	FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager,
+		bool looping = true, bool interruptable = true, float interruptable_percent = 0,
+		bool idles = false, float idle_percent = 0);
 	~FbxAnm() {}
 
 	//update the current frame and return FALSE if the animation is finished and does not loop
 	bool update(float delta);
+	//update the current frame using a percentage of the total length (used in animation blending)
+	bool updatedByPercentage(float percent);
+
+	//==============================================================//
+			/* 各更新処理関数　*/
+	bool updateLooping();
+	bool updateNonLooping();
+	bool updateIdling();
+	//==============================================================//
+
 
 	//check if the animation can be interrupted currently
 	bool getIfInterruptable();
-	//get the sampling rate of the animation to determine blended animation update speeds
-	float getSamplingTime() { return m_skeletons.sampling_time; }
 
-	//reset the frame 
-	void reset() { m_frame = 0; };
+	//check if the animation has finished playing
+	bool getIfFinished();
+
+	//get the total length of the animation to blend animations together
+	float getTotalTime();
+
+	float getPercentCompletion();
+
+	//reset the animation to default 
+	void reset();
+
+	//set the frame to a specific frame
+	void setFrame(int  frame);
 
 	//set the frame to a percentage of completion
 	void setFrame(float percent);
+
+	//set the trigger to complete an idling animation
+	void setFinishTrigger(bool trigger);
+
 	//get the percentage completion of the animation
 	float getPercent() { return (float)(m_frame) / (float)(m_skeletons.size()); }
 
 	//return the skeleton for the next frame in the animation and provide the number of bones through a pointer
 	Skeleton getPose();
+	//return the skeleton of a specific frame percentage in the animation
+	Skeleton getPoseAtPercent(float percent);
 
 
-private:
-	bool m_loops = true;
-	bool m_interruptable = true;
-	int  m_interruptable_frame = 0;
+protected:
+	//現在のフレーム
 	int  m_frame = 0;
+	//繰り返すかどうかを設定する変数
+	bool m_loops;
+	//途中から抜けるかどうか
+	bool m_interruptable;
+	//途中から抜けるなら何フレームから抜けるの設定
+	int  m_interruptable_frame;
+	//途中で更新を止めるかどうか
+	bool m_idles;
+	//途中で更新を待機するアニメーションの場合、何フレームまで生成したら止まるかの設定
+	int  m_idle_frame;
+	//途中で更新を待機するアニメーションであれば、この変数がTRUEになった時のみ終了する
+	bool m_trigger_finish = false;
 
 	SkeletalAnimation	m_skeletons;
 };

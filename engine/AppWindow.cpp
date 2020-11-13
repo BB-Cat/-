@@ -129,10 +129,6 @@ void AppWindow::onUpdate()
 
 	if(showShadowMap > 2) GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(showShadowMap, TEST, Vector2D(0.0f, 0.0f), Vector2D(1.0f, 1.0f), Vector2D(0, 0));
 
-
-	//GraphicsEngine::get()->changeTextSize(18.0f);
-	//GraphicsEngine::get()->renderText(L"Data", Vector2D(20, 20), Vector2D(100, 40), TextRenderer::WHITE);
-
 	if (AppWindow::getKeyTrigger('1'))
 	{
 		m_mouse = !m_mouse;

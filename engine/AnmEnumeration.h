@@ -19,9 +19,20 @@ namespace Animation
 		enum 
 		{
 			Idle,
+			Idle2,
+			Idle3,
 			Walk,
+			WalkBackward,
 			Run,
+			Stop,
 			Jump,
+			LandToIdle,
+			LandHard,
+			LandToRun,
+			Roll,
+			DodgeBack,
+			Attack1,
+			Attack2,
 			MAX
 		};
 	}

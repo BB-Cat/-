@@ -14,7 +14,8 @@ public:
 
 
 public:
-	virtual void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, float animation_speed = 1.0f) = 0;
+	virtual void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, 
+		int shader, bool is_textured = true, float animation_speed = 1.0f) = 0;
 
 
 protected:

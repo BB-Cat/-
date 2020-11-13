@@ -28,8 +28,8 @@ Scene06::Scene06(SceneManager* sm) : Scene(sm)
 
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(0.2, 0.2, 1.0);
-	m_ambient_light_color = Vector3D(1.0, 1.0, 0.4);
+	m_light_color = Vector3D(0.4, 0.6, 0.0);
+	m_ambient_light_color = Vector3D(1.0, 1.0, 0.8);
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 }
@@ -61,11 +61,11 @@ void Scene06::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(400, 500));
+	ImGui::SetNextWindowSize(ImVec2(400, 200));
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 
 	//create the test window
-	ImGui::Begin("Test Window");
+	ImGui::Begin("Animation Test");
 	ImGui::Text("Press 1 key to");
 	ImGui::Text("display the mouse");
 

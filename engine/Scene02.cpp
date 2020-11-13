@@ -42,7 +42,7 @@ void Scene02::update(float delta, const float& width, const float& height)
 		m_is_first_frame = false;
 	}
 
-	CameraManager::get()->update(delta, width, height, nullptr, nullptr);
+	CameraManager::get()->update(delta, width, height);
 
 	Lighting::get()->updateSceneLight(Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x)), Vector3D(1.0f, 1.0f, 1.0f), 0.85f, Vector3D(0.2, 0.3, 0.4));
 

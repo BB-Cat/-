@@ -8,7 +8,8 @@
 class SceneSelect : public Scene
 {
 private:
-    static bool m_first_time;
+    static bool m_popup_toggle;
+    TexturePtr m_tex1;
 private: //ImGui variables
 
 public:

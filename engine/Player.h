@@ -3,43 +3,93 @@
 #include "high_resolution_timer.h"
 #include "Actor.h"
 
-#define PSPEED_MAX      (10.0f)
-#define PACCEL			(0.2f)		//player deceleration
-#define PROT_SPEED_MAX	(5.0f)		//player rotation speed
-#define PROT_ACCEL		(1.2f)		//player rotation acceleration
-#define PJUMP_FORCE		(0.1f)		//player starting jump speed
-#define PJUMP_DECAY		(0.004f)	//player jump speed decay rate
+namespace PlayerState
+{
+	enum
+	{
+		Idle,
+		MoveForward,
+		MoveBackward,
+		Stop,
+		Jump,
+		Land,
+		Roll,
+		DodgeBack,
+		Attack1,
+		Attack2,
+	};
+}
 
-//bullet speeds
-#define PSHOT_SPEED		(30.0f)		//speed of players default bullets
-#define PMACHINE_SPEED		(65.0f)		//speed of players machine bullets
-#define PSPREAD_SPEED		(45.0f)		//speed of players spread bullets
-#define PCURVE_SPEED		(5.0f)		//speed of players spread bullets
-#define PBOMB_SPEED			(50.0f)		//speed of players bomb bullets
+struct PlayerInput
+{
+	bool w = false;
+	bool a = false;
+	bool s = false;
+	bool d = false;
+		    
+	bool m1 = false;
+	bool m2 = false;
 
+	bool space = false;
+	bool lshift = false;
+	bool lctrl = false;
 
-// shot colors for player
-#define PDEFAULT_COLOR  (Vector3D(5.0f, 5.0f, 10.0f))
-#define PMACHINE_COLOR  (Vector3D(4.0f, 8.0f, 4.0f))
-#define PSPREAD_COLOR  (Vector3D(7.0f, 7.0f, 2.0f))
-#define PCURVE_COLOR  (Vector3D(7.0f, 5.0f, 7.0f))
-#define PBOMB_COLOR  (Vector3D(13.0f, 3.0f, 3.0f))
-
-#define PLAYER_RADIUS (0.35f)
-#define PLAYER_RESPAWN (2.0f)
-#define PLAYER_INVINCIBLE (3.0f)
+	float cam_angle = 0;
+};
 
 class Player : public Actor
 {
 public:
-	Player();
+	Player(bool has_shadow);
 	~Player();
 public:
-	void update(float delta, Terrain* terrain);
-	void render(float delta);
 
-private: //rendering members
-	SkinnedMeshPtr m_mesh;
+	//=====================================================
+	//   更新関数
+	//-----------------------------------------------------
+	void update(float delta) override;
+	//-----------------------------------------------------
+	void idle(float delta);
+	void moveForward(float delta);
+	void moveBackward(float delta);
+	void stop(float delta);
+	void jump(float delta);
+	void land(float delta, int landing_type);
+	void roll(float delta);
+	void dodgeBack(float delta);
+	void attack1(float delta);
+	void attack2(float delta);
+	//=====================================================
+
+	void render(float delta) override;
+	void renderShadow(float delta) override;
+
+public:
+	void imGuiWindow() override;
+	//void animationTree() override;
+
+private: 
+	//描画関連変数
+	SkinnedMeshPtr m_model;
+
+	//プレイヤー性質関連
+	float P_WACCEL = 5.0f;
+	float P_RACCEL = 10.0f;
+	float P_WSPEED = 5.0f;
+	float P_RSPEED = 15.0f;
+	float P_ROT_SPEED = 0.2f;
+	float P_JUMP_SPEED = 30.0f;
+	float P_ROLL_DIST = 1.4f;
+	float P_GRAVITY = 0.5f;
+
+	//ゲーム処理関連
+	bool m_jump = false;
+	float m_jump_speed = 0;
+	float m_momentum = 0;
+	float m_blend = 0;
+	PlayerInput m_input;
+
+
 
 private:
 	friend class ActorManager;

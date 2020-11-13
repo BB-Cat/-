@@ -126,7 +126,7 @@ StaticMesh::~StaticMesh()
 {
 }
 
-void StaticMesh::renderMesh(float elapsed_time/*dummy value*/, Vector3D scale, Vector3D position, Vector3D rotation, int shader, float animation_speed)
+void StaticMesh::renderMesh(float elapsed_time/*dummy value*/, Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured, float animation_speed)
 {
 	//set the mesh's buffers into the device context for rendering
 	//set the vertices which will be drawn

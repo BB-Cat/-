@@ -6,12 +6,35 @@
 class Actor
 {
 public:
+	Actor(bool has_shadow = false) : m_has_shadow(has_shadow) {}
+
 	Vector3D getPosition() { return m_pos; };
 	Vector3D getDirectionVector() { return Vector3D(sinf(m_angle * 0.01745f), 0, cosf(m_angle * 0.01745f)); };
+
+	virtual void update(float delta) = 0;
+	virtual void render(float delta) = 0;
+	virtual void renderShadow(float delta) = 0;
+
+	virtual void imGuiWindow() {}
+	//virtual void animationTree() {}
 protected:
 	Vector3D m_pos;
 	Vector3D m_rot;
 	Vector3D m_scale;
 	float m_angle;
 	SkinnedMeshPtr m_mesh;
+	//stateの初期値の０が全てのアニメーションネームスペースでは待機という意味を持つので、初期状態が必ず０です。
+	int m_state = 0;
+	//アニメーションの更新がprevious stateとstateの値が異なった場合のみ更新するので、最初の待機アニメーションを始めるのに‐1に設定します。
+	int m_previous_state = -1;
+
+	////アニメーション関連
+	//int m_try_animation = -1;
+	//int m_queued_animation = -1;
+
+	//ディファドレンダリングに関する変数
+	bool m_has_shadow;
+
+protected:
+	friend class ActorManager;
 };

@@ -9,6 +9,7 @@
 #include "Scene07.h"
 #include "Scene08.h"
 #include "Scene09.h"
+#include "Scene10.h"
 
 SceneManager::SceneManager() :m_next_scene(0), m_clear_flag()
 {
@@ -77,6 +78,9 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
         case SCENE09:
             m_scene_stack.emplace(std::make_unique<Scene09>(this));
             break;
+        case SCENE10:
+            m_scene_stack.emplace(std::make_unique<Scene10>(this));
+            break;
         }
     }
     else
@@ -112,6 +116,9 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
             break;
         case SCENE09:
             m_scene_stack.emplace(std::make_unique<Scene09>(this));
+            break;
+        case SCENE10:
+            m_scene_stack.emplace(std::make_unique<Scene10>(this));
             break;
         }
     }

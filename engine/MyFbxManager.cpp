@@ -535,9 +535,8 @@ void MyFbxManager::loadAnimationData(const wchar_t* filename, SkeletalAnimation&
     // Use the first argument as the filename for the importer.
     if (!m_importer->Initialize(filename_buffer, -1, m_manager->GetIOSettings()))
     {
-        printf("Call to FbxImporter::Initialize() failed.\n");
-        printf("Error returned: %s\n\n", m_importer->GetStatus().GetErrorString());
-        exit(-1);
+        std::string err = "Unable to load animation file";
+       throw std::exception(err.c_str());
     }
     delete filename_buffer;
 

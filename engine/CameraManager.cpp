@@ -2,6 +2,7 @@
 #include "GraphicsEngine.h"
 #include "DeviceContext.h"
 #include "AppWindow.h"
+#include "ActorManager.h"
 
 CameraManager* CameraManager::cm = nullptr;
 
@@ -16,7 +17,7 @@ CameraManager::~CameraManager()
 
 }
 
-void CameraManager::update(const float& delta, const int& width, const int& height, Vector3D* player_pos, Vector3D* player_rot)
+void CameraManager::update(const float& delta, const int& width, const int& height)
 {
 	updateInput();
 
@@ -34,75 +35,105 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	Vector3D new_pos = m_world_camera.getTranslation();
 
 	//declare variables necessary for camera update
-	Vector3D p_pos; 
-	Vector3D p_dir; 
-	Vector3D tempDir;
+	//カメラ更新に必要な変数
+	Vector3D cam_position = m_world_camera.getTranslation();
+	Vector3D player_position = ActorManager::get()->getActivePlayerPosition();
+	Vector3D player_dir = ActorManager::get()->getActivePlayerDirection();
+
+	Vector3D target_view = (player_position + Vector3D(0, 3.0f, 0));
+	Vector3D target_view_to_cam = cam_position - target_view;
+
+	//Vector3D player_to_camera = cam_position - player_position;
+
+	Vector3D temp_dir;
 	float angle_to_player;
+	float target_dist = 15.0f;
+	float min_dist = 12.0f;
+	Vector3D target_position;
+	Vector2D mouse_delta = AppWindow::getMouseDelta();
+	
 
 	switch (m_cam_state)
 	{
 	case (FREE):
-			new_pos = m_world_camera.getTranslation() + m_world_camera.getZDirection() * (m_forward * m_speed);
-			new_pos = new_pos + m_world_camera.getXDirection() * (m_rightward * m_speed);
+		new_pos = cam_position + m_world_camera.getZDirection() * (m_forward * m_speed);
+		new_pos = new_pos + m_world_camera.getXDirection() * (m_rightward * m_speed);
 
-			temp.setIdentity();
-			temp.setRotationX(m_camera_rot.m_x);
-			worldcam *= temp;
+		temp.setIdentity();
+		temp.setRotationX(m_camera_rot.m_x);
+		worldcam *= temp;
 
-			temp.setIdentity();
-			temp.setRotationY(m_camera_rot.m_y);
-			worldcam *= temp;
-
-
-			
-			break;
+		temp.setIdentity();
+		temp.setRotationY(m_camera_rot.m_y);
+		worldcam *= temp;
+		
+		break;
 
 	case (TP):
 
-			if (player_pos == nullptr || player_rot == nullptr)
-			{
-				//throw std::exception("No player data was passed to the camera!");
-				m_cam_state++;
-				break;
-			}
-			p_pos = *player_pos;
-			p_dir = *player_rot;
+		////if (target_view_to_cam.length() > target_dist)
+		////{
+		////	target_view_to_cam.normalize();
+		////	new_pos = Vector3D::lerp(cam_position, target_view + target_view_to_cam * target_dist, delta * 10.0f);
+		////}
+		////else if (target_view_to_cam.length() < min_dist)
+		////{
+		////	target_view_to_cam.normalize();
+		////	new_pos = Vector3D::lerp(cam_position, target_view + target_view_to_cam * min_dist, delta * 10.0f);
+		////}
+		////else new_pos = cam_position;
 
-			new_pos = Vector3D::lerp(new_pos, p_pos - (p_dir * 3.0f) + Vector3D(0.5f, 0.75f, 0), delta * 10);
+		////worldcam.lookAt(player_position, new_pos, Vector3D(0, -1, 0));
 
-			temp.setIdentity();
-			temp.setRotationX(5.0f * 0.01745f);
-			worldcam *= temp;
+		//temp.setIdentity();
+		//temp.setRotationX(m_camera_rot.m_x);
+		//worldcam *= temp;
 
-			tempDir = (p_pos - new_pos);
-			tempDir.normalize();
-			angle_to_player = atan2(tempDir.m_x, tempDir.m_z);
-			temp.setIdentity();
-			temp.setRotationY(angle_to_player);
-			worldcam *= temp;
-		
-			break;
+		////temp_dir = Vector3D(
+		////	sinf(sinf(m_camera_rot.m_y) * m_camera_rot.m_y), 
+		////	cosf(m_camera_rot.m_x), 
+		////	sinf(cosf(m_camera_rot.m_y) * m_camera_rot.m_y));
+		////new_pos = target_view - temp_dir * target_dist;
+
+		//temp_dir = (player_position - new_pos);
+		//temp_dir.normalize();
+		//angle_to_player = atan2(temp_dir.m_x, temp_dir.m_z);
+		//temp.setIdentity();
+		//temp.setRotationY(angle_to_player);
+		//worldcam *= temp;
+
+		new_pos = cam_position + m_world_camera.getYDirection() * (mouse_delta.m_x * m_speed * 50);
+		new_pos = new_pos + m_world_camera.getXDirection() * (-mouse_delta.m_y * m_speed * 50);
+
+		temp_dir = target_view - new_pos;
+		temp_dir.normalize();
+
+		new_pos = target_view - temp_dir * 10;
+
+		worldcam.lookAt(target_view, new_pos, Vector3D(0, -1, 0));
+
+		//temp.setIdentity();
+		//temp.setRotationX(m_camera_rot.m_x);
+		//worldcam *= temp;
+
+		//temp.setIdentity();
+		//temp.setRotationY(m_camera_rot.m_y);
+		//worldcam *= temp;
+		//
+		break;
 
 	case (TOPDOWN):
 
-			if (player_pos == nullptr)
-			{
-				//throw std::exception("No player data was passed to the camera!");
-				m_cam_state++;
-				break;
-			}
-			p_pos = *player_pos;
+		new_pos = Vector3D::lerp(new_pos, player_position + Vector3D(0, 25.0f, -9.0f), delta * 10);
 
-			new_pos = Vector3D::lerp(new_pos, p_pos + Vector3D(0, 25.0f, -9.0f), delta * 10);
-
-			temp.setIdentity();
-			temp.setRotationX(70 * 0.01745f);
-			worldcam *= temp;
+		temp.setIdentity();
+		temp.setRotationX(70 * 0.01745f);
+		worldcam *= temp;
 		
-			break;
+		break;
 
 	case (STATIC): 
-			break;
+		break;
 
 	}
 
@@ -116,11 +147,29 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 
 	float depth = 2500.0f;
 	cc.m_projection.setPerspectiveFovLH(1.0f, ((float)width / (float)height), 0.1f, depth);
-	//cc.m_projection.setOrthoLH(1.0f, 1.0f, 0.1f, 100.0f);
 	m_world_constant_buffer->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 
 	//update the frustum for the current frame
+	//錐台の更新
 	m_frustum.constructFrustum(depth, cc.m_projection, cc.m_view);
+}
+
+void CameraManager::lookAtPosition(const Vector3D& target, float seconds, float delta)
+{
+	Matrix4x4 mat; 
+	mat.lookAt(target, m_world_camera.getTranslation(), Vector3D(0, 1, 0));
+	m_world_camera = m_world_camera * (1.0f - seconds * delta) + mat * (seconds * delta);
+}
+
+void CameraManager::moveToPosition(Vector3D target, float seconds, float delta)
+{
+	Vector3D pos = m_world_camera.getTranslation();
+	pos = pos * (1.0f - seconds * delta) + target * (seconds * delta);
+}
+
+void CameraManager::moveCamera(Vector3D move_amount)
+{
+	m_world_camera.setTranslation(m_world_camera.getTranslation() + move_amount);
 }
 
 void CameraManager::setWorldBuffer()
@@ -233,10 +282,5 @@ void CameraManager::updateInput()
 	}
 
 	m_camera_rot = m_camera_rot + AppWindow::getMouseDelta();
-
-	if (AppWindow::getKeyTrigger('P'))
-	{
-		m_cam_state++;
-		if (m_cam_state == CAMERA_STATE::MAX) m_cam_state = 0;
-	}
+	if (m_camera_rot.m_x < -1.57f) m_camera_rot.m_x = -1.57f;
 }

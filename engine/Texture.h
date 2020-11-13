@@ -10,9 +10,10 @@ public:
 	~Texture();
 
 	Vector2D getSize() { return Vector2D(m_height, m_width); }
+	ID3D11ShaderResourceView* getSRV() { return m_shader_res_view; }
 private:
 	ID3D11Resource* m_texture = nullptr;
-	ID3D11ShaderResourceView *m_shader_res_view = nullptr;
+	ID3D11ShaderResourceView* m_shader_res_view = nullptr;
 
 	int m_height;
 	int m_width;

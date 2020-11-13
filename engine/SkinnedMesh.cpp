@@ -69,6 +69,14 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 	m_active_animation = -1;
 	//make sure there is no animation queued
 	m_queued_animation = -1;
+	//set the blended animation to inactive by default
+	m_blended_animation = -1;
+	//set the blend rate to 0 by default
+	m_blend = 0;
+	//set the blended animation frame to 0 by default
+	m_blended_anm_frame = 0;
+	//set the percent tick to a negative number so it is not used unless toggled from outside
+	m_percent_tick = -1;
 }
 
 SkinnedMesh::~SkinnedMesh()
@@ -90,22 +98,96 @@ void SkinnedMesh::setAnimationCategory(int type)
 	}
 }
 
-void SkinnedMesh::loadAnimation(int type, const wchar_t* full_path, bool looping, bool interruptable, int interruptable_frame)
+void SkinnedMesh::loadAnimation(int type, const wchar_t* full_path, bool looping, bool interruptable, int interruptable_frame,
+	bool idles, int idle_frame)
 {
 	m_animation[type] = FbxAnm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
-		looping, interruptable, interruptable_frame);
+		looping, interruptable, interruptable_frame, idles, idle_frame);
+}
+
+void SkinnedMesh::loadAnimation(void* dummy, int type, const wchar_t* full_path, bool looping, 
+	bool interruptable, float interruptable_percent, bool idles, float idle_percent)
+{
+	m_animation[type] = FbxAnm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
+		looping, interruptable, interruptable_percent, idles, idle_percent);
 }
 
 void SkinnedMesh::setAnimation(int type)
 {
 	//if there is not an active animation of the active animation is interruptable, update the active animation value
-	if (m_active_animation >= 0 && m_animation[m_active_animation].getIfInterruptable()) 
-		m_active_animation = type;
+	if (m_active_animation < 0 || m_animation[m_active_animation].getIfInterruptable() || 
+		m_animation[m_active_animation].getIfFinished())
+	{
+		if(m_active_animation >= 0) m_animation[m_active_animation].reset();
 
+		m_active_animation = type;
+		m_blended_animation = type;
+		m_blend = 0;
+		m_blended_anm_frame = 0;
+	}
 	else m_queued_animation = type;
 }
 
-void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, float animation_speed)
+void SkinnedMesh::setBlendAnimation(int type)
+{
+	if (type >= 0 && type < m_animation.size())
+	{
+		m_blended_animation = type;
+	}
+	else m_blended_animation = -1;
+}
+
+void SkinnedMesh::setBlendAnmFrame(float percent)
+{
+	m_blended_anm_frame = max( min(percent, 1.0f), 0);
+}
+
+void SkinnedMesh::setAnmPercentTick(float tick)
+{
+	m_percent_tick = tick;
+}
+
+bool SkinnedMesh::getIfAnimInterruptable()
+{
+	if (m_active_animation < 0) return true;
+	else return m_animation[m_active_animation].getIfInterruptable();
+}
+
+bool SkinnedMesh::getIfAnimFinished()
+{
+	if (m_active_animation < 0) return true;
+	else return m_animation[m_active_animation].getIfFinished();
+}
+
+float SkinnedMesh::getActiveAnmPercent()
+{
+	if (m_active_animation < 0) return 0;
+	return m_animation[m_active_animation].getPercentCompletion();
+}
+
+bool SkinnedMesh::getAnimationLengths(float& active_length, float& blend_length)
+{
+	if (m_active_animation < 0) active_length = 0;
+	else active_length = m_animation[m_active_animation].getTotalTime();
+
+	if (m_blended_animation < 0)
+	{
+		blend_length = 0;
+		return false;
+	}
+	
+	blend_length = m_animation[m_blended_animation].getTotalTime();
+	return true;
+
+}
+
+void SkinnedMesh::triggerAnimationFinish(bool trigger)
+{
+	if(m_active_animation >= 0) m_animation[m_active_animation].setFinishTrigger(trigger);
+}
+
+void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, 
+	int shader, bool is_textured, float animation_speed)
 {
 	BlendMode::get()->SetBlend(BlendType::ALPHA);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDepthStencilState(m_depth_stencil);
@@ -116,16 +198,59 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D positi
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_wire_rast);
 
 
-	//check if there is a queued animation that can be activated
-	if (m_active_animation < 0 || m_queued_animation >= 0 && m_animation[m_active_animation].getIfInterruptable())
+	Skeleton skeleton, blend_skeleton;
+	size_t number_of_bones = 0;
+
+
+	//====================================================================
+	//  Primary Animation Data
+	//====================================================================
+	//see if the active animation needs to be changed
+	if (m_active_animation < 0 || (m_queued_animation >= 0 && 
+		(m_animation[m_active_animation].getIfInterruptable() || m_animation[m_active_animation].getIfFinished())))
 	{
-		//reset the frame of the previous animation
 		if (m_active_animation >= 0) m_animation[m_active_animation].reset();
-		//overwrite the active animation
 		m_active_animation = m_queued_animation;
-		//reset the queued animation value
 		m_queued_animation = -1;
 	}
+
+	//see if there is an active animation
+	if (m_active_animation >= 0)
+	{
+		//update the animation data. if a percent tick was sent to the render function, 
+		//use the update by percent function. otherwise use delta time.
+		if (m_percent_tick >= 0)m_animation[m_active_animation].updatedByPercentage(m_percent_tick * animation_speed);
+		else m_animation[m_active_animation].update(elapsed_time * animation_speed);
+
+		//this is a quick fix because we are calling the render function in the shadow mapping function AND the normal render function,
+		//which is causing problems for animation blending.  we need a better solution later.
+		if (animation_speed != 0)
+		{
+			m_percent_tick = -1;
+		}
+
+		//get the current animation pose
+		skeleton = m_animation[m_active_animation].getPose();
+		//get the number of bones
+		number_of_bones = skeleton.m_bones.size();
+	}
+
+	//====================================================================
+	//  Blend Animation Data
+	//====================================================================
+		//see if there is an active animation
+	if (number_of_bones && m_blend != 0 && m_blended_animation >= 0)
+	{
+		//get the current animation pose
+		blend_skeleton = m_animation[m_blended_animation].getPoseAtPercent(m_blended_anm_frame);
+		//get the number of bones
+		size_t number_of_bones2 = blend_skeleton.m_bones.size();
+		_ASSERT_EXPR(number_of_bones == number_of_bones2, L"Skeletons with a different number of bones attempted to blend!");
+	}
+	else blend_skeleton = skeleton;
+
+
+	//--------------------------------------------------------------------
 
 	//draw the vertices
 	for (int i = 0; i < m_meshdata.size(); i++)
@@ -141,39 +266,27 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D positi
 		Matrix4x4	bone_transforms[MAXBONES];
 		for (size_t k = 0; k < MAXBONES; k++) bone_transforms[k].setIdentity();
 
-		//update animation data for the mesh if the active animation is loadable
-		if (m_active_animation >= 0)
-		{ 
-			//update the frame data for the animation
-			bool unfinished = m_animation[m_active_animation].update(elapsed_time * animation_speed);
-			//m_animation[Animation::Player::Run].setFrame(m_animation[m_active_animation].getPercent());
-			//get the current pose
-			Skeleton skeleton = m_animation[m_active_animation].getPose();
-
-			//Skeleton skeleton2 = m_animation[Animation::Player::Run].getPose();
-
-			size_t number_of_bones = skeleton.m_bones.size();
-
-			_ASSERT_EXPR(number_of_bones < MAXBONES, L"Bones exceeding the MAXBONES limit attempted to load!");
-			//set the bone transformations
-			for (size_t i = 0; i < number_of_bones; i++)
-			{
-				bone_transforms[i] = skeleton.m_bones.at(i).transform;// *(1.0 - m_blend) + skeleton2.m_bones.at(i).transform * m_blend;
-			}
-
-			if(!unfinished) m_active_animation = m_queued_animation * (m_queued_animation >= 0) + -1 * ((m_queued_animation < 0));
+		//apply animation data to bone transforms if currently animating
+		_ASSERT_EXPR(number_of_bones < MAXBONES, L"Bones exceeding the MAXBONES limit attempted to load!");
+		//set the bone transformations
+		for (size_t i = 0; i < number_of_bones; i++)
+		{
+			bone_transforms[i] = skeleton.m_bones.at(i).transform * (1.0 - m_blend) + blend_skeleton.m_bones.at(i).transform * m_blend;
 		}
 
 		for (int j = 0; j < m_meshdata[i].m_subs.size(); j++)
 		{
-			//set textures for the pixel shader
-			GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseNormalGlossEnvironTexPS
-			(
-				m_meshdata[i].m_subs[j].diffuse.m_map, 
-				m_meshdata[i].m_subs[j].m_map_normal,
-				m_meshdata[i].m_subs[j].specular.m_map,
-				m_metal
-			);
+			if (is_textured)
+			{
+				//set textures for the pixel shader
+				GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseNormalGlossEnvironTexPS
+				(
+					m_meshdata[i].m_subs[j].diffuse.m_map,
+					m_meshdata[i].m_subs[j].m_map_normal,
+					m_meshdata[i].m_subs[j].specular.m_map,
+					m_metal
+				);
+			}
 
 			//set displacement map for the domain shader
 			GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDisplacementTexDS(m_displace);
@@ -205,6 +318,7 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D positi
 			else GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawIndexedTriangleList(index_count, 0, m_meshdata[i].m_subs[j].index_start);
 		}
 	}
+	
 }
 
 void SkinnedMesh::ImGui_LightProperties()

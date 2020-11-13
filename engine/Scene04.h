@@ -2,6 +2,8 @@
 #include "SceneManager.h"
 #include "Prerequisites.h"
 #include "TextRenderer.h"
+#include "ConstantBufferFormats.h"
+
 
 class Scene04 : public Scene
 {
@@ -27,6 +29,9 @@ private:
     int m_min_tess_range = 200;
     int m_max_tess_range = 120;
 
+    cb_noise m_noise;
+    cb_cloud m_cloud_props;
+    Texture3DPtr m_tex3D;
 
 public:
     Scene04(SceneManager*);

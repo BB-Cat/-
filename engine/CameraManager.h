@@ -27,7 +27,12 @@ public:
 	static CameraManager* get();
 	~CameraManager();
 	
-	void update(const float& delta, const int& width, const int& height, Vector3D* player_pos = nullptr, Vector3D* player_rot = nullptr);
+	void update(const float& delta, const int& width, const int& height);
+	void lookAtPosition(const Vector3D& target, float seconds, float delta);
+	void moveToPosition(Vector3D target, float seconds, float delta);
+	void moveCamera(Vector3D move_amount);
+
+
 	void createWorldBuffers();
 	void setWorldBuffer();
 	//orthoID determines which projection to activate for the next shadowmap pass

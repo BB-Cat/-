@@ -24,15 +24,16 @@ public:
     enum SCENE
     {
         SCENESELECT,
-        SCENE01,
-        SCENE02,
-        SCENE03,
-        SCENE04,
-        SCENE05,
-        SCENE06,
-        SCENE07,
-        SCENE08,
-        SCENE09,
+        SCENE01,  //shaders (several need reworking)
+        SCENE02,  //shadow mapping
+        SCENE03,  //terrain generator (needs to be multi threaded and streamlined)
+        SCENE04,  //dynamic terrain
+        SCENE05,  //tesselation (needs reworking)
+        SCENE06,  //character animation
+        SCENE07,  //noise generator (voronoi and perlin)
+        SCENE08,  //volumetric cloud cube
+        SCENE09,  //weather map clouds
+        SCENE10,  //character movement
     };
 
     void changeScene(const SCENE, bool clear_current_scene = false);
