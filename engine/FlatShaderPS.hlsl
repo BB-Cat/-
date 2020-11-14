@@ -53,7 +53,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	{
 		float shadowdepth = ShadowMapNear.Sample(ShadowMapSampler, input.shadowpos.xy).r;
 
-
 		penumbra += 1.0f * (input.shadowpos.z - ShadowMapNear.Sample(ShadowMapSampler, input.shadowpos.xy + float2(0.003, 0)).r > shadow_bias);
 		penumbra += 1.0f * (input.shadowpos.z - ShadowMapNear.Sample(ShadowMapSampler, input.shadowpos.xy + float2(0, 0.003)).r > shadow_bias);
 		penumbra += 1.0f * (input.shadowpos.z - ShadowMapNear.Sample(ShadowMapSampler, input.shadowpos.xy + float2(-0.003, 0)).r > shadow_bias);

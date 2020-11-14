@@ -350,8 +350,17 @@
     <Filter Include="Shaders\21 SimpleStage">
       <UniqueIdentifier>{7ca18538-023a-4f71-9e4a-c7e5b0ea4b8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants">
-      <UniqueIdentifier>{4fdbbf5b-28ed-4741-b808-b945a133ac9f}</UniqueIdentifier>
+    <Filter Include="Shaders\0 Error">
+      <UniqueIdentifier>{f7c51883-34fd-4000-91ab-1ca4ea473ca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives">
+      <UniqueIdentifier>{6dd0e471-e4c9-48fe-b9ae-d9763d0cd8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube">
+      <UniqueIdentifier>{b74e56a7-945d-4e81-a7b8-4180ae74558f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\11">
+      <UniqueIdentifier>{a4ed439a-64e7-46a5-b4c0-8db22c406cbb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -586,8 +595,17 @@
     <ClCompile Include="Scene10.cpp">
       <Filter>Sources\Scenes\10</Filter>
     </ClCompile>
-    <ClCompile Include="AnmJump.cpp">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants</Filter>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveGenerator.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene11.cpp">
+      <Filter>Sources\Scenes\11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -906,8 +924,17 @@
     <ClInclude Include="Scene10.h">
       <Filter>Sources\Scenes\10</Filter>
     </ClInclude>
-    <ClInclude Include="AnmJump.h">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation\AnimationVariants</Filter>
+    <ClInclude Include="Shader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveGenerator.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene11.h">
+      <Filter>Sources\Scenes\11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1159,6 +1186,12 @@
     </FxCompile>
     <FxCompile Include="SimpleStageVS.hlsl">
       <Filter>Shaders\21 SimpleStage</Filter>
+    </FxCompile>
+    <FxCompile Include="ErrorPS.hlsl">
+      <Filter>Shaders\0 Error</Filter>
+    </FxCompile>
+    <FxCompile Include="ErrorVS.hlsl">
+      <Filter>Shaders\0 Error</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

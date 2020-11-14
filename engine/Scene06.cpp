@@ -53,11 +53,6 @@ void Scene06::update(float delta, const float& width, const float& height)
 
 void Scene06::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -90,20 +85,6 @@ void Scene06::imGuiRender()
 
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene06::shadowRenderPass(float delta)

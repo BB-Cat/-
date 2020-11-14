@@ -55,11 +55,6 @@ void Scene02::update(float delta, const float& width, const float& height)
 
 void Scene02::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -67,7 +62,7 @@ void Scene02::imGuiRender()
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 
 	//create the test window
-	ImGui::Begin("Test Window");
+	ImGui::Begin("Shadow Mapping");
 	ImGui::Text("Press 1 key to");
 	ImGui::Text("display the mouse");
 
@@ -75,19 +70,6 @@ void Scene02::imGuiRender()
 
 	VectorToArray v(&m_global_light_rotation);
 	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene02::shadowRenderPass(float delta)

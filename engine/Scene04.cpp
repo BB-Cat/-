@@ -82,11 +82,6 @@ void Scene04::update(float delta, const float& width, const float& height)
 
 void Scene04::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -117,19 +112,6 @@ void Scene04::imGuiRender()
 
 	if (ImGui::Button("Update Terrain Types", ImVec2(200, 30))) m_terrain->updateTerrainTypes();
 	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene04::shadowRenderPass(float delta)

@@ -15,6 +15,7 @@ class Sampler;
 class MyConstantBuffer;
 class MyGeometricPrimitive;
 class RenderSystem;
+class Shader;
 class Resource;
 class ResourceManager;
 class Texture;
@@ -30,6 +31,9 @@ class SkinnedMesh;
 class ConstantBufferSystem;
 class BlendMode;
 class GraphicsEngine;
+
+//primitive classes
+class Cube;
 
 //game classes
 class Player;
@@ -57,6 +61,8 @@ typedef std::shared_ptr<Texture3D> Texture3DPtr;
 typedef std::shared_ptr<Sprite> SpritePtr;
 typedef std::shared_ptr<StaticMesh> StaticMeshPtr;
 typedef std::shared_ptr<SkinnedMesh> SkinnedMeshPtr;
+typedef std::shared_ptr<Shader> ShaderPtr;
+typedef std::shared_ptr<Cube> CubePtr;
 
 //game type definitions
 typedef std::shared_ptr<Player> PlayerPtr;

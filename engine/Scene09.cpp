@@ -101,12 +101,6 @@ void Scene09::update(float delta, const float& width, const float& height)
 
 void Scene09::imGuiRender()
 {
-
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -152,20 +146,6 @@ void Scene09::imGuiRender()
 	}
 
 	ImGui::Text("Time: %.3f", m_cloud_props.m_time);
-
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene09::shadowRenderPass(float delta)

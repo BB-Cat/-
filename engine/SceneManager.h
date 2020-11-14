@@ -20,6 +20,7 @@ public:
 
 
     void execute(const float& delta, const float& width, const float& height);
+    void imGui();
 
     enum SCENE
     {
@@ -34,6 +35,7 @@ public:
         SCENE08,  //volumetric cloud cube
         SCENE09,  //weather map clouds
         SCENE10,  //character movement
+        SCENE11,  //stage creation
     };
 
     void changeScene(const SCENE, bool clear_current_scene = false);

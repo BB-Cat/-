@@ -56,11 +56,6 @@ void Scene05::update(float delta, const float& width, const float& height)
 
 void Scene05::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -104,19 +99,6 @@ void Scene05::imGuiRender()
 	t.m_max_tess_range = m_max_tess_range;
 	t.m_min_tess = m_min_tess;
 	t.m_min_tess_range = m_min_tess_range;
-
-	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetVSTesselationBuffer(t);
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene05::shadowRenderPass(float delta)

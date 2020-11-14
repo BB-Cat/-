@@ -10,6 +10,7 @@
 #include "Scene08.h"
 #include "Scene09.h"
 #include "Scene10.h"
+#include "Scene11.h"
 
 SceneManager::SceneManager() :m_next_scene(0), m_clear_flag()
 {
@@ -31,10 +32,13 @@ void SceneManager::execute(const float& delta, const float& width, const float& 
 
     m_scene_stack.top()->update(delta, width, height);
     m_scene_stack.top()->render(delta, width, height);
+    
+}
 
+void SceneManager::imGui()
+{
     //render whatever imgui dialogue the current scene needs
     m_scene_stack.top()->imGuiRender();
-    
 }
 
 
@@ -81,6 +85,9 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
         case SCENE10:
             m_scene_stack.emplace(std::make_unique<Scene10>(this));
             break;
+        case SCENE11:
+            m_scene_stack.emplace(std::make_unique<Scene11>(this));
+            break;
         }
     }
     else
@@ -119,6 +126,9 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
             break;
         case SCENE10:
             m_scene_stack.emplace(std::make_unique<Scene10>(this));
+            break;
+        case SCENE11:
+            m_scene_stack.emplace(std::make_unique<Scene11>(this));
             break;
         }
     }

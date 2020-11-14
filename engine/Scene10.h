@@ -4,6 +4,9 @@
 #include "TextRenderer.h"
 #include "ConstantBufferFormats.h"
 
+//temp
+#include "PrimitiveGenerator.h"
+
 class Scene10 : public Scene
 {
 private:
@@ -11,6 +14,7 @@ private:
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
     SkinnedMeshPtr m_floor;
+    std::shared_ptr<Cube> m_cube;
 
     float m_speed = 0.35f;
     float m_blend = 0;

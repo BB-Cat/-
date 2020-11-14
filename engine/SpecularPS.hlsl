@@ -46,5 +46,5 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 
 
 	return float4(m_diffuseColor.xyz * lightFinal, m_d);
-	//return float4(specularReflection, d);
+
 }

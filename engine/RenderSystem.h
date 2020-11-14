@@ -85,5 +85,6 @@ private:
 	friend class Sprite;
 	friend class Mesh;
 	friend class TerrainManager;
+	friend class Cube;
 };
 

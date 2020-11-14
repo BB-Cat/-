@@ -1,4 +1,9 @@
-﻿  SceneSelect.cpp
+﻿  Scene11.cpp
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\lighting.h(46): warning C4316: 'Lighting': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\texture.h(12): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(47): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(55): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(56): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(58): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(75): warning C4244: '引数': 'const float' から 'const int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene11.cpp(161): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   3dgp.vcxproj -> C:\Users\2190404\Desktop\GraphicsEngine - Backup\BACKUP-GRAPHICS-ENGINE\engine\Debug\3dgp.exe

@@ -34,16 +34,11 @@ void SceneSelect::update(float delta, const float& width, const float& height)
 
 void SceneSelect::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(800, 700));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -58,6 +53,7 @@ void SceneSelect::imGuiRender()
 	if (ImGui::Button("Volumetric Clouds", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE08, true);
 	if (ImGui::Button("Weather Map", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE09, true);
 	if (ImGui::Button("Character Movement", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE10, true);
+	if (ImGui::Button("Stage Creator", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE11, true);
 	if (ImGui::Button("Explanation")) m_popup_toggle = true;
 	//ImGui::BeginPopup("Hello");
 	if (m_popup_toggle)
@@ -68,8 +64,6 @@ void SceneSelect::imGuiRender()
 		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
 		ImTextureID t = m_tex1->getSRV();
 		
-
-
 		ImGui::OpenPopup("Hello2");
 		ImGui::BeginPopupModal("Hello2");
 		ImGui::Text("Where does THIS appear");
@@ -77,23 +71,6 @@ void SceneSelect::imGuiRender()
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_popup_toggle = false;
 		ImGui::EndPopup();
 	}
-
-	//ImGui::EndPopup();
-	//ImGui::CloseCurrentPopup();
-
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void SceneSelect::shadowRenderPass(float delta)

@@ -50,6 +50,17 @@ void AppWindow::resetInput()
 	m_old_mouse_state[1] = m_mouse_state[1];
 }
 
+void AppWindow::mainMenu()
+{
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Menu"))
+	{
+		GraphicsEngine::get()->getShaderManager()->imGuiMenuShaderCompile();
+		ImGui::EndMenu();
+	}
+	ImGui::EndMainMenuBar();
+}
+
 void AppWindow::onCreate()
 {
 	Window::onCreate();
@@ -111,7 +122,25 @@ void AppWindow::onUpdate()
 	//render the gameworld
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
+
+	//update and render the current scene
 	m_scene_manager->execute(m_delta_time.time_interval(), width, height);
+
+	//begin ImGui UI
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+
+	//render imGui from the current scene
+	m_scene_manager->imGui();
+	//render the menu bar
+	mainMenu();
+	
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 
 
 	////render final pass if the current pipeline is deferred
@@ -149,6 +178,7 @@ void AppWindow::onUpdate()
 void AppWindow::onFocus()
 {
 	InputSystem::get()->addListener(this);
+	GraphicsEngine::get()->getShaderManager()->recompileErrorShaders();
 }
 
 void AppWindow::onKillFocus()

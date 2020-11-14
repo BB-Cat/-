@@ -11,6 +11,7 @@
 #include "DeviceContext.h"
 #include "ActorManager.h"
 
+
 //bool Scene03::m_first_time = true;
 
 Scene10::Scene10(SceneManager* sm) : Scene(sm)
@@ -67,6 +68,12 @@ Scene10::Scene10(SceneManager* sm) : Scene(sm)
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
+
+
+
+	//temp
+	//m_cube = std::shared_ptr<Cube>(new Cube());
+	m_cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, Vector3D(3, 1, 1), Vector3D(0, 0, 0), Vector3D(0, 0, 0), nullptr);
 }
 
 Scene10::~Scene10()
@@ -94,16 +101,11 @@ void Scene10::update(float delta, const float& width, const float& height)
 
 void Scene10::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(400, 200));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -126,20 +128,6 @@ void Scene10::imGuiRender()
 
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-
-
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-	ActorManager::get()->activePlayerImGui();
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene10::shadowRenderPass(float delta)
@@ -153,7 +141,7 @@ void Scene10::mainRenderPass(float delta)
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
 	//m_model->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0, 0, 2), Vector3D(0, 180 * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 	ActorManager::get()->renderFaction(L"Player", delta);
-
+	m_cube->render(Vector3D(3, 3, 3), Vector3D(), Vector3D(), Shaders::LAMBERT_SPECULAR, false);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
 	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);

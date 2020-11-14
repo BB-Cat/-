@@ -1,6 +1,7 @@
 #pragma once
 #include "PixelShader.h"
-
+#include "Prerequisites.h"
+#include "Shader.h"
 
 class ShaderManager
 {
@@ -8,6 +9,10 @@ public:
 	ShaderManager();
 	~ShaderManager();
 	void compileShaders();
+	void recompileErrorShaders();
+	void recompileShader(int shader);
+
+	void imGuiMenuShaderCompile();
 
 	//function which sets all of the necessary shaders for a specific shader type
 	void setPipeline(int shader_type);
@@ -50,102 +55,142 @@ private:
 	DomainShaderPtr m_TessTerrain3SplatDS;
 
 	//VS PS SHADERS
-	VertexShaderPtr m_FlatVS;
-	PixelShaderPtr m_FlatPS;
-	PixelShaderPtr m_FlatTexPS;
+	//VertexShaderPtr m_ErrorVS;
+	//PixelShaderPtr m_ErrorPS;
+	ShaderPtr m_error;
 
-	VertexShaderPtr m_LambertVS;
-	PixelShaderPtr m_LambertPS;
+	//VertexShaderPtr m_FlatVS;
+	//PixelShaderPtr m_FlatPS;
+	ShaderPtr m_flat;
+	//PixelShaderPtr m_FlatTexPS;
+	ShaderPtr m_flat_tex;
 
-	VertexShaderPtr m_Lambert_SpecularVS;
-	PixelShaderPtr m_Lambert_SpecularPS;
+	//VertexShaderPtr m_LambertVS;
+	//PixelShaderPtr m_LambertPS;
+	ShaderPtr m_lambert;
 
-	VertexShaderPtr m_Lambert_Specular_RimlightVS;
-	PixelShaderPtr m_Lambert_Specular_RimlightPS;
+	//VertexShaderPtr m_Lambert_SpecularVS;
+	//PixelShaderPtr m_Lambert_SpecularPS;
+	ShaderPtr m_lambert_specular;
 
-	VertexShaderPtr m_TextureVS;
-	PixelShaderPtr m_TexturePS;
+	//VertexShaderPtr m_Lambert_Specular_RimlightVS;
+	//PixelShaderPtr m_Lambert_Specular_RimlightPS;
+	ShaderPtr m_lambert_specular_rimlight;
 
-	VertexShaderPtr m_TextureNormalVS;
-	PixelShaderPtr m_TextureNormalPS;
+	//VertexShaderPtr m_TextureVS;
+	//PixelShaderPtr m_TexturePS;
+	ShaderPtr m_texture;
 
-	VertexShaderPtr m_TextureNormalGlossVS;
-	PixelShaderPtr m_TextureNormalGlossPS;
+	//VertexShaderPtr m_TextureNormalVS;
+	//PixelShaderPtr m_TextureNormalPS;
+	ShaderPtr m_texture_normal;
 
-	VertexShaderPtr m_EnvTexVS;
-	PixelShaderPtr m_EnvTexPS;
+	//VertexShaderPtr m_TextureNormalGlossVS;
+	//PixelShaderPtr m_TextureNormalGlossPS;
+	ShaderPtr m_texture_normal_gloss;
 
-	VertexShaderPtr m_GeoTestVS;
-	PixelShaderPtr m_GeoTestPS;
+	//VertexShaderPtr m_EnvTexVS;
+	//PixelShaderPtr m_EnvTexPS;
+	ShaderPtr m_environment_tex;
 
-	VertexShaderPtr m_TessModelVS;
-	PixelShaderPtr m_TessModelPS;
+	//VertexShaderPtr m_GeoTestVS;
+	//PixelShaderPtr m_GeoTestPS;
+	ShaderPtr m_geo_test;
 
-	VertexShaderPtr m_TessTerrainVS;
-	VertexShaderPtr m_TessFluidTerrainVS;
-	PixelShaderPtr m_TessTerrainPS;
+	//VertexShaderPtr m_TessModelVS;
+	//PixelShaderPtr m_TessModelPS;
+	ShaderPtr m_tess_model;
 
-	VertexShaderPtr m_DeferredVS;
-	PixelShaderPtr m_DeferredPS;
+	//VertexShaderPtr m_TessTerrainVS;
+	//VertexShaderPtr m_TessFluidTerrainVS;
+	//PixelShaderPtr m_TessTerrainPS;
+	ShaderPtr m_tess_terrain;
 
-	VertexShaderPtr m_ShadowMapVS;
-	VertexShaderPtr m_ShadowMapTerrainVS;
-	PixelShaderPtr m_ShadowMapPS;
+	//VertexShaderPtr m_DeferredVS;
+	//PixelShaderPtr m_DeferredPS;
+	ShaderPtr m_deferred;
 
-	VertexShaderPtr m_TessTerrain3SplatVS;
-	VertexShaderPtr m_TessTerrain3SplatDemoVS;
-	PixelShaderPtr m_TessTerrain3SplatPS;
+	//VertexShaderPtr m_ShadowMapVS;
+	//VertexShaderPtr m_ShadowMapTerrainVS;
+	//PixelShaderPtr m_ShadowMapPS;
+	ShaderPtr m_shadowmap;
+	ShaderPtr m_shadowmap_terrain;
 
-	VertexShaderPtr m_TerrainTestVS;
-	PixelShaderPtr m_TerrainTestPS;
+	//VertexShaderPtr m_TessTerrain3SplatVS;
+	//VertexShaderPtr m_TessTerrain3SplatDemoVS;
+	//PixelShaderPtr m_TessTerrain3SplatPS;
+	ShaderPtr m_tess_terrain_splat;
+	ShaderPtr m_tess_terrain_splat_demo;
 
-	VertexShaderPtr m_TerrainLDVS;
-	PixelShaderPtr m_TerrainLDPS;
+	//VertexShaderPtr m_TerrainTestVS;
+	//PixelShaderPtr m_TerrainTestPS;
+	ShaderPtr m_terrain_test;
 
-	VertexShaderPtr m_TerrainMDVS;
-	PixelShaderPtr m_TerrainMDPS;
+	//VertexShaderPtr m_TerrainLDVS;
+	//PixelShaderPtr m_TerrainLDPS;
+	ShaderPtr m_terrain_ld;
 
-	VertexShaderPtr m_TerrainHDVS;
-	PixelShaderPtr m_TerrainHDPS;
+	//VertexShaderPtr m_TerrainMDVS;
+	//PixelShaderPtr m_TerrainMDPS;
+	ShaderPtr m_terrain_md;
 
-	VertexShaderPtr m_TerrainLDVS_toon;
-	PixelShaderPtr m_TerrainMDPS_toon;
-	PixelShaderPtr m_TerrainHDPS_toon;
+	//VertexShaderPtr m_TerrainHDVS;
+	//PixelShaderPtr m_TerrainHDPS;
+	ShaderPtr m_terrain_hd;
 
-	VertexShaderPtr m_AtmosphereVS;
-	PixelShaderPtr m_AtmospherePS;
+	//VertexShaderPtr m_TerrainLDVS_toon;
+	//PixelShaderPtr m_TerrainMDPS_toon;
+	//PixelShaderPtr m_TerrainHDPS_toon;
+	ShaderPtr m_terrain_ld_toon;
+	ShaderPtr m_terrain_md_toon;
+	ShaderPtr m_terrain_hd_toon;
 
-	VertexShaderPtr m_WhiteNoiseVS;
-	PixelShaderPtr m_WhiteNoisePS;
+	//VertexShaderPtr m_AtmosphereVS;
+	//PixelShaderPtr m_AtmospherePS;
+	ShaderPtr m_atmosphere;
 
-	VertexShaderPtr m_ValueNoiseVS;
-	PixelShaderPtr m_ValueNoisePS;
+	//VertexShaderPtr m_WhiteNoiseVS;
+	//PixelShaderPtr m_WhiteNoisePS;
+	ShaderPtr m_white_noise;
 
-	VertexShaderPtr m_PerlinNoiseVS;
-	PixelShaderPtr m_PerlinNoisePS;
+	//VertexShaderPtr m_ValueNoiseVS;
+	//PixelShaderPtr m_ValueNoisePS;
+	ShaderPtr m_value_noise;
 
-	VertexShaderPtr m_DynamicNoiseVS;
-	PixelShaderPtr m_DynamicNoisePS;
+	//VertexShaderPtr m_PerlinNoiseVS;
+	//PixelShaderPtr m_PerlinNoisePS;
+	ShaderPtr m_perlin_noise;
 
-	VertexShaderPtr m_PerlinVoronoiNoiseVS;
-	PixelShaderPtr m_PerlinVoronoiNoisePS;
+	//VertexShaderPtr m_DynamicNoiseVS;
+	//PixelShaderPtr m_DynamicNoisePS;
+	ShaderPtr m_dynamic_noise;
 
-	VertexShaderPtr m_VolumeCloudVS;
-	PixelShaderPtr m_VolumeCloudPS;
+	//VertexShaderPtr m_PerlinVoronoiNoiseVS;
+	//PixelShaderPtr m_PerlinVoronoiNoisePS;
+	ShaderPtr m_perlin_voronoi_noise;
 
-	VertexShaderPtr m_WeatherMapVS;
-	PixelShaderPtr m_WeatherMapPS;
+	//VertexShaderPtr m_VolumeCloudVS;
+	//PixelShaderPtr m_VolumeCloudPS;
+	ShaderPtr m_volume_cloud;
 
-	VertexShaderPtr m_WeatherAtmosphereVS;
-	PixelShaderPtr m_WeatherAtmospherePS;
+	//VertexShaderPtr m_WeatherMapVS;
+	//PixelShaderPtr m_WeatherMapPS;
+	ShaderPtr m_weather_map;
 
-	VertexShaderPtr m_3DTexVS;
-	PixelShaderPtr m_3DTexPS;
+	//VertexShaderPtr m_WeatherAtmosphereVS;
+	//PixelShaderPtr m_WeatherAtmospherePS;
+	ShaderPtr m_weather_atmosphere;
 
-	VertexShaderPtr m_SimpleStageVS;
-	PixelShaderPtr m_SimpleStagePS;
+	//VertexShaderPtr m_3DTexVS;
+	//PixelShaderPtr m_3DTexPS;
+	ShaderPtr m_3D_tex;
+
+	//VertexShaderPtr m_SimpleStageVS;
+	//PixelShaderPtr m_SimpleStagePS;
+	ShaderPtr m_simple_stage;
 
 	//FINAL PASS VS PS SHADERS
-	VertexShaderPtr m_FinalBasicVS;
-	PixelShaderPtr m_FinalBasicPS;
+	//VertexShaderPtr m_FinalBasicVS;
+	//PixelShaderPtr m_FinalBasicPS;
+	ShaderPtr m_final_basic;
 };

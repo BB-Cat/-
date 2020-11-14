@@ -192,8 +192,8 @@ void CameraManager::setDirectionalLightWVPBuffer(Vector3D light_dir, const int& 
 	temp.setScale(Vector3D(10.0f, 10.0f, 10.0f));
 	lightcam *= temp;
 
-	Vector3D persp = m_world_camera.getTranslation() + m_world_camera.getZDirection()*5 -light_dir * 30.0f;
-
+	Vector3D persp = m_world_camera.getTranslation() + m_world_camera.getZDirection()*5 - light_dir * 30.0f;
+	persp = m_world_camera.getTranslation() + light_dir * 30.0f;
 
 	temp.setIdentity();
 	temp.lookAt(m_world_camera.getTranslation() + m_world_camera.getZDirection() * 5, persp, Vector3D(0, 1, 0));

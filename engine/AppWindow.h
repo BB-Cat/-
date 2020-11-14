@@ -16,6 +16,8 @@ public:
 
 	//reset the input values saved in the app window
 	void resetInput();
+	//ImGui driven main menu function
+	void mainMenu();
 
 	//inherited from Window
 	virtual void onCreate() override;

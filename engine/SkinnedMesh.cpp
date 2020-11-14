@@ -44,9 +44,6 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, MyFbxManager* fbx_manager, fl
 
 SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager* fbx_manager, float* topology, D3D11_CULL_MODE culltype) : Mesh(full_path, culltype)
 {
-	
-	std::vector<VertexMesh> vertices;
-	std::vector<u_int> indices;
 
 	m_meshdata = fbx_manager->loadFbxMesh(full_path, topology);
 

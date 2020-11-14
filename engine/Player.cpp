@@ -29,7 +29,7 @@ Player::Player(bool has_shadow) : Actor(has_shadow)
 	m_model->loadAnimation(nullptr, Animation::Player::LandHard,	L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToRun,	L"..\\Assets\\CharacterRough\\lp_land_to_run.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::Roll,		L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, false);
-	m_model->loadAnimation(nullptr, Animation::Player::DodgeBack,   L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, false);
+	m_model->loadAnimation(nullptr, Animation::Player::DodgeBack,   L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, true, 0.8f);
 	m_model->loadAnimation(nullptr, Animation::Player::Attack1,		L"..\\Assets\\CharacterRough\\lp_slash.fbx", false, true, 0.5f);
 	m_model->loadAnimation(nullptr, Animation::Player::Attack2,		L"..\\Assets\\CharacterRough\\lp_kick.fbx", false, false);
 
@@ -224,6 +224,8 @@ void Player::moveForward(float delta)
 	}
 
 
+
+
 	float speed_limit = P_WSPEED;
 	float accel = P_WACCEL;
 	//run transition
@@ -239,7 +241,18 @@ void Player::moveForward(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	m_angle = m_angle * (1.0f - delta * 6) + m_input.cam_angle * delta * 6;
+	float target_angle = m_input.cam_angle;
+	if (m_input.a)
+	{
+		target_angle -= 60.0f;
+	}
+	if (m_input.d)
+	{
+		target_angle += 60.0f;
+	}
+
+	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+
 
 	Vector3D move = (getDirectionVector() * m_momentum) * delta;
 	CameraManager::get()->moveCamera(move);
@@ -303,7 +316,17 @@ void Player::moveBackward(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	m_angle = m_angle * (1.0f - delta * 6) + m_input.cam_angle * delta * 6;
+	float target_angle = m_input.cam_angle;
+	if (m_input.a)
+	{
+		target_angle += 60.0f;
+	}
+	if (m_input.d)
+	{
+		target_angle -= 60.0f;
+	}
+
+	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 
 
 	Vector3D move = (getDirectionVector() * m_momentum) * delta;
@@ -500,7 +523,7 @@ void Player::dodgeBack(float delta)
 
 	CameraManager::get()->moveCamera(m_pos - temp);
 
-	if (m_model->getIfAnimFinished())
+	if (m_model->getIfAnimFinished() || (m_model->getIfAnimInterruptable() && (m_input.w || m_input.s )))
 	{
 		m_state = PlayerState::Idle;
 		m_model->setAnimation(Animation::Player::Idle);

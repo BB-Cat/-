@@ -64,11 +64,6 @@ void Scene01::update(float delta, const float& width, const float& height)
 
 void Scene01::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 //=====================================================
 //  Create the scene interface window
 //-----------------------------------------------------
@@ -76,12 +71,11 @@ void Scene01::imGuiRender()
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 
 	//create the test window
-	ImGui::Begin("Test Window");
+	ImGui::Begin("Shaders");
 	ImGui::Text("Press 1 key to");
 	ImGui::Text("display the mouse");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-
 
 	if (ImGui::Button("Toggle Sky")) m_show_sky = !m_show_sky;
 	if (ImGui::Button("Toggle Raster")) m_mesh->toggleRaster();
@@ -97,26 +91,6 @@ void Scene01::imGuiRender()
 
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-
-	ImGui::End();
-
-//=====================================================
-//  Create the additional interface windows
-//-----------------------------------------------------
-	//ImGui::SetNextWindowSize(ImVec2(200, 300));
-	//ImGui::SetNextWindowPos(ImVec2(0, 400));
-
-	////create the test window
-	//ImGui::Begin("Test");
-
-	//ImGui::End();
-
-	m_mesh->ImGui_LightProperties();
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene01::shadowRenderPass(float delta)

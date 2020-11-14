@@ -86,11 +86,6 @@ void Scene07::update(float delta, const float& width, const float& height)
 
 void Scene07::imGuiRender()
 {
-	//start the ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
@@ -188,18 +183,6 @@ void Scene07::imGuiRender()
 		if (ImGui::Button("Save File", ImVec2(200, 150))) m_tex->outputFile();
 		if (ImGui::Button("Return", ImVec2(200, 30))) m_tex.reset();
 	}
-	ImGui::End();
-
-	//=====================================================
-	//  Create the additional interface windows
-	//-----------------------------------------------------
-
-	//=====================================================
-
-	//assemble the data
-	ImGui::Render();
-	//render the draw data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene07::shadowRenderPass(float delta)
