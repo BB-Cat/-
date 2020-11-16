@@ -1,5 +1,5 @@
 #include "Scene02.h"
-#include "Bullet.h"
+//#include "Bullet.h"
 #include "Terrain.h"
 #include "CameraManager.h"
 #include "Lighting.h"
@@ -26,7 +26,6 @@ Scene02::Scene02(SceneManager* sm) : Scene(sm)
 	CameraManager::get()->setCamPos(Vector3D(0, 4, -10));
 	CameraManager::get()->setCamState(FREE);
 
-	m_is_first_frame = true;
 	AppWindow::toggleDeferredPipeline(false);
 }
 
@@ -37,10 +36,6 @@ Scene02::~Scene02()
 
 void Scene02::update(float delta, const float& width, const float& height)
 {
-	if (m_is_first_frame)
-	{
-		m_is_first_frame = false;
-	}
 
 	CameraManager::get()->update(delta, width, height);
 
@@ -59,7 +54,7 @@ void Scene02::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(250, 400));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Shadow Mapping");
@@ -70,6 +65,26 @@ void Scene02::imGuiRender()
 
 	VectorToArray v(&m_global_light_rotation);
 	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Shadow Mapping Popup");
+		ImGui::BeginPopupModal("Shadow Mapping Popup");
+
+		ImGui::TextWrapped("Simple Shadow mapping.  This is an old scene so there are some bugs.  I will remake this when I have time.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }
 
 void Scene02::shadowRenderPass(float delta)

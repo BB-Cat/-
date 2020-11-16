@@ -17,7 +17,7 @@ private:
     Vector3D m_light_pos;
 
 
-    static bool m_first_time;
+    bool m_first_time = true;
     ParticleSystem* m_particle_system;
 
     float m_tesselation;

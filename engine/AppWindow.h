@@ -65,6 +65,15 @@ private:
 
 private:
 	high_resolution_timer m_delta_time;
+	float m_fps_update_timer;
+	int   m_loop_count;
+	int   m_fps;
+
+private: 
+	//ImGui
+	bool m_show_popup = true;
+	TexturePtr m_image;
+
 	std::unique_ptr<SceneManager> m_scene_manager;
 
 private:

@@ -10,6 +10,8 @@ private:
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
 
+    bool m_first_time = true;
+
     float m_speed = 0.35f;
     float m_blend = 0;
 

@@ -3,7 +3,7 @@
 #include "GraphicsEngine.h"
 #include "Terrain.h"
 #include "AppWindow.h"
-#include "Bullet.h"
+//#include "Bullet.h"
 #include "Lighting.h"
 #include "MyAudio.h"
 #include "ActorManager.h"
@@ -62,7 +62,7 @@ void Player::update(float delta)
 	m_input.cam_angle = atan2(cam_dir.m_x, cam_dir.m_z) / 0.01745f;
 	if (m_angle > 360) m_angle -= 360;
 	if (abs(m_input.cam_angle + 360 - m_angle) < abs(m_input.cam_angle - m_angle)) m_input.cam_angle += 360;
-
+	if (abs(m_input.cam_angle - 360 - m_angle) < abs(m_input.cam_angle - m_angle)) m_input.cam_angle -= 360;
 
 	//更新関数の選択
 	switch (m_state)
@@ -390,24 +390,10 @@ void Player::jump(float delta)
 
 		if (m_pos.m_y < 0)
 		{
-			m_pos.m_y = 0;
-			m_jump = false;
-			m_jump_speed = 0;
 			m_model->triggerAnimationFinish(true);
-			
-			//switch to land
-			m_state = PlayerState::Land;
-			int landing_type = Animation::Player::LandToIdle;
-			if (m_jump_speed < -15.0f) Animation::Player::LandHard;
-			m_momentum = 0;
-			if (m_input.w)
-			{
-				m_momentum = P_WSPEED * 0.5f;
-				landing_type = Animation::Player::LandToRun;
-			}
+			m_pos.m_y = 0;
 
-
-			land(delta, landing_type);
+			endJump(delta);
 			return;
 		}
 	}
@@ -586,6 +572,25 @@ void Player::renderShadow(float delta)
 {
 	//アニメーションが複数回更新しないようにアニメーション生成速度を０に設定して描画する
 	m_model->renderMesh(delta, Vector3D(1, 1, 1), m_pos, Vector3D(0, m_angle * 0.01745f, 0), Shaders::SHADOWMAP, false, 0);
+}
+
+void Player::endJump(float delta)
+{
+	m_state = PlayerState::Land;
+	m_jump = false;
+	m_jump_speed = 0;
+
+	//switch to land
+	int landing_type = Animation::Player::LandToIdle;
+	if (m_jump_speed < -15.0f) Animation::Player::LandHard;
+	m_momentum = 0;
+	if (m_input.w)
+	{
+		m_momentum = P_WSPEED * 0.5f;
+		landing_type = Animation::Player::LandToRun;
+	}
+
+	land(delta, landing_type);
 }
 
 void Player::imGuiWindow()

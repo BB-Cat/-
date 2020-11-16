@@ -9,9 +9,9 @@
 #include "AppWindow.h"
 #include "AnmEnumeration.h"
 
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_dx11.h"
-#include "ImGui/imgui_impl_win32.h"
+//#include "ImGui/imgui.h"
+//#include "ImGui/imgui_impl_dx11.h"
+//#include "ImGui/imgui_impl_win32.h"
 
 
 //INSTANCING - TODO:
@@ -52,15 +52,15 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 
 	m_raster = true;
 
-	m_mat.m_diffuseColor = Vector3D(0.6f, 0.7f, 0.6f);	
-	m_mat.m_d = 1.0f;
-	m_mat.m_diffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
+	m_mat.m_diffuse_color = Vector3D(0.6f, 0.7f, 0.6f);	
+	m_mat.m_transparency = 1.0f;
+	m_mat.m_diffuse_color = Vector3D(0.7f, 0.7f, 0.7f);
 	m_mat.m_metallicAmount = 0.445f;
 	m_mat.m_shininess = 30;
-	m_mat.m_specularColor = Vector3D(0.5, 0.2, 0.5);
-	m_mat.m_rimColor = Vector3D(0.4f, 0.7f, 0.7f);
-	m_mat.m_rimColor.m_w = 1.0f;
-	m_mat.m_rimPower = 4.4f;
+	m_mat.m_specular_color = Vector3D(0.5, 0.2, 0.5);
+	m_mat.m_rim_color = Vector3D(0.4f, 0.7f, 0.7f);
+	m_mat.m_rim_color.m_w = 1.0f;
+	m_mat.m_rim_power = 4.4f;
 
 	//set the mesh to not animate by default
 	m_active_animation = -1;
@@ -328,17 +328,17 @@ void SkinnedMesh::ImGui_LightProperties()
 	//if (ImGui::Button("Toggle Sky")) m_show_sky = !m_show_sky;
 	//if (ImGui::Button("Toggle Raster")) m_mesh->toggleRaster();
 	//ImGui::DragInt("Shader Type", &m_shader_type, 0.1f, FLAT, TEXTURE_TESS_MODEL);
-	VectorToArray v(&m_mat.m_diffuseColor);
+	VectorToArray v(&m_mat.m_diffuse_color);
 	ImGui::DragFloat3("Diffuse Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Transparency", &m_mat.m_d, 0.01f, 0, 1.0);
+	ImGui::DragFloat("Transparency", &m_mat.m_transparency, 0.01f, 0, 1.0);
 
-	v = VectorToArray(&m_mat.m_specularColor);
+	v = VectorToArray(&m_mat.m_specular_color);
 	ImGui::DragFloat3("Specular Color", v.setArray(), 0.01f, 0, 1.0);
 	ImGui::DragFloat("Specular Power", &m_mat.m_shininess, 0.01f, 0, 100.0);
 
-	v = VectorToArray(&m_mat.m_rimColor);
+	v = VectorToArray(&m_mat.m_rim_color);
 	ImGui::DragFloat3("Rim Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Rim Power", &m_mat.m_rimPower, 0.01f, 0, 100.0);
+	ImGui::DragFloat("Rim Power", &m_mat.m_rim_power, 0.01f, 0, 100.0);
 
 	ImGui::DragFloat("Metallicness", &m_mat.m_metallicAmount, 0.01f, 0, 1.0);
 

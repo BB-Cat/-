@@ -34,43 +34,46 @@ void SceneSelect::update(float delta, const float& width, const float& height)
 
 void SceneSelect::imGuiRender()
 {
+	//if (ImGui::Button("Explanation")) m_popup_toggle = true;
+	//if (m_popup_toggle)
+	//{
+	//	ImGui::SetNextWindowSize(ImVec2(400, 400));
+	//	Vector2D size = AppWindow::getScreenSize();
+
+	//	ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+	//	ImTextureID t = m_tex1->getSRV();
+
+	//	ImGui::OpenPopup("Welcome");
+	//	ImGui::BeginPopupModal("Welcome");
+	//	ImGui::Image(t, ImVec2(300, 300));
+	//	if (ImGui::Button("Okay", ImVec2(100, 30))) m_popup_toggle = false;
+	//	ImGui::EndPopup();
+	//}
+
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(800, 700));
+	ImGui::SetNextWindowSize(ImVec2(1000, 700));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
-	ImGui::Begin("Test Window");
+	ImGui::Begin("Scene Selection");
 	ImGui::Text("Press 1 key to display the mouse");
-	if (ImGui::Button("Shaders", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE01, true);
-	if (ImGui::Button("ShadowMapping", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE02, true);
-	if (ImGui::Button("Terrain Generator", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE03, true);
-	if (ImGui::Button("Dynamic Terrain", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE04, true);
-	if (ImGui::Button("Tesselation", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE05, true);
-	if (ImGui::Button("Character Animation", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE06, true);
-	if (ImGui::Button("Noise", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE07, true);
-	if (ImGui::Button("Volumetric Clouds", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE08, true);
-	if (ImGui::Button("Weather Map", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE09, true);
-	if (ImGui::Button("Character Movement", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE10, true);
-	if (ImGui::Button("Stage Creator", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENE11, true);
-	if (ImGui::Button("Explanation")) m_popup_toggle = true;
-	//ImGui::BeginPopup("Hello");
-	if (m_popup_toggle)
-	{
-		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+	if (ImGui::Button("Shaders", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE01, true);
+	if (ImGui::Button("ShadowMapping", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE02, true);
+	if (ImGui::Button("Terrain Generator", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE03, true);
+	if (ImGui::Button("Dynamic Terrain", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE04, true);
+	if (ImGui::Button("Tesselation", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE05, true);
+	if (ImGui::Button("Character Animation", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE06, true);
+	if (ImGui::Button("Noise", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE07, true);
+	if (ImGui::Button("Volumetric Clouds", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE08, true);
+	if (ImGui::Button("Weather Map", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE09, true);
+	if (ImGui::Button("Character Movement", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE10, true);
+	if (ImGui::Button("Stage Creator", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE11, true);
+	if (ImGui::Button("Stage Example", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE12, true);
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
-		ImTextureID t = m_tex1->getSRV();
-		
-		ImGui::OpenPopup("Hello2");
-		ImGui::BeginPopupModal("Hello2");
-		ImGui::Text("Where does THIS appear");
-		ImGui::Image(t, ImVec2(300, 300));
-		if (ImGui::Button("Okay", ImVec2(100, 30))) m_popup_toggle = false;
-		ImGui::EndPopup();
-	}
+
+	ImGui::End();
 }
 
 void SceneSelect::shadowRenderPass(float delta)

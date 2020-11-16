@@ -3,6 +3,7 @@
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
 #include "DeviceContext.h"
+#include "Cube.h"
 
 PrimitiveGenerator* PrimitiveGenerator::instance = nullptr;
 
@@ -28,6 +29,39 @@ CubePtr PrimitiveGenerator::createCube(const wchar_t* diffuse_tex, const wchar_t
 	if (mat != nullptr) output->setMaterial(*mat);
 
 	return output;
+}
+
+bool PrimitiveGenerator::loadTexture(std::wstring file, std::string name)
+{
+	std::wstring full_file = L"..\\Assets\\Textures\\PrimitiveTextures\\" + file;
+	const wchar_t* tempwchar = full_file.c_str();
+	TexturePtr temp = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(tempwchar);
+	if (temp == nullptr) return false;
+
+	m_textures.push_back(temp);
+	m_tex_names.push_back(name);
+	m_tex_files.push_back(file);
+	return true;
+}
+
+TexturePtr PrimitiveGenerator::findTexture(std::string name)
+{
+	for (int i = 0; i < m_textures.size(); i++)
+	{
+		if (m_tex_names[i] == name)
+		{
+			return m_textures[i];
+		}
+	}
+
+	return nullptr;
+}
+
+void PrimitiveGenerator::clearTextures()
+{
+	m_textures.clear();
+	m_tex_files.clear();
+	m_tex_names.clear();
 }
 
 bool PrimitiveGenerator::initPrimitiveCube()

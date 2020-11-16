@@ -49,7 +49,17 @@ public:
 
 public:
 	//現在起動状態しているプレイヤーオブジェクトの位置情報を取得
+	int getActivePlayerState();
+	//現在起動状態しているプレイヤーオブジェクトの位置情報を取得
 	Vector3D getActivePlayerPosition();
+	//起動状態のプレイヤーオブジェクトの位置を設定する
+	void setActivePlayerPosition(Vector3D pos);
+	//起動状態のプレイヤーオブジェクトの上昇を止める
+	void stopActivePlayerAscent();
+	//起動状態のプレイヤーオブジェクトの着地をさせる
+	void stopActivePlayerJump();
+	//起動状態のプレイヤーオブジェクトの着地をさせる
+	void startActivePlayerFall();
 	//現在起動状態しているプレイヤーオブジェクトの回転情報を取得
 	Vector3D getActivePlayerDirection();
 
@@ -62,4 +72,5 @@ public:
 private:
 	std::vector<Faction> m_actor_lists;
 	const float m_active_player = 0;
+	PlayerPtr m_player = nullptr;
 };

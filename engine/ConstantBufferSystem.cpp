@@ -257,14 +257,14 @@ void ConstantBufferSystem::updateAndSetObjectLightPropertyBuffer(const Material_
 	cb_mesh_light_properties lp;
 
 	lp.m_shininess = mat.m_shininess;
-	lp.m_rimPower = mat.m_rimPower;
-	lp.m_transparency =  mat.m_d;
+	lp.m_rimPower = mat.m_rim_power;
+	lp.m_transparency =  mat.m_transparency;
 	lp.m_metallicAmount = mat.m_metallicAmount;
-	lp.m_ambientColor = mat.m_ambientColor;
-	lp.m_diffuseColor = mat.m_diffuseColor;
-	lp.m_specularColor = mat.m_specularColor;
+	lp.m_ambientColor = mat.m_ambient_color;
+	lp.m_diffuseColor = mat.m_diffuse_color;
+	lp.m_specularColor = mat.m_specular_color;
 	lp.m_emitColor = mat.m_emitColor;
-	lp.m_rimColor = mat.m_rimColor;
+	lp.m_rimColor = mat.m_rim_color;
 
 	//update the constant light properties buffer
 	m_light_properties_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &lp);

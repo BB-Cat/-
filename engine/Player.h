@@ -64,20 +64,24 @@ public:
 	void render(float delta) override;
 	void renderShadow(float delta) override;
 
+	//-----------------------------------------------------
+
+	void endJump(float delta);
+	
+
 public:
 	void imGuiWindow() override;
-	//void animationTree() override;
 
 private: 
 	//描画関連変数
 	SkinnedMeshPtr m_model;
 
 	//プレイヤー性質関連
-	float P_WACCEL = 5.0f;
-	float P_RACCEL = 10.0f;
-	float P_WSPEED = 5.0f;
-	float P_RSPEED = 15.0f;
-	float P_ROT_SPEED = 0.2f;
+	float P_WACCEL = 10.0f;
+	float P_RACCEL = 25.0f;
+	float P_WSPEED = 6.0f;
+	float P_RSPEED = 20.0f;
+	float P_ROT_SPEED = 0.4f;
 	float P_JUMP_SPEED = 30.0f;
 	float P_ROLL_DIST = 1.4f;
 	float P_GRAVITY = 0.5f;

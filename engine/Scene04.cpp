@@ -86,7 +86,7 @@ void Scene04::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(250, 400));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -112,6 +112,26 @@ void Scene04::imGuiRender()
 
 	if (ImGui::Button("Update Terrain Types", ImVec2(200, 30))) m_terrain->updateTerrainTypes();
 	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Dynamic Terrain Popup");
+		ImGui::BeginPopupModal("Dynamic Terrain Popup");
+
+		ImGui::TextWrapped("This scene uses LOD and tesselation to render large amounts of terrain. The empty spaces are NOT a bug, they are because of missing files.  I will fix them later.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }
 
 void Scene04::shadowRenderPass(float delta)

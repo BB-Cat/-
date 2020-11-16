@@ -1494,8 +1494,9 @@ void Terrain::loadChunkFromText(bool from_generated)
     std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_chunk.txt";
     std::ifstream fin;
 
-    if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
-    else fin = std::ifstream("..\\ChunkData\\" + file);
+    //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
+    //else fin = std::ifstream("..\\ChunkData\\" + file);
+    fin = std::ifstream("..\\ChunkData\\" + file);
 
     _ASSERT_EXPR(fin.is_open(), L"Terrain Data File not found!");
 
@@ -1521,8 +1522,9 @@ void Terrain::loadSeamRFromText(bool from_generated)
     std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamR.txt";
     std::ifstream fin;
 
-    if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
-    else fin = std::ifstream("..\\ChunkData\\" + file);
+    //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
+    //else fin = std::ifstream("..\\ChunkData\\" + file);
+    fin = std::ifstream("..\\ChunkData\\" + file);
     
     //if there is no seam for this chunk, simply return
     if (!fin) return;
@@ -1549,8 +1551,9 @@ void Terrain::loadSeamFFromText(bool from_generated)
     std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamF.txt";
     std::ifstream fin;
 
-    if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
-    else fin = std::ifstream("..\\ChunkData\\" + file);
+    //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
+    //else fin = std::ifstream("..\\ChunkData\\" + file);
+    fin = std::ifstream("..\\ChunkData\\" + file);
 
     //if there is no seam for this chunk, simply return
     if (!fin) return;

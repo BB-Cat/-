@@ -222,19 +222,19 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 		}
 		else if (0 == wcscmp(command, L"Ka"))
 		{
-			fin >> m_mats[num_mats].m_ambientColor.m_x >> m_mats[num_mats].m_ambientColor.m_y >> m_mats[num_mats].m_ambientColor.m_z;
+			fin >> m_mats[num_mats].m_ambient_color.m_x >> m_mats[num_mats].m_ambient_color.m_y >> m_mats[num_mats].m_ambient_color.m_z;
 		}
 		else if (0 == wcscmp(command, L"Kd"))
 		{
-			fin >> m_mats[num_mats].m_diffuseColor.m_x >> m_mats[num_mats].m_diffuseColor.m_y >> m_mats[num_mats].m_diffuseColor.m_z;
+			fin >> m_mats[num_mats].m_diffuse_color.m_x >> m_mats[num_mats].m_diffuse_color.m_y >> m_mats[num_mats].m_diffuse_color.m_z;
 		}
 		else if (0 == wcscmp(command, L"Ks"))
 		{
-			fin >> m_mats[num_mats].m_specularColor.m_x >> m_mats[num_mats].m_specularColor.m_y >> m_mats[num_mats].m_specularColor.m_z;
+			fin >> m_mats[num_mats].m_specular_color.m_x >> m_mats[num_mats].m_specular_color.m_y >> m_mats[num_mats].m_specular_color.m_z;
 		}
 		else if (0 == wcscmp(command, L"d"))
 		{
-			fin >> m_mats[num_mats].m_d;
+			fin >> m_mats[num_mats].m_transparency;
 		}
 		//else if (0 == wcscmp(command, L"Tf"))
 		//{

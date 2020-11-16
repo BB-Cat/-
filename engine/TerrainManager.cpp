@@ -210,14 +210,14 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
 
     //set the material characteristics
     Material_Obj mat;
-    mat.m_diffuseColor = Vector3D(0.55f, 0.75f, 0.15f);
-    mat.m_d = 1.0f;
+    mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
+    mat.m_transparency = 1.0f;
     mat.m_metallicAmount = 0.445f;
     mat.m_shininess = 30;
-    mat.m_specularColor = Vector3D(0.2f, 0.4f, 0.4f);
-    mat.m_rimColor = Vector3D(0.7f, 0.4f, 0.4f);
-    mat.m_rimColor.m_w = 1.0f;
-    mat.m_rimPower = 2.0;
+    mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
+    mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
+    mat.m_rim_color.m_w = 1.0f;
+    mat.m_rim_power = 2.0;
     GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(mat);
 
     //set the height buffer for domain shader enabled terrain
@@ -253,7 +253,7 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
     // HD Chunks
     //===========================================================
     GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TERRAIN_HD_TOON);
-    if(shader == Shaders::TESSDEMO)    GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TESSDEMO);
+    if(shader == Shaders::TESSDEMO) GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TESSDEMO);
     GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_high);
     for (int i = 0; i < high.size(); i++) high[i]->render(0, 0);
 
@@ -349,6 +349,82 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_seam_low);
         for (int i = 0; i < forward.low.size(); i++) forward.low[i]->render(0, 1, SeamLOD::LOW);
         for (int i = 0; i < right.low.size(); i++) right.low[i]->render(0, 2, SeamLOD::LOW);
+    }
+}
+
+void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe, int is_HD)
+{
+    //set blend mode to alpha
+    BlendMode::get()->SetBlend(BlendType::ALPHA);
+
+    //set the material characteristics
+    Material_Obj mat;
+    mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
+    mat.m_transparency = 1.0f;
+    mat.m_metallicAmount = 0.445f;
+    mat.m_shininess = 30;
+    mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
+    mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
+    mat.m_rim_color.m_w = 1.0f;
+    mat.m_rim_power = 2.0;
+    GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(mat);
+
+    //set the height buffer for domain shader enabled terrain
+    GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetDSHeightBuffer(bumpiness);
+
+    //Set the rasterizer state
+    if (is_wireframe)
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs_wire.Get());
+    else
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs_fill.Get());
+
+    //set all textures for the terrain
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture3SplatTex(
+        m_tex1, m_displace1_1, m_norm1, m_rough1, m_ambient_occ1,
+        m_tex2, m_displace2_1, m_norm2, m_rough2, m_ambient_occ2,
+        m_tex3, m_displace3_1, m_norm3, m_rough3, m_ambient_occ3,
+        m_tex4, m_displace4_1, m_norm4, m_rough4, m_ambient_occ4);
+
+    Matrix4x4 temp;
+    temp.setIdentity();
+    Matrix4x4	bone_transforms[MAXBONES];
+    GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetTransformationBuffer(temp, bone_transforms);
+
+    GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TESSDEMO);
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_high);
+
+    if (!is_HD)
+    {
+        GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TERRAIN_LD_TOON);
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_low);
+    }
+
+    int lod = 0;
+    if (!is_HD) lod = 2;
+
+    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    {
+        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        {
+            m_map[i][j].m_chunk->render(lod, 0);
+        }
+    }
+
+    GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_seam_high);
+    int seamlod = SeamLOD::HIGH;
+    if (!is_HD)
+    {
+        GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_seam_low);
+        seamlod = SeamLOD::LOW;
+    }
+
+    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    {
+        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        {
+            m_map[i][j].m_chunk->render(0, 1, seamlod);
+            m_map[i][j].m_chunk->render(0, 2, seamlod);
+        }
     }
 }
 

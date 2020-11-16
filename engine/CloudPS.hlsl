@@ -40,16 +40,6 @@ cbuffer constant: register(b6)
 }
 
 static const int MAX_STEPS = 100;
-//static const float step_size = 1.0;
-//
-//static const float m_cloud_density = 0.06;
-//static const float3 m_cloud_position = float3(0, 0, 0);
-//static const float3 m_cloud_size = float3(50, 30, 50);
-//static const float m_vertical_fade = 0.4; //vertical fade
-//static const float m_horizontal_fade = 0.8; //width fade
-//
-//static const float m_fade_threshhold = 0.15;
-
 
 //the fade mod returns a value from 1.0 (no fade) to 0 (fully faded) based on distance from the origin of the cloud
 float fadeMod(float3 pos, float3 obj_pos, float3 obj_size, float3 fade_dist)

@@ -66,6 +66,9 @@ public:
 	//render the terrain chunks stored in m_map after sorting them into temporary vectors
 	void render(int shader, float bumpiness, bool is_wireframe = false, int is_HD = 0);
 
+	//render terrain only in on LOD
+	void renderInLOD(int shader, float bumpiness, bool is_wireframe = false, int is_HD = 0);
+
 public:
 	//output text files for every terrain chunk in the terrain manager
 	void outputFiles();

@@ -24,7 +24,7 @@ void Shader::compile(const wchar_t* vs_file, const wchar_t* ps_file, void* shade
 	if (m_vs != nullptr && m_ps != nullptr) m_initiated = true;
 }
 
-bool Shader::recompile()
+bool Shader::recompile(ShaderPtr error_shader)
 {
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
@@ -44,15 +44,20 @@ bool Shader::recompile()
 		m_initiated = true;
 		return true;
 	}
-	else m_initiated = false;
+	else
+	{
+		m_initiated = false;
+		m_vs = error_shader->m_vs;
+		m_ps = error_shader->m_ps;
+	}
 
 	return false;
 }
 
-bool Shader::ifErrorRecompile()
+bool Shader::ifErrorRecompile(ShaderPtr error_shader)
 {
 	if (m_initiated) return true;
-	else return recompile();
+	else return recompile(error_shader);
 }
 
 void Shader::ifErrorReplaceShaders(VertexShaderPtr err_vs, PixelShaderPtr err_ps)

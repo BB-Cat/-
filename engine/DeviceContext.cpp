@@ -220,9 +220,9 @@ void DeviceContext::setDiffuseNormalTexPS(const TexturePtr& diffusetex, const Te
 
 void DeviceContext::setDiffuseNormalGlossTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, const TexturePtr& glossmap)
 {
-	m_device_context->PSSetShaderResources(0, 1, &diffusetex->m_shader_res_view);
-	m_device_context->PSSetShaderResources(1, 1, &normalmap->m_shader_res_view);
-	m_device_context->PSSetShaderResources(2, 1, &glossmap->m_shader_res_view);
+	if(diffusetex != nullptr) m_device_context->PSSetShaderResources(0, 1, &diffusetex->m_shader_res_view);
+	if(normalmap != nullptr) m_device_context->PSSetShaderResources(1, 1, &normalmap->m_shader_res_view);
+	if(glossmap != nullptr) m_device_context->PSSetShaderResources(2, 1, &glossmap->m_shader_res_view);
 }
 
 void DeviceContext::setDiffuseNormalGlossEnvironTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap,

@@ -8,7 +8,7 @@ class Scene02 : public Scene
 {
 private:
 	Terrain* m_terrain;
-    bool m_is_first_frame;
+    bool m_first_time = true;
 
     SkinnedMeshPtr m_mesh1;
     SkinnedMeshPtr m_mesh2;

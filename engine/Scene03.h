@@ -16,6 +16,7 @@ private:
     std::shared_ptr<TerrainManager> m_terrain;
 
     int m_toggle_HD = 2;
+    bool m_first_time = true;
     bool m_rast = false;
 
 public:

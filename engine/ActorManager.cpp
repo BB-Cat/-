@@ -1,6 +1,7 @@
 #include "ActorManager.h"
 #include "GraphicsEngine.h"
-#include "Bullet.h"
+#include "Player.h"
+//#include "Bullet.h"
 #include "MyAudio.h"
 
 ActorManager* ActorManager::instance = nullptr;
@@ -11,8 +12,8 @@ ActorManager::ActorManager()
 	m_actor_lists.push_back(Faction(L"Enemy"));
 	m_actor_lists.push_back(Faction(L"Ambient"));
 
-	PlayerPtr p = std::shared_ptr<Player>(new Player(true));
-	getFaction(L"Player")->m_actors.push_back(p);
+	m_player = std::shared_ptr<Player>(new Player(true));
+	getFaction(L"Player")->m_actors.push_back(m_player);
 }
 
 ActorManager* ActorManager::get()
@@ -105,15 +106,58 @@ void ActorManager::renderFactionShadows(std::wstring name, float delta)
 	}
 }
 
+int ActorManager::getActivePlayerState()
+{
+	if (m_player != nullptr)
+	{
+		return m_player->m_state;
+	}
+	return -1;
+}
+
 Vector3D ActorManager::getActivePlayerPosition()
 {
-	if (m_actor_lists[FactionID::PLAYER].m_actors.size() > m_active_player)
+	if (m_player != nullptr)
 	{
-		return m_actor_lists[FactionID::PLAYER].m_actors[m_active_player]->getPosition();
+		return m_player->getPosition();
 	}
 
 	//ƒvƒŒƒCƒ„[‚ª‘¶Ý‚µ‚È‚¢ê‡‰Šú‰»Vector3D‚ð•Ô‚·
 	return Vector3D();
+}
+
+void ActorManager::setActivePlayerPosition(Vector3D pos)
+{
+	if (m_player != nullptr)
+	{
+		m_player->m_pos = pos;
+	}
+}
+
+void ActorManager::stopActivePlayerAscent()
+{
+	if (m_player != nullptr)
+	{
+		m_player->m_jump_speed = 0;
+	}
+}
+
+void ActorManager::stopActivePlayerJump()
+{
+	if (m_player != nullptr)
+	{
+		m_player->endJump(0);
+	}
+}
+
+void ActorManager::startActivePlayerFall()
+{
+	if (m_player != nullptr)
+	{
+		m_player->m_state = PlayerState::Jump;
+		m_player->m_jump = true;
+		m_player->m_jump_speed = 0;
+	}
 }
 
 Vector3D ActorManager::getActivePlayerDirection()

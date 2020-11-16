@@ -59,6 +59,8 @@ private:
 	//PixelShaderPtr m_ErrorPS;
 	ShaderPtr m_error;
 
+	ShaderPtr m_temp;
+
 	//VertexShaderPtr m_FlatVS;
 	//PixelShaderPtr m_FlatPS;
 	ShaderPtr m_flat;
@@ -188,6 +190,9 @@ private:
 	//VertexShaderPtr m_SimpleStageVS;
 	//PixelShaderPtr m_SimpleStagePS;
 	ShaderPtr m_simple_stage;
+
+
+	ShaderPtr m_triplanar_texture;
 
 	//FINAL PASS VS PS SHADERS
 	//VertexShaderPtr m_FinalBasicVS;

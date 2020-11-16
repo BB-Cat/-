@@ -17,10 +17,11 @@ Scene05::Scene05(SceneManager* sm) : Scene(sm)
 	CameraManager::get()->setCamState(FREE);
 
 	Vector2D spawn(0, 0);
-	CameraManager::get()->setCamPos(Vector3D(spawn.m_x * 33 + 16, 20, spawn.m_y * 33 + 16) * PRELOADED_SCALE);
+	CameraManager::get()->setCamPos(Vector3D(spawn.m_x * 33 + 16, 25, -5) * PRELOADED_SCALE);
+	CameraManager::get()->setCamRot(Vector2D(0, 0));
 
 	std::shared_ptr<TerrainManager> t(new TerrainManager("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp",
-		Vector2D(3, 3), Vector2D(0,0)));
+		Vector2D(3, 3), Vector2D(0, 0)));
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	//m_terrain = std::shared_ptr<Terrain>(new Terrain(Vector2D(3, 3), false));
@@ -32,6 +33,11 @@ Scene05::Scene05(SceneManager* sm) : Scene(sm)
 	m_global_light_strength = 0.85f;
 	m_light_color = Vector3D(1.0, 1.0, 1.0);
 	m_ambient_light_color = Vector3D(1.0, 1.0, 1.0);
+
+	m_toggle_HD = 0;
+	m_max_tess = 3;
+	m_bump_height = 0.5f;
+	m_max_tess_range = 1.0f;
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 }
@@ -60,7 +66,7 @@ void Scene05::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(400, 500));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -69,6 +75,12 @@ void Scene05::imGuiRender()
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
+	if (ImGui::Button("Toggle Tesselation"))
+	{
+		if (m_toggle_HD) m_toggle_HD = 0;
+		else m_toggle_HD = 1;
+	}
+
 	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 	ImGui::DragFloat("Bump Height", &m_bump_height, 0.001f, 0.0f, 0.5f);
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
@@ -91,6 +103,23 @@ void Scene05::imGuiRender()
 
 	//if (ImGui::Button("Update Terrain Types", ImVec2(200, 30))) m_terrain->updateTerrainTypes();
 	//if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Tesselation Popup");
+		ImGui::BeginPopupModal("Tesselation Popup");
+
+		ImGui::TextWrapped("This scene shows my tesselation system.  It is used to take a low polygon model able to use an HD height map.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
 
 	ImGui::End();
 
@@ -99,6 +128,19 @@ void Scene05::imGuiRender()
 	t.m_max_tess_range = m_max_tess_range;
 	t.m_min_tess = m_min_tess;
 	t.m_min_tess_range = m_min_tess_range;
+
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetVSTesselationBuffer(t);
+
+	////=====================================================
+	////  Create the additional interface windows
+	////-----------------------------------------------------
+
+	////=====================================================
+
+	////assemble the data
+	//ImGui::Render();
+	////render the draw data
+	//ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Scene05::shadowRenderPass(float delta)
@@ -109,7 +151,9 @@ void Scene05::mainRenderPass(float delta)
 {
 	m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
 
-	m_terrain->render(Shaders::TESSDEMO, m_bump_height, m_rast, m_toggle_HD);
+	//m_terrain->render(Shaders::TESSDEMO, m_bump_height, m_rast, m_toggle_HD);
+	m_terrain->renderInLOD(Shaders::TESSDEMO, m_bump_height, m_rast, m_toggle_HD);
+
 	//if (m_toggle_norm) m_terrain->render(Shaders::TERRAIN_TEST, m_bump_height, m_rast, m_toggle_HD);
 	//else m_terrain->render(Shaders::TEXTURE_TESS_3SPLAT, m_bump_height, m_rast, m_toggle_HD);
 }

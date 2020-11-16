@@ -16,6 +16,7 @@ Scene09::Scene09(SceneManager* sm) : Scene(sm)
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
 	CameraManager::get()->setCamPos(Vector3D(0, -20, -60));
+	CameraManager::get()->setCamRot(Vector2D(-0.6, -0.2));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -57,7 +58,7 @@ Scene09::Scene09(SceneManager* sm) : Scene(sm)
 	m_cloud_props.m_speed = 0.7f;
 	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
 
-	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("voronoiPerlin128x.txt"));
+	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 }
@@ -69,21 +70,6 @@ Scene09::~Scene09()
 
 void Scene09::update(float delta, const float& width, const float& height)
 {
-	//CameraManager::get()->setSpeed(m_speed);
-	//CameraManager::get()->update(delta, width, height);
-
-	//m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
-	//m_scene_light_dir.normalize();
-	//Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
-
-
-	//GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSNoiseBuffer(m_noise);
-	//m_cloud_props.m_time += delta;
-	//GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSCloudBuffer(m_cloud_props);
-
-	//m_timer++;
-
-
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height);
 
@@ -105,7 +91,7 @@ void Scene09::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(400, 500));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -146,6 +132,28 @@ void Scene09::imGuiRender()
 	}
 
 	ImGui::Text("Time: %.3f", m_cloud_props.m_time);
+
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Weatherbox Popup");
+		ImGui::BeginPopupModal("Weatherbox Popup");
+
+		ImGui::TextWrapped("This scene uses 3D textures to create a large amount of clouds in the sky.  It is an early test.  I will add correct light calculations soon.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+
+	ImGui::End();
 }
 
 void Scene09::shadowRenderPass(float delta)
@@ -164,6 +172,6 @@ void Scene09::mainRenderPass(float delta)
 	m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);
 	
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_model->renderMesh(delta, Vector3D(10, 10, 1), Vector3D(), Vector3D(), Shaders::WEATHER_MAP);
+	//m_model->renderMesh(delta, Vector3D(10, 10, 1), Vector3D(), Vector3D(), Shaders::WEATHER_MAP);
 
 }

@@ -40,6 +40,8 @@ public:
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
 
+	bool compileVSIncludeFile(const wchar_t* filename, void** include_byte_code, size_t* include_byte_code_size);
+
 private:
 	DeviceContextPtr m_imm_device_context; //immediate device context
 	GBufferPtr m_gbuffer; //deferred rendering class for shadow mapping and other deferred rendering features

@@ -20,6 +20,8 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 
+#include <chrono>
+
 
 struct vertex
 {
@@ -53,11 +55,36 @@ void AppWindow::resetInput()
 void AppWindow::mainMenu()
 {
 	ImGui::BeginMainMenuBar();
-	if (ImGui::BeginMenu("Menu"))
+	ImGui::Text(("FPS: " + std::to_string(m_fps)).c_str());
+
+	if (ImGui::Button("Explanation")) m_show_popup = true;
+	if (m_show_popup)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Welcome");
+		ImGui::BeginPopupModal("Welcome");
+		ImGui::Text("1: Toggle Mouse Display");
+		ImGui::Text("WASD: Camera Movement / Player Movement");
+		ImGui::Text("Shift: Player Sprint");
+		ImGui::Text("Space: Player Jump");
+
+		ImGui::TextWrapped("This program uses many text files. Please do not move or replace them or the program will crash.");
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_show_popup = false;
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginMenu("Shaders"))
 	{
 		GraphicsEngine::get()->getShaderManager()->imGuiMenuShaderCompile();
 		ImGui::EndMenu();
 	}
+
 	ImGui::EndMainMenuBar();
 }
 
@@ -96,10 +123,28 @@ void AppWindow::onCreate()
 
 	//initalize the ImGui interface
 	GraphicsEngine::get()->getRenderSystem()->initializeImGui(m_hwnd);
+
+	//initialize variables for timing FPS
+	m_fps_update_timer = 0;
+	m_loop_count = 0;
+	m_fps = 0;
 }
 
 void AppWindow::onUpdate()
 {
+	m_fps_update_timer += m_delta_time.time_stamp();
+	m_loop_count++;
+	if (m_fps_update_timer > 0.5f)
+	{
+		//calculate the average fps every 0.5 seconds
+		//m_fps = (m_fps_update_timer / m_loop_count) / 1.0f;
+		m_fps = (1.0f / (m_fps_update_timer / m_loop_count));
+		m_fps_update_timer = 0;
+		m_loop_count = 0;
+	}
+	m_delta_time.reset();
+
+
 	Window::onUpdate();
 	InputSystem::get()->update();
 
@@ -137,7 +182,7 @@ void AppWindow::onUpdate()
 	//render the menu bar
 	mainMenu();
 	
-	ImGui::End();
+	//ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -153,10 +198,10 @@ void AppWindow::onUpdate()
 	//	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(3, TEST, Vector2D(1.0f, 0.0f), Vector2D(0.5f, 0.5f), Vector2D(0, 0));
 	//}
 
-	static int showShadowMap = 2;
-	if (AppWindow::getKeyTrigger('V')) showShadowMap = (showShadowMap + 1) * (showShadowMap + 1 < 6) + 2 * (showShadowMap + 1 > 6);
+	//static int showShadowMap = 2;
+	//if (AppWindow::getKeyTrigger('V')) showShadowMap = (showShadowMap + 1) * (showShadowMap + 1 < 6) + 2 * (showShadowMap + 1 > 6);
 
-	if(showShadowMap > 2) GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(showShadowMap, TEST, Vector2D(0.0f, 0.0f), Vector2D(1.0f, 1.0f), Vector2D(0, 0));
+	//if(showShadowMap > 2) GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(showShadowMap, TEST, Vector2D(0.0f, 0.0f), Vector2D(1.0f, 1.0f), Vector2D(0, 0));
 
 	if (AppWindow::getKeyTrigger('1'))
 	{

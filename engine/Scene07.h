@@ -12,6 +12,7 @@ private:
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
     Texture3DPtr m_tex;
+    bool m_first_time = true;
 
     float m_speed = 0.35f;
 
@@ -25,6 +26,9 @@ private:
     int m_int_vor_frequency;
     int m_int_per_octave;
     int m_int_per_frequency;
+
+    float m_move = 0;
+    int m_is_move = 0;
 
     cb_noise m_noise;
     float m_seed = 1.0f;

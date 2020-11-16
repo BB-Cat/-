@@ -1,6 +1,10 @@
 #pragma once
 #include <memory>
 
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_dx11.h"
+#include "ImGui/imgui_impl_win32.h"
+
 class SwapChain;
 class DeviceContext;
 class GBuffer;
@@ -110,6 +114,7 @@ enum PS
 	WEATHER_MAP_PS,
 	WEATHER_ATMOSPHERE_PS,
 	SIMPLE_STAGE_PS,
+	TRIPLANAR_TEXTURE_PS,
 };
 //vertex shader enumeration for setting shaders in the pipeline
 enum VS
@@ -149,6 +154,7 @@ enum VS
 	WEATHER_MAP_VS,
 	WEATHER_ATMOSPHERE_VS,
 	SIMPLE_STAGE_VS,
+	TRIPLANAR_TEXTURE_VS,
 };
 
 enum GS
@@ -220,6 +226,7 @@ enum Shaders
 	WEATHER_MAP,
 	WEATHER_ATMOSPHERE,
 	SIMPLE_STAGE,
+	TRIPLANAR_TEXTURE,
 	SHADERMAX
 };
 

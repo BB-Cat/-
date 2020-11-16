@@ -15,6 +15,7 @@ private:
     SkinnedMeshPtr m_model;
     SkinnedMeshPtr m_floor;
     std::shared_ptr<Cube> m_cube;
+    bool m_first_time = true;
 
     float m_speed = 0.35f;
     float m_blend = 0;

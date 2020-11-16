@@ -12,14 +12,14 @@ public:
 	std::wstring m_name;
 
 	float		m_shininess; //specular power
-	float		m_rimPower; //rimlight power
-	float		m_d;	//transparency 
+	float		m_rim_power; //rimlight power
+	float		m_transparency;	//transparency 
 	float		m_metallicAmount; //transmission filter
-	Vector4D	m_ambientColor; //ambient color
-	Vector4D	m_diffuseColor; //diffuse color
-	Vector4D	m_specularColor; //specular color
+	Vector4D	m_ambient_color; //ambient color
+	Vector4D	m_diffuse_color; //diffuse color
+	Vector4D	m_specular_color; //specular color
 	Vector4D	m_emitColor; //emissive color
-	Vector4D    m_rimColor; //rimlight color
+	Vector4D    m_rim_color; //rimlight color
 
 	float illum; //illumination model
 

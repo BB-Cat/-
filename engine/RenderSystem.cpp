@@ -237,8 +237,9 @@ void RenderSystem::createGBuffer(UINT width, UINT height)
 
 bool RenderSystem::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
+
 	ID3DBlob* error_blob = nullptr;
-	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "vs_5_0", 0, 0, &m_blob, &error_blob)))
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "vs_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		if (error_blob) error_blob->Release();
 		return false;
@@ -252,7 +253,7 @@ bool RenderSystem::compileVertexShader(const wchar_t* file_name, const char* ent
 bool RenderSystem::compileGeometryShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
 	ID3DBlob* error_blob = nullptr;
-	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "gs_5_0", 0, 0, &m_blob, &error_blob)))
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "gs_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		if (error_blob) error_blob->Release();
 		return false;
@@ -266,7 +267,7 @@ bool RenderSystem::compileGeometryShader(const wchar_t* file_name, const char* e
 bool RenderSystem::compileHullShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
 	ID3DBlob* error_blob = nullptr;
-	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "hs_5_0", 0, 0, &m_blob, &error_blob)))
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "hs_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		if (error_blob) error_blob->Release();
 		return false;
@@ -280,7 +281,7 @@ bool RenderSystem::compileHullShader(const wchar_t* file_name, const char* entry
 bool RenderSystem::compileDomainShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
 	ID3DBlob* error_blob = nullptr;
-	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "ds_5_0", 0, 0, &m_blob, &error_blob)))
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "ds_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		if (error_blob) error_blob->Release();
 		return false;
@@ -294,7 +295,7 @@ bool RenderSystem::compileDomainShader(const wchar_t* file_name, const char* ent
 bool RenderSystem::compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {
 	ID3DBlob* error_blob = nullptr;
-	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, nullptr, entry_point_name, "ps_5_0", 0, 0, &m_blob, &error_blob)))
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "ps_5_0", 0, 0, &m_blob, &error_blob)))
 	{
 		//if (error_blob)
 		//	MessageBoxA(0, (char*)error_blob->GetBufferPointer(), NULL, MB_OK);
@@ -309,6 +310,13 @@ bool RenderSystem::compilePixelShader(const wchar_t* file_name, const char* entr
 void RenderSystem::releaseCompiledShader()
 {
 	if (m_blob) m_blob->Release();
+}
+
+bool RenderSystem::compileVSIncludeFile(const wchar_t* filename, void** include_byte_code, size_t* include_byte_code_size)
+{
+
+
+	return false;
 }
 
 

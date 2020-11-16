@@ -11,6 +11,7 @@ private:
 
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
+    bool m_first_time = true;
 
     Texture3DPtr m_tex3D;
     bool m_show_tex3D = false;

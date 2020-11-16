@@ -36,6 +36,7 @@ public:
         SCENE09,  //weather map clouds
         SCENE10,  //character movement
         SCENE11,  //stage creation
+        SCENE12,  //game style scene select
     };
 
     void changeScene(const SCENE, bool clear_current_scene = false);

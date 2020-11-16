@@ -15,7 +15,8 @@ Scene07::Scene07(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 0, -5));
+	CameraManager::get()->setCamPos(Vector3D(0, 0.0f, -5));
+	CameraManager::get()->setCamRot(Vector2D(0,0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -90,26 +91,34 @@ void Scene07::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(400, 500));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
 	ImGui::Text("Press 1 key to");
 	ImGui::Text("display the mouse");
 
+
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
-	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
-	//VectorToArray v(&m_global_light_rotation);
-	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	if (ImGui::Button("Move Forward", ImVec2(100, 20)))
+	{
+		m_is_move = 1;
+	}
+	if (ImGui::Button("Move Backward", ImVec2(100, 20)))
+	{
+		m_is_move = -1;
+	}
 
-	//v = VectorToArray(&m_light_color);
-	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	if (ImGui::Button("Stop", ImVec2(100, 20)))
+	{
+		m_is_move = 0;
+	}
 
-	//v = VectorToArray(&m_ambient_light_color);
-	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+	if (m_is_move)
+	{
+		m_move += 0.01f * m_is_move;
+	}
 
 	if (m_tex == nullptr)
 	{
@@ -183,6 +192,26 @@ void Scene07::imGuiRender()
 		if (ImGui::Button("Save File", ImVec2(200, 150))) m_tex->outputFile();
 		if (ImGui::Button("Return", ImVec2(200, 30))) m_tex.reset();
 	}
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Noise Popup");
+		ImGui::BeginPopupModal("Noise Popup");
+
+		ImGui::TextWrapped("This scene generates noise on the GPU. You can save it to a 3D texture file.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }
 
 void Scene07::shadowRenderPass(float delta)
@@ -191,21 +220,17 @@ void Scene07::shadowRenderPass(float delta)
 
 void Scene07::mainRenderPass(float delta)
 {
-	static float move = 0.0f;
-
-	if (AppWindow::getKeyState('I')) move += 0.01f;
-	if (AppWindow::getKeyState('K')) move -= 0.01f;
 
 	if (m_tex == nullptr)
 	{
 		m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
-		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, move), Vector3D(0, 0, 0), Shaders::DYNAMIC_NOISE);
+		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, m_move), Vector3D(0, 0, 0), Shaders::DYNAMIC_NOISE);
 	}
 	else
 	{
 
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex->getShaderResourceView());
-		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, move), Vector3D(0, 0, 0), Shaders::_3DTEX);
+		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, m_move), Vector3D(0, 0, 0), Shaders::_3DTEX);
 	}
 
 }

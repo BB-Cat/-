@@ -2,7 +2,7 @@
 #include "GraphicsEngine.h"
 #include "Terrain.h"
 #include "ActorManager.h"
-#include "Bullet.h"
+//#include "Bullet.h"
 #include "MyAudio.h"
 
 Enemy::Enemy(Vector3D pos, float scale, Vector3D rot)

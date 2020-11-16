@@ -9,6 +9,13 @@
 #include "AnmEnumeration.h"
 #include "Texture3D.h"
 #include "DeviceContext.h"
+#include "Texture.h"
+#include "Cube.h"
+#include "WorldObjectManager.h"
+
+#include <iostream>
+#include <fstream>  
+
 
 
 //bool Scene03::m_first_time = true;
@@ -56,12 +63,6 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 	m_ambient_light_color = Vector3D(1.0, 1.0, 0.8);
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
-
-	//temp
-	//m_cube = std::shared_ptr<Cube>(new Cube());
-
-	//m_cubes.push_back(PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, 
-	//	Vector3D(3, 1, 1), Vector3D(0, 0, 0), Vector3D(0, 0, 0), nullptr));
 }
 
 Scene11::~Scene11()
@@ -90,20 +91,18 @@ void Scene11::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(400, 200));
+	ImGui::SetNextWindowSize(ImVec2(400, 230));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
-	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	ImGui::Begin("Scene Settings");
+	ImGui::Text("Press 1 key to display the mouse");
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
+	if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
 	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	ImGui::DragFloat2("Light Direction", v.setArray(), 0.02f, -6.28f, 6.28f);
 
 	v = VectorToArray(&m_light_color);
 	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
@@ -112,41 +111,28 @@ void Scene11::imGuiRender()
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
 
-	if (ImGui::Button("Spawn Cube"))
+	//GameSceneManager::get()->imGuiRender();
+	WorldObjectManager::get()->imGuiRender();
+
+
+	if (m_first_time)
 	{
-		m_show_window = true;
-		m_spawn_pos = Vector3D(0, 0, 0);
-		m_spawn_scale = Vector3D(1, 1, 1);
-		m_spawn_rot = Vector3D(0, 0, 0);
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
 
-		m_cubes.push_back(PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, m_spawn_scale, m_spawn_pos, m_spawn_rot, nullptr));
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Level Creator Popup");
+		ImGui::BeginPopupModal("Level Creator Popup");
+		ImGui::TextWrapped("This scene is for creating scenes out of primitives. You can change shaders, size, material and other things.  You can save a scene and load it later too.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
 	}
-	v = VectorToArray(&m_spawn_pos);
-	ImGui::DragFloat3("Position", v.setArray(), 0.05f, -100.0f, 100.0f);
-	v = VectorToArray(&m_spawn_scale);
-	ImGui::DragFloat3("Scale", v.setArray(), 0.05f, -100.0f, 100.0f);
-	v = VectorToArray(&m_spawn_rot);
-	ImGui::DragFloat3("Rot", v.setArray(), 0.01f, -100.0f, 100.0f);
 
-	if (m_cubes.size())
-	{
-		m_cubes[m_cubes.size() - 1]->setPosition(m_spawn_pos);
-		m_cubes[m_cubes.size() - 1]->setScale(m_spawn_scale);
-		m_cubes[m_cubes.size() - 1]->setRotation(m_spawn_rot);
-	}
-	//TOMORROW IMPLEMENT THIS
-	//if (m_show_window)
-	//{
-	//	ImGui::SetNextWindowSize(ImVec2(100, 300));
-	//	Vector2D size = AppWindow::getScreenSize();
-
-	//	ImGui::SetNextWindowPos(ImVec2(30, 100), 0, ImVec2(0.5f, 0.5f));
-	//	ImGui::OpenPopup("Spawn Cube");
-	//	ImGui::BeginPopupModal("Spawn Cube");
-	//	
-	//	if (ImGui::Button("Okay", ImVec2(100, 30))) m_popup_toggle = false;
-	//	ImGui::EndPopup();
-	//}
+	ImGui::End();
 }
 
 void Scene11::shadowRenderPass(float delta)
@@ -156,16 +142,9 @@ void Scene11::shadowRenderPass(float delta)
 void Scene11::mainRenderPass(float delta)
 {
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
-	//m_model->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0, 0, 2), Vector3D(0, 180 * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 
-	for (int i = 0; i < m_cubes.size(); i++)
-	{
-		m_cubes[i]->render(Shaders::LAMBERT_SPECULAR, false);
-	}
+	WorldObjectManager::get()->render();
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
 	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);
-	m_floor->renderMesh(delta, Vector3D(10, 10, 10), Vector3D(campos.m_x, 0, campos.m_z), Vector3D(0, 0, 0), Shaders::FLAT, false);
-
-
 }

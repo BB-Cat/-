@@ -47,8 +47,8 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 ambientReflection = 0.5 * m_ambient_light_color.xyz * max(0.0, dot(input.normal, ambientLightDir));
 
 	//specular
-	float3 specularReflection = m_specularColor.rgb * max(0.0, dot(input.normal, m_global_light_dir.xyz))
-		* pow(max(0.0, dot(reflect(-lightDir.xyz, input.normal), -input.direction_to_camera)), m_shininess);
+	float3 specularReflection = min(1.0, m_specularColor.rgb * max(0.0, dot(input.normal, m_global_light_dir.xyz))
+		* pow(max(0.0, dot(reflect(-lightDir.xyz, input.normal), -input.direction_to_camera)), m_shininess)) * m_specularColor.a;
 
 	//rim lighting
 	float rim = 1 - saturate(dot(-input.direction_to_camera, input.normal));

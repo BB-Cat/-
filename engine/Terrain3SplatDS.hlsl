@@ -100,7 +100,7 @@ DS_OUTPUT dsmain(
 
 	float4 texbias =
 		patch[0].texbias * domain.x + patch[1].texbias * domain.y + patch[2].texbias * domain.z;
-	
+
 	float4 pos = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
 
 	// Interpolate patch attributes to generated vertices.
@@ -124,7 +124,7 @@ DS_OUTPUT dsmain(
 	float mipLevel = clamp(distance(Output.position.xyz, m_camera_position) / 10 - 6.0, 0.0, 6.0);
 
 	// Sample height map.
-	float h  = HeightMapR.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.r;
+	float h = HeightMapR.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.r;
 	float h2 = HeightMapG.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.g;
 	float h3 = HeightMapB.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.b;
 

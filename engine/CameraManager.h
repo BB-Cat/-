@@ -43,6 +43,7 @@ public:
 	Matrix4x4 getCamera() { return m_world_camera; }
 	void setCamState(int state) { m_cam_state = state; }
 	void setCamPos(Vector3D pos) { m_world_camera.setTranslation(pos); }
+	void setCamRot(Vector2D rot) { m_camera_rot = rot; }
 
 public:
 	// Culling Detection Functions //

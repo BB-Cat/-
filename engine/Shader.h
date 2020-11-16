@@ -9,8 +9,8 @@ public:
 
 	void compile(const wchar_t* vs_file, const wchar_t* ps_file, void* shader_byte_code, size_t& size_shader);
 
-	bool recompile();
-	bool ifErrorRecompile();
+	bool recompile(ShaderPtr error_shader);
+	bool ifErrorRecompile(ShaderPtr error_shader);
 
 	void ifErrorReplaceShaders(VertexShaderPtr err_vs, PixelShaderPtr err_ps);
 	

@@ -1,3 +1,4 @@
+
 struct VS_INPUT
 {
 	float4 position: POSITION0;
@@ -77,7 +78,6 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	//float val = output.position.x - output.position.z;
 	//float val2 = (output.position.y);
 	//output.cliff_texcoord = float2(val, val2) / 10;
-
 
 	//output.cliff_texcoord = floor(output.position.x) / 10.0 + floor(output.position.y) / 10.0 + floor(output.position.z) / 10.0;
 	//output.cliff_texcoord = 

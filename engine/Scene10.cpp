@@ -10,6 +10,7 @@
 #include "Texture3D.h"
 #include "DeviceContext.h"
 #include "ActorManager.h"
+#include "Cube.h"
 
 
 //bool Scene03::m_first_time = true;
@@ -73,7 +74,7 @@ Scene10::Scene10(SceneManager* sm) : Scene(sm)
 
 	//temp
 	//m_cube = std::shared_ptr<Cube>(new Cube());
-	m_cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, Vector3D(3, 1, 1), Vector3D(0, 0, 0), Vector3D(0, 0, 0), nullptr);
+	//m_cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, Vector3D(3, 1, 1), Vector3D(0, 0, 0), Vector3D(0, 0, 0), nullptr);
 }
 
 Scene10::~Scene10()
@@ -128,6 +129,32 @@ void Scene10::imGuiRender()
 
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+
+
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Character Interface Popup");
+		ImGui::BeginPopupModal("Character Interface Popup");
+		ImGui::Text("WASD: move");
+		ImGui::Text("Camera: control direction");
+		ImGui::Text("Shift: run");
+		ImGui::Text("Space: jump");
+		ImGui::Text("Right Click During Run: roll");
+		ImGui::TextWrapped("This scene is for testing player movement.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }
 
 void Scene10::shadowRenderPass(float delta)
@@ -141,7 +168,7 @@ void Scene10::mainRenderPass(float delta)
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
 	//m_model->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0, 0, 2), Vector3D(0, 180 * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 	ActorManager::get()->renderFaction(L"Player", delta);
-	m_cube->render(Vector3D(3, 3, 3), Vector3D(), Vector3D(), Shaders::LAMBERT_SPECULAR, false);
+	//m_cube->render(Vector3D(3, 3, 3), Vector3D(), Vector3D(), Shaders::LAMBERT_SPECULAR, false);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
 	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);

@@ -14,7 +14,8 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, -20, -60));
+	CameraManager::get()->setCamPos(Vector3D(0, 3, -15));
+	CameraManager::get()->setCamRot(Vector2D(0,0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -26,16 +27,17 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 
 
 	//initial cloud property settings
-	m_cloud_props.m_cloud_density = 0.06f;
+	m_cloud_props.m_cloud_density = 0.02f;
 	m_cloud_props.m_cloud_position = Vector3D(0, 0, 0);
-	m_cloud_props.m_cloud_size = Vector3D(150, 30, 150);
-	m_cloud_props.m_vertical_fade = 0.4f;
-	m_cloud_props.m_horizontal_fade = 0.8f;
-	m_cloud_props.m_per_pixel_fade_threshhold = 0.15f;
-	m_cloud_props.m_per_sample_fade_threshhold = 0.0f;
-	m_cloud_props.m_sampling_resolution = Vector4D(30, 30, 30, 30);
+	m_cloud_props.m_cloud_size = Vector3D(15, 10, 20);
+	m_cloud_props.m_vertical_fade = 0.9f;
+	m_cloud_props.m_horizontal_fade = 0.35f;
+	m_cloud_props.m_per_pixel_fade_threshhold = 0.0f;
+	m_cloud_props.m_per_sample_fade_threshhold = 0.5f;
+	m_cloud_props.m_sampling_resolution = Vector4D(22, 9, 7, 10);
 	m_cloud_props.m_sampling_weight = Vector4D(0.4, 0.3, 0.2, 0.1);
-	m_cloud_props.m_speed = 0;
+	m_cloud_props.m_speed = 2.6;
+	m_cloud_props.m_move_dir = Vector3D(1, 0, 1);
 
 
 	//m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("voronoiPerlin128x.txt"));
@@ -71,7 +73,7 @@ void Scene08::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(400, 500));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -123,6 +125,27 @@ void Scene08::imGuiRender()
 	}
 	ImGui::Text("Time: %.3f", m_cloud_props.m_time);
 	if(ImGui::Button("Show Vertexes", ImVec2(200, 30))) m_show_tex3D = (!m_show_tex3D);
+
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Cloud Popup");
+		ImGui::BeginPopupModal("Cloud Popup");
+
+		ImGui::TextWrapped("This scene uses 3D textures to create a volumetric cloud.  This is an early test so it is slow.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }
 
 void Scene08::shadowRenderPass(float delta)

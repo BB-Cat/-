@@ -18,7 +18,7 @@ Scene03::Scene03(SceneManager* sm) : Scene(sm)
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(33 * pos.m_x, 55, -15 + 33 * pos.m_y));
+	CameraManager::get()->setCamPos(Vector3D(0, 80, -15));
 
 	Lighting::get()->updateSceneLight(Vector3D(0,0.9,0), Vector3D(1,1,1), 0.85f, Vector3D(0.2,0.2,0.4));
 
@@ -42,7 +42,7 @@ void Scene03::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(250, 400));
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
 	ImGui::Begin("Test Window");
@@ -54,6 +54,27 @@ void Scene03::imGuiRender()
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
 
 	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
+
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vector2D size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Texture Generator Popup");
+		ImGui::BeginPopupModal("Texture Generator Popup");
+
+		ImGui::TextWrapped("This scene creates a heightmap with textures and normals.  You can save them to a text file which is used in Dynamic terrain to load quickly");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+
+	ImGui::End();
 }
 
 void Scene03::shadowRenderPass(float delta)
@@ -62,5 +83,5 @@ void Scene03::shadowRenderPass(float delta)
 
 void Scene03::mainRenderPass(float delta)
 {
-	m_terrain->render(Shaders::TERRAIN_TEST, 0, m_rast, m_toggle_HD);
+	m_terrain->render(Shaders::TERRAIN_HD_TOON, 0, m_rast, m_toggle_HD);
 }

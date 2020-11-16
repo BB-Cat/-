@@ -66,7 +66,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 		output.normal = input.normal;
 	}
 
-	output.normal = mul(float4(output.normal.xyz, 0), m_global).xyz;
+	output.normal = normalize(mul(float4(output.normal.xyz, 0), m_global).xyz);
 
 	////WORLD SPACE
 	output.position = mul(mul(output.position, m_world), m_global);

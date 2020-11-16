@@ -155,9 +155,6 @@
     <Filter Include="Sources\GameWorld\Particles\Particles">
       <UniqueIdentifier>{c14dcb4b-e797-461d-8585-1a40656c00db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Objects">
-      <UniqueIdentifier>{d9b4e47c-77ce-4593-bc04-782af7e903b0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\GameWorld\Particles\Particles\SpriteParticles">
       <UniqueIdentifier>{1a3bcb4b-9054-42f1-8025-c5c6ba4de8a2}</UniqueIdentifier>
     </Filter>
@@ -362,6 +359,21 @@
     <Filter Include="Sources\Scenes\11">
       <UniqueIdentifier>{a4ed439a-64e7-46a5-b4c0-8db22c406cbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\22 Triplanar Sampling">
+      <UniqueIdentifier>{8baf8f49-8513-4341-a456-c7a0161474a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\12">
+      <UniqueIdentifier>{6d346e15-29d8-4a61-a33a-a92a17a6e853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\WorldObjectManager">
+      <UniqueIdentifier>{bfb3e907-d3a2-41a5-afc6-91ee57f56ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude">
+      <UniqueIdentifier>{14d0204b-c798-4ff0-a705-41be572140e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\CubeCloudsNew">
+      <UniqueIdentifier>{2f3d47ca-4bfd-4d03-9476-0477c17b63c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -459,9 +471,6 @@
     </ClCompile>
     <ClCompile Include="CapsuleHB.cpp">
       <Filter>Sources\GameWorld\Actors</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Sources\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Lighting.cpp">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Lighting</Filter>
@@ -607,6 +616,15 @@
     <ClCompile Include="Scene11.cpp">
       <Filter>Sources\Scenes\11</Filter>
     </ClCompile>
+    <ClCompile Include="Scene12.cpp">
+      <Filter>Sources\Scenes\12</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObjectManager.cpp">
+      <Filter>Sources\GameWorld\WorldObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderInclude.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="high_resolution_timer.h">
@@ -743,9 +761,6 @@
     </ClInclude>
     <ClInclude Include="CapsuleHB.h">
       <Filter>Sources\GameWorld\Actors</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Sources\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Lighting.h">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\Lighting</Filter>
@@ -935,6 +950,15 @@
     </ClInclude>
     <ClInclude Include="Scene11.h">
       <Filter>Sources\Scenes\11</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene12.h">
+      <Filter>Sources\Scenes\12</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObjectManager.h">
+      <Filter>Sources\GameWorld\WorldObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderInclude.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1193,10 +1217,25 @@
     <FxCompile Include="ErrorVS.hlsl">
       <Filter>Shaders\0 Error</Filter>
     </FxCompile>
+    <FxCompile Include="TriplanarTexturePS.hlsl">
+      <Filter>Shaders\22 Triplanar Sampling</Filter>
+    </FxCompile>
+    <FxCompile Include="TriplanarTextureVS.hlsl">
+      <Filter>Shaders\22 Triplanar Sampling</Filter>
+    </FxCompile>
+    <FxCompile Include="NewCloudPS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
+    </FxCompile>
+    <FxCompile Include="NewCloudVS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="noise.fx">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="cloud.fx">
+      <Filter>Shaders\19 VolumetricClouds</Filter>
     </None>
   </ItemGroup>
 </Project>
