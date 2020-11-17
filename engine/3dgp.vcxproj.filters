@@ -374,6 +374,12 @@
     <Filter Include="Shaders\19 VolumetricClouds\CubeCloudsNew">
       <UniqueIdentifier>{2f3d47ca-4bfd-4d03-9476-0477c17b63c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader">
+      <UniqueIdentifier>{8148abbb-f4dc-46e8-ba8c-766508c78801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComputeShaders">
+      <UniqueIdentifier>{e3e92969-9961-4c61-a9b1-c2282e2c7f02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -624,6 +630,9 @@
     </ClCompile>
     <ClCompile Include="ShaderInclude.cpp">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -960,6 +969,9 @@
     <ClInclude Include="ShaderInclude.h">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude</Filter>
     </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
@@ -1228,6 +1240,9 @@
     </FxCompile>
     <FxCompile Include="NewCloudVS.hlsl">
       <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
+    </FxCompile>
+    <FxCompile Include="ComputeTest.hlsl">
+      <Filter>ComputeShaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

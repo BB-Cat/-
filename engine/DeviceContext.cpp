@@ -8,6 +8,7 @@
 #include "HullShader.h"
 #include "DomainShader.h"
 #include "PixelShader.h"
+#include "ComputeShader.h"
 #include "Sampler.h"
 #include "Texture.h"
 #include <exception>
@@ -182,6 +183,48 @@ void DeviceContext::setPixelShader(const PixelShaderPtr& pixel_shader)
 	m_device_context->PSSetShader(pixel_shader->m_pixel_shader, nullptr, 0);
 }
 
+void DeviceContext::setComputeShader(ID3D11ComputeShader* compute_shader, ID3D11ShaderResourceView* srv, ID3D11UnorderedAccessView* uav)
+{
+	m_device_context->CSSetShader(compute_shader, nullptr, 0);
+	m_device_context->CSSetShaderResources(0, 1, &srv);
+	m_device_context->CSSetUnorderedAccessViews(0, 1, &uav, 0);
+}
+
+void DeviceContext::dispatchComputeShader(UINT x_dispatch_count, UINT y_dispatch_count, UINT z_dispatch_count)
+{
+	m_device_context->Dispatch(x_dispatch_count, y_dispatch_count, z_dispatch_count);
+
+	//unbind the compute shader srv and uav after dispatching for safety
+	ID3D11ShaderResourceView* null_srv[] = { NULL };
+	m_device_context->CSSetShaderResources(0, 1, null_srv);
+
+	ID3D11UnorderedAccessView* null_uav[] = { NULL };
+	m_device_context->CSSetUnorderedAccessViews(0, 1, null_uav, 0);
+
+}
+
+void DeviceContext::copyResource(ID3D11Buffer* source, ID3D11Buffer* target)
+{
+	m_device_context->CopyResource(target, source);
+}
+
+HRESULT DeviceContext::mapResourceRead(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource)
+{
+	HRESULT hr = m_device_context->Map(source, 0, D3D11_MAP_READ, 0, mapped_resource);
+	return hr;
+}
+
+HRESULT DeviceContext::mapResourceWriteDiscard(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource)
+{
+	HRESULT hr = m_device_context->Map(source, 0, D3D11_MAP_WRITE_DISCARD, 0, mapped_resource);
+	return hr;
+}
+
+void DeviceContext::unmapResource(ID3D11Buffer* resource)
+{
+	m_device_context->Unmap(resource, 0);
+}
+
 void DeviceContext::removeGeometryShader()
 {
 	m_device_context->GSSetShader(nullptr, nullptr, 0);
@@ -195,6 +238,11 @@ void DeviceContext::removeHullShader()
 void DeviceContext::removeDomainShader()
 {
 	m_device_context->DSSetShader(nullptr, nullptr, 0);
+}
+
+void DeviceContext::removeComputeShader()
+{
+	m_device_context->CSSetShader(nullptr, nullptr, 0);
 }
 
 void DeviceContext::setTextureVS(const TexturePtr& texture)
@@ -216,6 +264,13 @@ void DeviceContext::setDiffuseNormalTexPS(const TexturePtr& diffusetex, const Te
 {
 	m_device_context->PSSetShaderResources(0, 1, &diffusetex->m_shader_res_view);
 	m_device_context->PSSetShaderResources(1, 1, &normalmap->m_shader_res_view);
+}
+
+void DeviceContext::setDiffuseNormalGlossTexPS(ID3D11ShaderResourceView* srv, ID3D11ShaderResourceView* srv2, ID3D11ShaderResourceView* srv3)
+{
+	m_device_context->PSSetShaderResources(0, 1, &srv);
+	m_device_context->PSSetShaderResources(1, 1, &srv2);
+	m_device_context->PSSetShaderResources(2, 1, &srv2);
 }
 
 void DeviceContext::setDiffuseNormalGlossTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, const TexturePtr& glossmap)

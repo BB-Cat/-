@@ -29,6 +29,8 @@ public:
 	HullShaderPtr createHullShader(const void* shader_byte_code, size_t byte_code_size);
 	DomainShaderPtr createDomainShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShaderPtr createPixelShader(const void* shader_byte_code, size_t byte_code_size);
+	ComputeShaderPtr createComputeShader(const void* shader_byte_code, size_t byte_code_size,
+		size_t input_structure_size, size_t output_structure_size, void* data, UINT input_count);
 	SamplerPtr createSamplerState();
 	void createGBuffer(UINT width, UINT height);
 
@@ -38,6 +40,7 @@ public:
 	bool compileHullShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compileDomainShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	bool compilePixelShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
+	bool compileComputeShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
 	void releaseCompiledShader();
 
 	bool compileVSIncludeFile(const wchar_t* filename, void** include_byte_code, size_t* include_byte_code_size);
@@ -76,6 +79,7 @@ private:
 	friend class GeometryShader;
 	friend class HullShader;
 	friend class DomainShader;
+	friend class ComputeShader;
 	friend class Sampler;
 	friend class MyConstantBuffer;
 	friend class Texture;
@@ -88,5 +92,6 @@ private:
 	friend class Mesh;
 	friend class TerrainManager;
 	friend class Cube;
+	friend class SceneSelect;
 };
 

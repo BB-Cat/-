@@ -87,18 +87,20 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 				break;
 			}
 		}
-	//	dist_travelled += step_size;
+		dist_travelled += step_size;
 	}
 
-	////Add clouds to background
-	//float3 background_color = float3(0.2, 0.4, 0.5);
-	//float3 cloud_color = light_energy * m_global_light_color;
-	//float3 col = background_color * transmittance + cloud_color;
-	//return float4(col, 1);
+	//Add clouds to background
+	float3 background_color = float3(0.2, 0.4, 0.5);
+	float3 cloud_color = light_energy * m_global_light_color;
+	float3 col = background_color * transmittance + cloud_color;
+	return float4(col, 1);
 
+	//return light_energy;
+	//return float4(light_energy, 1);
 
 
 	//float noise = raymarchCloud(pos, dir);
 	//return float4(1, 1, 1, noise);
-	return float4(1, 1, 1, 1);
+	//return float4(1, 1, 1, 1);
 }

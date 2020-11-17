@@ -10,6 +10,11 @@ class SceneSelect : public Scene
 private:
     static bool m_popup_toggle;
     TexturePtr m_tex1;
+    //TexturePtr m_compute_texture;
+
+    void* compute_image_data;
+    ComputeShaderPtr m_cs;
+    ID3D11ShaderResourceView* m_srv;
 private: //ImGui variables
 
 public:
@@ -18,6 +23,8 @@ public:
 
     virtual void update(float delta, const float& width, const float& height) override;
     virtual void imGuiRender() override;
+
+    void makeComputeShaderTextureTest();
 private:
     virtual void shadowRenderPass(float delta) override;
     virtual void mainRenderPass(float delta) override;

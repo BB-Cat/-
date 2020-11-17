@@ -9,6 +9,7 @@
 #include "HullShader.h"
 #include "DomainShader.h"
 #include "PixelShader.h"
+#include "ComputeShader.h"
 #include "Sampler.h"
 #include "GBuffer.h"
 
@@ -209,6 +210,20 @@ PixelShaderPtr RenderSystem::createPixelShader(const void* shader_byte_code, siz
 	return ps;
 }
 
+ComputeShaderPtr RenderSystem::createComputeShader(const void* shader_byte_code, size_t byte_code_size,
+	size_t input_structure_size, size_t output_structure_size, void* data, UINT input_count)
+{
+	ComputeShaderPtr cs = nullptr;
+	try
+	{
+		cs = std::make_shared <ComputeShader>(shader_byte_code, byte_code_size, this,
+			input_structure_size, output_structure_size, data, input_count);
+	}
+	catch (...) {}
+
+	return cs;
+}
+
 
 SamplerPtr RenderSystem::createSamplerState()
 {
@@ -299,6 +314,20 @@ bool RenderSystem::compilePixelShader(const wchar_t* file_name, const char* entr
 	{
 		//if (error_blob)
 		//	MessageBoxA(0, (char*)error_blob->GetBufferPointer(), NULL, MB_OK);
+		return false;
+	}
+	*shader_byte_code = m_blob->GetBufferPointer();
+	*byte_code_size = m_blob->GetBufferSize();
+
+	return true;
+}
+
+bool RenderSystem::compileComputeShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
+{
+	ID3DBlob* error_blob = nullptr;
+	if (!SUCCEEDED(::D3DCompileFromFile(file_name, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, entry_point_name, "cs_5_0", 0, 0, &m_blob, &error_blob)))
+	{
+		if (error_blob) MessageBoxA(0, (char*)error_blob->GetBufferPointer(), NULL, MB_OK);
 		return false;
 	}
 	*shader_byte_code = m_blob->GetBufferPointer();

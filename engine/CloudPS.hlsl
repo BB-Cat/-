@@ -22,12 +22,13 @@ cbuffer constant: register(b0)
 //cloud property settings
 cbuffer constant: register(b6)
 {
-	
 	float4	 m_cloud_position;
 	float4	 m_cloud_size;
 	float4   m_sampling_resolution;
 	float4   m_sampling_weight;
 	float4   m_move_dir;
+	float4   m_phase_parameters;
+	float4   m_detail_sampling_weight;
 	float	 m_cloud_density;
 	float	 m_vertical_fade;
 	float	 m_horizontal_fade;
@@ -37,6 +38,18 @@ cbuffer constant: register(b6)
 	float	 m_out_scattering_strength;
 	float	 m_time;
 	float    m_speed;
+
+	// NEW
+
+	float  m_ray_offset_strength;
+	float  m_density_offset;
+	float  m_detail_noise_scale;
+	float  m_detail_speed;
+	float  m_detail_noise_weight;
+	float  m_light_stepcount;
+	float  m_darkness_threshold;
+	float  m_light_absorption_towards_sun;
+	float  m_light_absorption_through_cloud;
 }
 
 static const int MAX_STEPS = 100;

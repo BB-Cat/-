@@ -13,7 +13,9 @@ private:
     SkinnedMeshPtr m_model;
     bool m_first_time = true;
 
-    Texture3DPtr m_tex3D;
+    Texture3DPtr m_tex3D_main;
+    Texture3DPtr m_tex3D_detail;
+    TexturePtr m_blue_noise;
     bool m_show_tex3D = false;
 
     float m_speed = 0.35f;

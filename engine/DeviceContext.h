@@ -35,10 +35,20 @@ public:
 	void setHullShader(const HullShaderPtr& hull_shader);
 	void setDomainShader(const DomainShaderPtr& domain_shader);
 	void setPixelShader(const PixelShaderPtr& pixel_shader);
+	//this function takes a direct ID3D11ComputeShader instead of the entire computeshaderptr since it is called from within the 
+	//shader object.  this might need to be changed later.
+	void setComputeShader(ID3D11ComputeShader* compute_shader, ID3D11ShaderResourceView* srv, ID3D11UnorderedAccessView* uav);
+	void dispatchComputeShader(UINT x_dispatch_count, UINT y_dispatch_count, UINT z_dispatch_count);
+	void copyResource(ID3D11Buffer* source, ID3D11Buffer* target);
+	HRESULT mapResourceRead(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
+	HRESULT mapResourceWriteDiscard(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
+	void unmapResource(ID3D11Buffer* resource);
+	//void retrieveComputeShaderOutput();
 
 	void removeGeometryShader();
 	void removeHullShader();
 	void removeDomainShader();
+	void removeComputeShader();
 
 public:
 	void setTextureVS(const TexturePtr& texture);
@@ -48,6 +58,8 @@ public:
 	void setDiffuseTexPS(ID3D11ShaderResourceView* srv);
 	//set the diffuse and normal map textures simultaneously with two texture class pointers
 	void setDiffuseNormalTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap);
+	//set the diffuse and normal map textures using a shaderresourceview directly
+	void setDiffuseNormalGlossTexPS(ID3D11ShaderResourceView* srv, ID3D11ShaderResourceView* srv2, ID3D11ShaderResourceView* srv3);
 	//set the diffuse and normal map textures simultaneously with two texture class pointers
 	void setDiffuseNormalGlossTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, const TexturePtr& glossmap);
 	//set the diffuse and normal map textures simultaneously with two texture class pointers

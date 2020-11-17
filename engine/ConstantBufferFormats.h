@@ -130,6 +130,8 @@ struct cb_cloud
 	Vector4D	m_sampling_resolution;
 	Vector4D	m_sampling_weight;
 	Vector4D    m_move_dir;
+	Vector4D	m_phase_parameters;
+	Vector4D	m_detail_sampling_weight;
 	float		m_cloud_density;
 	float		m_vertical_fade;
 	float		m_horizontal_fade;
@@ -139,4 +141,16 @@ struct cb_cloud
 	float		m_out_scattering_strength;
 	float		m_time;
 	float		m_speed;
+
+	//NEW
+
+	float		m_ray_offset_strength;
+	float		m_density_offset;
+	float		m_detail_noise_scale;
+	float		m_detail_speed;
+	float		m_detail_noise_weight;
+	float		m_light_stepcount;
+	float		m_darkness_threshold;
+	float		m_light_absorption_towards_sun;
+	float		m_light_absorption_through_cloud;
 };

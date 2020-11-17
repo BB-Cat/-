@@ -159,6 +159,7 @@
     <ClCompile Include="ActorManager.cpp" />
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="BubbleEmitter.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="FbxAnm.cpp" />
     <ClCompile Include="Foliage.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="AnmEnumeration.h" />
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="BubbleEmitter.h" />
+    <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="FbxAnm.h" />
     <ClInclude Include="Foliage.h" />
@@ -475,6 +477,17 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="ComputeTest.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="DefaultDS.hlsl">

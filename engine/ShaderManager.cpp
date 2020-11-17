@@ -198,7 +198,7 @@ void ShaderManager::compileShaders()
 	//***************************************************************************//
 
 	//volumetric cloud shader
-	m_volume_cloud = std::shared_ptr<Shader>(new Shader(L"CloudVS.hlsl", L"CloudPS.hlsl", shader_byte_code, size_shader));
+	m_volume_cloud = std::shared_ptr<Shader>(new Shader(L"NewCloudVS.hlsl", L"NewCloudPS.hlsl", shader_byte_code, size_shader));
 	m_volume_cloud->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
 	//***************************************************************************//
 
