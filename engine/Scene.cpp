@@ -7,8 +7,8 @@
 
 void Scene::render(float delta, const float& width, const float& height)
 {
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(AppWindow::getScreenSize().m_x * 4, AppWindow::getScreenSize().m_y * 2);
 
+	/* this needs to be changed. we only need one shadow map texture total for all 3 cascades combined. */
 	//repeat the shadowRenderPass once for each shadowmap
 	for (int i = 0; i < 3; i++)
 	{
@@ -17,7 +17,6 @@ void Scene::render(float delta, const float& width, const float& height)
 		shadowRenderPass(delta);
 	}
 
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(AppWindow::getScreenSize().m_x, AppWindow::getScreenSize().m_y);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargetDirect();
 	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->setShadowMapTex();

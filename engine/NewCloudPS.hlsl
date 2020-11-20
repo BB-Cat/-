@@ -48,7 +48,10 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 entry_point = input.world_pos.xyz;
 
 	//random starting offset (to make low resolution noise look less jagged)
-	float random_offset = BlueNoise.SampleLevel(TextureSampler, input.position.xy, 0);
+	/* this offset should be changed to offset in 3 dimensions, not one.  right now one offset causes the clouds to look blocky 
+	in areas where they ray goes directly through one row of voxels. other areas are looking great.*/
+
+	float random_offset = BlueNoise.SampleLevel(TextureSampler, input.position.xy / 1024.0 * 3, 0);
 	random_offset *= m_ray_offset_strength;
 
 	//Phase function makes clouds brighter around sun
@@ -67,12 +70,17 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//March through the box
 	float transmittance = 1;
 	float3 light_energy = 0;
+	//float random_offset = 0;
+	float dist_frac = 0;
+	float offset_strength = m_ray_offset_strength * (m_ray_offset_strength > 0) + 1.0 * !(m_ray_offset_strength > 0);
+	float3 current_ray;
 
 	float3 inverse_light_dir = normalize(-m_global_light_dir);
 
 	while (dist_travelled < dist_limit) 
 	{
-		ray_pos = entry_point + ray_dir * dist_travelled;
+		current_ray = ray_dir * dist_travelled;
+		ray_pos = entry_point + current_ray;
 		float density = sampleDensity(ray_pos, m_cloud_size.xyz, bounds_min, bounds_max);
 
 		if (density > 0) 
@@ -87,14 +95,21 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 				break;
 			}
 		}
-		dist_travelled += step_size;
+		//dist_frac = dist_travelled;
+		//dist_frac = frac(dist_frac);
+		random_offset = BlueNoise.SampleLevel(TextureSampler, (input.world_pos.xz * input.world_pos.y * (m_time % 1000) / 1024.0 * 3) +
+			frac(float2(dist_travelled * 12.358, dist_travelled * 34.123) / random_offset), 0);
+		random_offset = max(random_offset * offset_strength, 0.5);
+		//while (random_offset < 1) random_offset += 1;
+		dist_travelled += (step_size * random_offset);
 	}
 
 	//Add clouds to background
-	float3 background_color = float3(0.2, 0.4, 0.5);
+	float3 background_color = float3(0.3, 0.3, 0.4);
 	float3 cloud_color = light_energy * m_global_light_color;
 	float3 col = background_color * transmittance + cloud_color;
 	return float4(col, 1);
+	//return random_offset;
 
 	//return light_energy;
 	//return float4(light_energy, 1);

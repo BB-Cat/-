@@ -35,15 +35,21 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	Vector3D new_pos = m_world_camera.getTranslation();
 
 	//declare variables necessary for camera update
-	//カメラ更新に必要な変数
 	Vector3D cam_position = m_world_camera.getTranslation();
-	Vector3D player_position = ActorManager::get()->getActivePlayerPosition();
-	Vector3D player_dir = ActorManager::get()->getActivePlayerDirection();
+
+	Vector3D player_position;
+	Vector3D player_dir;
+	//since calling the actor manager will cause the player to initialize (which loads a lot of animation data and is slow)
+	//we will only make the call if the camera has been set to a camera state which needs player data.
+	if (m_cam_state != FREE)
+	{
+		Vector3D player_position = ActorManager::get()->getActivePlayerPosition();
+		Vector3D player_dir = ActorManager::get()->getActivePlayerDirection();
+	}
 
 	Vector3D target_view = (player_position + Vector3D(0, 3.0f, 0));
 	Vector3D target_view_to_cam = cam_position - target_view;
 
-	//Vector3D player_to_camera = cam_position - player_position;
 
 	Vector3D temp_dir;
 	float angle_to_player;

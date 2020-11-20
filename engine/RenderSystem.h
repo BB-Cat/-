@@ -92,6 +92,8 @@ private:
 	friend class Mesh;
 	friend class TerrainManager;
 	friend class Cube;
-	friend class SceneSelect;
+
+	//temp - for testing scene 13 
+	friend class Scene13;
 };
 

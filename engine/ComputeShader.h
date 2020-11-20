@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "Prerequisites.h"
+#include "Vector2D.h"
 
 class ComputeShader
 {
@@ -12,15 +13,19 @@ public:
 
 	//call this to replace the input data with new data
 	void mapInputData(void* newdata, size_t data_size_in_bytes);
-	//call this to run the compute shader. retrieve the output data
-	//by using reinterpret_cast<DATATYPE*>(mappedResource.pData);
+	//call this to run the compute shader. 
 	//data is returned in the form of a void pointer
-	void* runComputeShader();
+	void runComputeShader();
 	//call this after retrieving data from the compute shader.
 	void unmapCPUReadable();
 
 	void setXDispatchCount(UINT x) { m_x_dispatch_count = x; }
 	void setYDispatchCount(UINT y) { m_y_dispatch_count = y; }
+
+	//retrieve the output data by using reinterpret_cast<DATATYPE*>(mappedResource.pData);
+	void* getOutputData() { return m_output_data; }
+
+	ID3D11ShaderResourceView* createTextureSRVFromOutput(Vector2D size);
 
 private:
 	UINT m_x_dispatch_count = 1;
@@ -39,6 +44,8 @@ private:
 	ID3D11UnorderedAccessView* m_output_uav;
 	//cpu readable version of the output buffer that allows us to use the data, save it, etc.
 	ID3D11Buffer* m_output_cpu_readable;
+	//void pointer to the output data which can be used for things like creating an SRV for image data
+	void* m_output_data = nullptr;
 
 private:
 	friend class RenderSystem;

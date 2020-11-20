@@ -14,11 +14,13 @@ Scene03::Scene03(SceneManager* sm) : Scene(sm)
 	Vector2D pos = Vector2D(0, 0);
 
 	std::shared_ptr<TerrainManager> t(new TerrainManager("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp", 
-		Vector2D(2, 2), pos));
+		Vector2D(1, 1), pos));
+
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	CameraManager::get()->setCamState(FREE);
 	CameraManager::get()->setCamPos(Vector3D(0, 80, -15));
+	CameraManager::get()->setCamRot(Vector2D(0, 0.7));
 
 	Lighting::get()->updateSceneLight(Vector3D(0,0.9,0), Vector3D(1,1,1), 0.85f, Vector3D(0.2,0.2,0.4));
 

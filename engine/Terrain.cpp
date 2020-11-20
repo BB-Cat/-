@@ -263,6 +263,80 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
     m_vec_vm_seamF = verts_forward_seam;
 }
 
+
+Terrain::Terrain(const std::vector<VertexMesh>& verts)
+{
+
+    //seperate the loaded vertex data into seperate pieces for the chunk and seams
+    int chunk_cols = CHUNK_AND_SEAM_SIZE;
+    int chunk_rows = CHUNK_AND_SEAM_SIZE;
+
+    //Create the grid
+    m_num_vertexes = CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE;
+    m_num_faces = (CHUNK_AND_SEAM_SIZE - 1) * (CHUNK_AND_SEAM_SIZE - 1) * 2;
+
+    std::vector<VertexMesh> chunkverts(m_num_vertexes);
+
+    for (int i = 0; i < chunk_rows; i++)
+    {
+        for (int j = 0; j < chunk_cols; j++)
+        {
+            chunkverts[i * chunk_cols + j] = verts[(i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
+        }
+    }
+
+    //VertexMesh c1, c2, c3;
+    //findCaps(verts, CHUNK_AND_SEAM_SIZE, CHUNK_AND_SEAM_SIZE, &c1, &c2, &c3);
+    //std::vector<VertexMesh> verts_forward_seam;
+    //verts_forward_seam.resize(chunk_cols * 2 + 2);
+
+    //for (int i = 0; i < chunk_cols; i++)
+    //{
+    //    for (int j = 0; j < 2; j++)
+    //    {
+    //        verts_forward_seam[i + j * chunk_cols + 1] = verts[chunk_rows - 1 + (i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
+    //    }
+    //}
+
+    ////verts_forward_seam[0] = c1;
+    ////verts_forward_seam[CHUNK_AND_SEAM_SIZE * 2 + 1] = c2;
+
+    //std::vector<VertexMesh> verts_right_seam;
+    //verts_right_seam.resize(chunk_cols * 2 + 2);
+
+    //for (int i = 0; i < 2; i++)
+    //{
+    //    for (int j = 0; j < chunk_cols; j++)
+    //    {
+    //        verts_right_seam[i * chunk_rows + j + 1] = verts[(chunk_rows - 1) * CHUNK_AND_SEAM_SIZE + (i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
+    //    }
+    //}
+
+    //verts_right_seam[0] = c3;
+    //verts_right_seam[chunk_cols * 2 + 1] = c2;
+
+
+    void* shader_byte_code = nullptr;
+    size_t size_shader = 0;
+    GraphicsEngine::get()->getVertexMeshLayoutShaderByteCodeAndSize(&shader_byte_code, &size_shader);
+
+    //use the vertices to prepare buffers
+    m_vertex_buffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&chunkverts[0], sizeof(VertexMesh),
+        (UINT)chunkverts.size(), shader_byte_code, (UINT)size_shader);
+
+    //if (verts_forward_seam.size()) m_seam_vb_forward = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_forward_seam[0], sizeof(VertexMesh),
+    //    (UINT)verts_forward_seam.size(), shader_byte_code, (UINT)size_shader);
+
+    //if (verts_right_seam.size()) m_seam_vb_right = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_right_seam[0], sizeof(VertexMesh),
+    //    (UINT)verts_right_seam.size(), shader_byte_code, (UINT)size_shader);
+
+
+    m_vec_vm_chunk = chunkverts;
+    //m_vec_vm_seamR = verts_right_seam;
+    //m_vec_vm_seamF = verts_forward_seam;
+}
+
+
 Terrain::~Terrain()
 {
     delete[] m_heightmap_info.height_map;

@@ -99,8 +99,8 @@ void AppWindow::onCreate()
 
 	//create the swapchain
 	RECT rc = Window::getClientWindowRect();
-	m_screen_size = Vector2D(rc.right - rc.left, rc.bottom - rc.top) * 1.0f;
-	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, rc.right - rc.left, rc.bottom - rc.top);
+	m_screen_size = Vector2D(rc.right - rc.left, rc.bottom - rc.top);
+	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, m_screen_size.m_x, m_screen_size.m_y);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->saveSwapChain(this->m_swap_chain);
 
 	//initialize the gbuffer
@@ -137,7 +137,6 @@ void AppWindow::onUpdate()
 	if (m_fps_update_timer > 0.5f)
 	{
 		//calculate the average fps every 0.5 seconds
-		//m_fps = (m_fps_update_timer / m_loop_count) / 1.0f;
 		m_fps = (1.0f / (m_fps_update_timer / m_loop_count));
 		m_fps_update_timer = 0;
 		m_loop_count = 0;
@@ -148,7 +147,7 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 	InputSystem::get()->update();
 
-	//clear render target
+	//clear render targets
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 0.3f, 0.3f, 0.4f, 1);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearGBufferRenderTargetColor(this->m_swap_chain, 0.6f, 0.6f, 0.5f, 1);
 
@@ -158,31 +157,28 @@ void AppWindow::onUpdate()
 	//set the scene lighting buffer
 	GraphicsEngine::get()->getConstantBufferSystem()->setGlobalLightPropertyBuffer();
 
-	//set the lights buffer
-	Lighting::get()->setLights();
-	GraphicsEngine::get()->getConstantBufferSystem()->setLocalLightPropertyBuffer();
+	/* OLD */
+	////set the lights buffer
+	//Lighting::get()->setLights();
+	//GraphicsEngine::get()->getConstantBufferSystem()->setLocalLightPropertyBuffer();
+
+
 	//set the sampler
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_sampler);
 
-	//render the gameworld
-	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
-	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
-
 	//update and render the current scene
-	m_scene_manager->execute(m_delta_time.time_interval(), width, height);
+	m_scene_manager->execute(m_delta_time.time_interval(), m_screen_size.m_x, m_screen_size.m_y);
 
 	//begin ImGui UI
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-
 	//render imGui from the current scene
 	m_scene_manager->imGui();
 	//render the menu bar
 	mainMenu();
 	
-	//ImGui::End();
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -213,7 +209,7 @@ void AppWindow::onUpdate()
 	//present the rendered chain
 	m_swap_chain->present(true);
 
-	//increase the high resolution timer
+	//increase the high resolution timer tick
 	m_delta_time.tick();
 
 	//reset input data structures for the next frame

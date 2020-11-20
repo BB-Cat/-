@@ -270,7 +270,7 @@ void DeviceContext::setDiffuseNormalGlossTexPS(ID3D11ShaderResourceView* srv, ID
 {
 	m_device_context->PSSetShaderResources(0, 1, &srv);
 	m_device_context->PSSetShaderResources(1, 1, &srv2);
-	m_device_context->PSSetShaderResources(2, 1, &srv2);
+	m_device_context->PSSetShaderResources(2, 1, &srv3);
 }
 
 void DeviceContext::setDiffuseNormalGlossTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, const TexturePtr& glossmap)
@@ -337,16 +337,16 @@ void DeviceContext::setTexture3SplatTex(const TexturePtr& dif1, const TexturePtr
 	m_device_context->PSSetShaderResources(6, 1, &dif4->m_shader_res_view);
 	m_device_context->PSSetShaderResources(7, 1, &norm4->m_shader_res_view);
 
-		//HD only terrain textures for AO and roughness
-		m_device_context->PSSetShaderResources(8, 1, &rough1->m_shader_res_view);
-		m_device_context->PSSetShaderResources(9, 1, &rough2->m_shader_res_view);
-		m_device_context->PSSetShaderResources(10, 1, &rough3->m_shader_res_view);
-		m_device_context->PSSetShaderResources(11, 1, &rough4->m_shader_res_view);
+	//HD only terrain textures for AO and roughness
+	m_device_context->PSSetShaderResources(8, 1, &rough1->m_shader_res_view);
+	m_device_context->PSSetShaderResources(9, 1, &rough2->m_shader_res_view);
+	m_device_context->PSSetShaderResources(10, 1, &rough3->m_shader_res_view);
+	m_device_context->PSSetShaderResources(11, 1, &rough4->m_shader_res_view);
 
-		m_device_context->PSSetShaderResources(12, 1, &ao1->m_shader_res_view);
-		m_device_context->PSSetShaderResources(13, 1, &ao2->m_shader_res_view);
-		m_device_context->PSSetShaderResources(14, 1, &ao3->m_shader_res_view);
-		m_device_context->PSSetShaderResources(15, 1, &ao4->m_shader_res_view);
+	m_device_context->PSSetShaderResources(12, 1, &ao1->m_shader_res_view);
+	m_device_context->PSSetShaderResources(13, 1, &ao2->m_shader_res_view);
+	m_device_context->PSSetShaderResources(14, 1, &ao3->m_shader_res_view);
+	m_device_context->PSSetShaderResources(15, 1, &ao4->m_shader_res_view);
 
 	//DOMAIN SHADER
 	m_device_context->DSSetShaderResources(0, 1, &height1->m_shader_res_view);

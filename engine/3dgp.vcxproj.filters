@@ -380,6 +380,9 @@
     <Filter Include="ComputeShaders">
       <UniqueIdentifier>{e3e92969-9961-4c61-a9b1-c2282e2c7f02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scenes\13">
+      <UniqueIdentifier>{a3e40173-b724-46d6-8c8b-41659454ed07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -633,6 +636,9 @@
     </ClCompile>
     <ClCompile Include="ComputeShader.cpp">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene13.cpp">
+      <Filter>Sources\Scenes\13</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -972,6 +978,9 @@
     <ClInclude Include="ComputeShader.h">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
     </ClInclude>
+    <ClInclude Include="Scene13.h">
+      <Filter>Sources\Scenes\13</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexMeshLayoutShader.hlsl">
@@ -1242,6 +1251,9 @@
       <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
     </FxCompile>
     <FxCompile Include="ComputeTest.hlsl">
+      <Filter>ComputeShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ComputeHeightmap.hlsl">
       <Filter>ComputeShaders</Filter>
     </FxCompile>
   </ItemGroup>

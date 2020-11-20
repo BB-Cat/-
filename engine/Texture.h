@@ -9,6 +9,8 @@ public:
 	Texture(const wchar_t* full_path);
 	~Texture();
 
+	void InitGeneratedTexture(ID3D11ShaderResourceView* srv, int width, int height);
+
 	Vector2D getSize() { return Vector2D(m_height, m_width); }
 	ID3D11ShaderResourceView* getSRV() { return m_shader_res_view; }
 private:

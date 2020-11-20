@@ -51,6 +51,8 @@ public:
 	Terrain(Vector2D map_pos, bool from_generated = false);
 	//constructor to load terrain piece by piece from image file.  The data can then be saved to a text file with outputFile().
 	Terrain(const char* filename_heightmap, const char* filename_terraintype, Vector2D map_pos);
+
+	Terrain(const std::vector<VertexMesh>& verts);
 	~Terrain();
 	//vb_id is the indicator about which vertex buffer to load (the terrain chunk, the forward seam, or the right seam in that order)
 	void render(int lod = 0, int vb_id = 0, int seam_lod = HIGH);

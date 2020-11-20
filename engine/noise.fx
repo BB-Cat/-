@@ -1,3 +1,24 @@
+//noise settings
+cbuffer constant: register(b5)
+{
+	float4 m_noise_type;
+	float4 m_rgba;
+
+	float  m_vor_octaves;
+	float  m_vor_frequency;
+	float  m_vor_gain;
+	float  m_vor_lacunarity;
+	float  m_vor_amplitude;
+	float  m_vor_cell_size;
+
+	float  m_per_octaves;
+	float  m_per_frequency;
+	float  m_per_gain;
+	float  m_per_lacunarity;
+	float  m_per_amplitude;
+	float  m_per_cell_size;
+}
+
 float rand1dTo1d(float3 value, float mutator = 0.546)
 {
 
@@ -150,8 +171,7 @@ float perlinNoise(float2 value)
 	return noise;
 }
 
-float perlinNoise(float3 value)
-{
+float perlinNoise(float3 value) {
 	float3 fraction = frac(value);
 
 	float interpolatorX = easeInOut(fraction.x);
@@ -328,14 +348,41 @@ float3 tiledVoronoiNoise(float3 value, float period)
 	return float3(minDistToCell, random, minEdgeDistance);
 }
 
-float3 brownianPerlin(float3 value, int octaves, float gain, float lacunarity, float amplitude)
+float brownianPerlin(float2 value, int octaves, float gain, float lacunarity, float amplitude)
+{
+	float result = 0;
+
+	for (int i = 0; i < octaves; i++)
+	{
+		result += perlinNoise(value) * amplitude;
+		value *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return result;
+}
+
+float brownianPerlin(float3 value, int octaves, float gain, float lacunarity, float amplitude)
+{
+	float result = 0;
+
+	for (int i = 0; i < octaves; i++)
+	{
+		result += (perlinNoise(value) + 0.5) * amplitude;
+		value *= lacunarity;
+		amplitude *= gain;
+	}
+
+	return result;
+}
+
+float3 brownianVoronoi(float3 value, int octaves, float gain, float lacunarity, float amplitude)
 {
 	float3 result = 0;
 
 	for (int i = 0; i < octaves; i++)
 	{
-		result += perlinNoise(value) * amplitude;
-		//frequency *= lacunarity;
+		result += voronoiNoise(value) * amplitude;
 		value *= lacunarity;
 		amplitude *= gain;
 	}

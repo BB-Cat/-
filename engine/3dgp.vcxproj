@@ -163,6 +163,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="FbxAnm.cpp" />
     <ClCompile Include="Foliage.cpp" />
+    <ClCompile Include="Scene13.cpp" />
     <ClCompile Include="ShaderInclude.cpp" />
     <ClCompile Include="WorldObjectManager.cpp" />
     <ClCompile Include="GBuffer.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="FbxAnm.h" />
     <ClInclude Include="Foliage.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="Scene13.h" />
     <ClInclude Include="ShaderInclude.h" />
     <ClInclude Include="WorldObjectManager.h" />
     <ClInclude Include="GBuffer.h" />
@@ -477,6 +479,17 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="ComputeHeightmap.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="ComputeTest.hlsl">

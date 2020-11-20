@@ -19,10 +19,10 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	color.g = 1 * (g % 2 == 1);
 
 	//return color;
-	//return float4(input.normal.xyz, 1);
+	return float4(input.normal.xyz, 1);
 
-	float tex = 1.0 + input.texcolor.w;
-	return float4(tex, tex, tex, tex);
+	//float tex = 1.0 + input.texcolor.w;
+	//return float4(tex, tex, tex, tex);
 	//return input.texcolor;
 
 	//r = input.texcolor.x / input.texcolor.xyz;
