@@ -15,9 +15,13 @@ public:
 	void mapInputData(void* newdata, size_t data_size_in_bytes);
 	//call this to run the compute shader. 
 	//data is returned in the form of a void pointer
+	/*! CAUTION ! This Compute Shader class will not clear it's output data 
+	automatically. you must call getOutputData, cast it to the correct type
+	and then delete it otherwise this function will simply return on call*/
 	void runComputeShader();
 	//call this after retrieving data from the compute shader.
 	void unmapCPUReadable();
+	void releaseCPUReadable();
 
 	void setXDispatchCount(UINT x) { m_x_dispatch_count = x; }
 	void setYDispatchCount(UINT y) { m_y_dispatch_count = y; }
@@ -27,6 +31,9 @@ public:
 
 	ID3D11ShaderResourceView* createTextureSRVFromOutput(Vector2D size);
 
+public: //!! This needs to be switched to private from public, but I'm still not sure how to handle releasing data after use from inside the class...
+	//void pointer to the output data which can be used for things like creating an SRV for image data
+	void* m_output_data = nullptr;
 private:
 	UINT m_x_dispatch_count = 1;
 	UINT m_y_dispatch_count = 1;
@@ -44,8 +51,7 @@ private:
 	ID3D11UnorderedAccessView* m_output_uav;
 	//cpu readable version of the output buffer that allows us to use the data, save it, etc.
 	ID3D11Buffer* m_output_cpu_readable;
-	//void pointer to the output data which can be used for things like creating an SRV for image data
-	void* m_output_data = nullptr;
+
 
 private:
 	friend class RenderSystem;

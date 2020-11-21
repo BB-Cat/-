@@ -1250,10 +1250,10 @@
     <FxCompile Include="NewCloudVS.hlsl">
       <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
     </FxCompile>
-    <FxCompile Include="ComputeTest.hlsl">
+    <FxCompile Include="ComputeHeightmap.hlsl">
       <Filter>ComputeShaders</Filter>
     </FxCompile>
-    <FxCompile Include="ComputeHeightmap.hlsl">
+    <FxCompile Include="ComputeNoiseTex.hlsl">
       <Filter>ComputeShaders</Filter>
     </FxCompile>
   </ItemGroup>

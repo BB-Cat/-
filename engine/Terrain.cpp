@@ -268,8 +268,10 @@ Terrain::Terrain(const std::vector<VertexMesh>& verts)
 {
 
     //seperate the loaded vertex data into seperate pieces for the chunk and seams
-    int chunk_cols = CHUNK_AND_SEAM_SIZE;
+    int chunk_columns = CHUNK_AND_SEAM_SIZE;
     int chunk_rows = CHUNK_AND_SEAM_SIZE;
+    int total_columns = CHUNK_AND_SEAM_SIZE + 1;
+    int total_rows = CHUNK_AND_SEAM_SIZE + 1;
 
     //Create the grid
     m_num_vertexes = CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE;
@@ -279,39 +281,45 @@ Terrain::Terrain(const std::vector<VertexMesh>& verts)
 
     for (int i = 0; i < chunk_rows; i++)
     {
-        for (int j = 0; j < chunk_cols; j++)
+        for (int j = 0; j < chunk_columns; j++)
         {
-            chunkverts[i * chunk_cols + j] = verts[(i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
+            chunkverts[i * chunk_columns + j] = verts[(i * total_columns) + (j)];
         }
     }
 
-    //VertexMesh c1, c2, c3;
-    //findCaps(verts, CHUNK_AND_SEAM_SIZE, CHUNK_AND_SEAM_SIZE, &c1, &c2, &c3);
-    //std::vector<VertexMesh> verts_forward_seam;
-    //verts_forward_seam.resize(chunk_cols * 2 + 2);
+    std::vector<VertexMesh> verts_right_seam;
+    verts_right_seam.resize(chunk_columns * 2 + 2);
 
-    //for (int i = 0; i < chunk_cols; i++)
-    //{
-    //    for (int j = 0; j < 2; j++)
-    //    {
-    //        verts_forward_seam[i + j * chunk_cols + 1] = verts[chunk_rows - 1 + (i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
-    //    }
-    //}
+    /* Due to compatibility restrictions with the old terrain generation system which is unfortunately inefficient, the first
+   and last vertex in each seam do not behave like the others and have set positions.  I will change this in the future
+   but for now it is a lot of work to fix and I don't have that much time. */
 
-    ////verts_forward_seam[0] = c1;
-    ////verts_forward_seam[CHUNK_AND_SEAM_SIZE * 2 + 1] = c2;
+    for (int i = 0; i < chunk_columns; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            verts_right_seam[i + j * chunk_columns + 1] = verts[chunk_columns - 1 + total_columns * i + j];
+        }
+    }
+    /* for compute shader generated terrain, the right seam wants to hide the first and last polygons it has
+    which are now unecessary due to computation changes. we will set them to the same value as one of the vertices they are indexed with*/
+    verts_right_seam[0] = verts[chunk_columns + total_columns * (chunk_columns - 1)];
+    verts_right_seam[chunk_columns * 2 + 1] = verts_right_seam[0];
 
-    //std::vector<VertexMesh> verts_right_seam;
-    //verts_right_seam.resize(chunk_cols * 2 + 2);
+    std::vector<VertexMesh> verts_forward_seam;
+    verts_forward_seam.resize(chunk_columns * 2 + 2);
 
-    //for (int i = 0; i < 2; i++)
-    //{
-    //    for (int j = 0; j < chunk_cols; j++)
-    //    {
-    //        verts_right_seam[i * chunk_rows + j + 1] = verts[(chunk_rows - 1) * CHUNK_AND_SEAM_SIZE + (i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
-    //    }
-    //}
+    for (int i = 0; i < 2; i++)
+    {
+        for (int j = 0; j < chunk_columns; j++)
+        {
+            //verts_right_seam[i * chunk_rows + j + 1] = verts[(chunk_rows - 1) * CHUNK_AND_SEAM_SIZE + (i + 3 * (m_left_buffer)) * CHUNK_AND_SEAM_SIZE + (j + 3 * (m_bottom_buffer))];
+            verts_forward_seam[i * chunk_rows + j + 1] = verts[(total_columns * (total_rows - 2)) + total_columns * i + j];
+        }
+    }
 
+    verts_forward_seam[0] = verts[total_columns * total_rows - 1];
+    verts_forward_seam[chunk_columns * 2 + 1] = verts[chunk_columns + total_rows * (chunk_columns - 1)];
     //verts_right_seam[0] = c3;
     //verts_right_seam[chunk_cols * 2 + 1] = c2;
 
@@ -324,11 +332,11 @@ Terrain::Terrain(const std::vector<VertexMesh>& verts)
     m_vertex_buffer = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&chunkverts[0], sizeof(VertexMesh),
         (UINT)chunkverts.size(), shader_byte_code, (UINT)size_shader);
 
-    //if (verts_forward_seam.size()) m_seam_vb_forward = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_forward_seam[0], sizeof(VertexMesh),
-    //    (UINT)verts_forward_seam.size(), shader_byte_code, (UINT)size_shader);
+    m_seam_vb_forward = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_forward_seam[0], sizeof(VertexMesh),
+        (UINT)verts_forward_seam.size(), shader_byte_code, (UINT)size_shader);
 
-    //if (verts_right_seam.size()) m_seam_vb_right = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_right_seam[0], sizeof(VertexMesh),
-    //    (UINT)verts_right_seam.size(), shader_byte_code, (UINT)size_shader);
+    m_seam_vb_right = GraphicsEngine::get()->getRenderSystem()->createVertexBuffer(&verts_right_seam[0], sizeof(VertexMesh),
+        (UINT)verts_right_seam.size(), shader_byte_code, (UINT)size_shader);
 
 
     m_vec_vm_chunk = chunkverts;

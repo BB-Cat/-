@@ -123,6 +123,8 @@ public:
 	void setVSTessBuffer(const MyConstantBufferPtr& buffer);
 
 	void setNoiseBufferPS(const MyConstantBufferPtr& buffer);
+	void setNoiseBufferCS(const MyConstantBufferPtr& buffer);
+
 
 	void setCloudBufferPS(const MyConstantBufferPtr& buffer);
 

@@ -243,6 +243,8 @@ void DeviceContext::removeDomainShader()
 void DeviceContext::removeComputeShader()
 {
 	m_device_context->CSSetShader(nullptr, nullptr, 0);
+	m_device_context->CSSetShaderResources(0, 0, nullptr);
+	m_device_context->CSSetUnorderedAccessViews(0, 0, nullptr, 0);
 }
 
 void DeviceContext::setTextureVS(const TexturePtr& texture)
@@ -439,6 +441,11 @@ void DeviceContext::setVSTessBuffer(const MyConstantBufferPtr& buffer)
 void DeviceContext::setNoiseBufferPS(const MyConstantBufferPtr& buffer)
 {
 	m_device_context->PSSetConstantBuffers(5, 1, &buffer->m_buffer);
+}
+
+void DeviceContext::setNoiseBufferCS(const MyConstantBufferPtr& buffer)
+{
+	m_device_context->CSSetConstantBuffers(5, 1, &buffer->m_buffer);
 }
 
 void DeviceContext::setCloudBufferPS(const MyConstantBufferPtr& buffer)

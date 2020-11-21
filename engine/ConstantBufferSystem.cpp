@@ -334,6 +334,17 @@ void ConstantBufferSystem::updateAndSetPSNoiseBuffer(const cb_noise& n)
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setNoiseBufferPS(m_noise_cb);
 }
 
+void ConstantBufferSystem::updateAndSetCSNoiseBuffer(const cb_noise& n)
+{
+	cb_noise temp = n;
+
+	//update the noise buffer
+	m_noise_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &temp);
+
+	//send the updated buffer to the pixel shader
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setNoiseBufferCS(m_noise_cb);
+}
+
 void ConstantBufferSystem::updateAndSetPSCloudBuffer(const cb_cloud& c)
 {
 	cb_cloud temp = c;

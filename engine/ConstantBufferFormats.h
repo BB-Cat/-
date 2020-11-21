@@ -120,6 +120,19 @@ struct cb_noise
 	float m_per_lacunarity;
 	float m_per_amplitude;
 	float m_per_cell_size;
+
+	//for the compute shader noise generator specifically
+	float m_yscale;
+	float m_xscale;
+	float m_compute_cell_size;
+	float m_seed;
+
+	float m_ridged_per_octaves;
+	float m_ridged_per_frequency;
+	float m_ridged_per_gain;
+	float m_ridged_per_lacunarity;
+	float m_ridged_per_amplitude;
+	float m_ridged_per_cell_size;
 };
 
 __declspec(align(16))

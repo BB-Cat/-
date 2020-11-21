@@ -42,6 +42,7 @@ public:
 	void updateAndSetVSTesselationBuffer(const cb_tess& t);
 
 	void updateAndSetPSNoiseBuffer(const cb_noise& n);
+	void updateAndSetCSNoiseBuffer(const cb_noise& n);
 
 	void updateAndSetPSCloudBuffer(const cb_cloud& c);
 

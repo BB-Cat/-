@@ -110,59 +110,35 @@ void ComputeShader::mapInputData(void* newdata, size_t data_size_in_bytes)
 
 void ComputeShader::runComputeShader()
 {
-	// Enable Compute Shader
-	//mDeviceContext->CSSetShader(mComputeShader, nullptr, 0);
-	//mDeviceContext->CSSetShaderResources(0, 1, &mInputView);
-	//mDeviceContext->CSSetUnorderedAccessViews(0, 1, &mOutputUAV, 0);
+	////Make sure all previous data has been released properly, otherwise we will leak
+	//if (m_output_cpu_readable != nullptr) m_output_cpu_readable->Release();
+
+	//Enable Compute Shader
 	m_system->getImmediateDeviceContext()->setComputeShader(m_compute_shader, m_input_srv, m_output_uav);
 
-	//// Dispatch
-	//mDeviceContext->Dispatch(1, 1, 1);
-	//// Unbind the input textures from the CS for good housekeeping
-	//ID3D11ShaderResourceView* nullSRV[] = { NULL };
-	//mDeviceContext->CSSetShaderResources(0, 1, nullSRV);
-	//// Unbind output from compute shader
-	//ID3D11UnorderedAccessView* nullUAV[] = { NULL };
-	//mDeviceContext->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
+	//Dispatch
 	m_system->getImmediateDeviceContext()->dispatchComputeShader(m_x_dispatch_count, m_y_dispatch_count, 1);
 
 	// Disable Compute Shader
-	//mDeviceContext->CSSetShader(nullptr, nullptr, 0);
-	for (int i = 0; i < 1000000; i++)
-	{
-		int a = 3;
-		a = -1;
-	}
-
-
 	m_system->getImmediateDeviceContext()->removeComputeShader();
 
-	// Copy result
-	//mDeviceContext->CopyResource(mOutputBuffer, mOutputResultBuffer);
+	//Copy result
 	m_system->getImmediateDeviceContext()->copyResource(m_output, m_output_cpu_readable);
 
-
-	//// Update particle system data with output from Compute Shader
+	//save a pointer to the copied data for later use
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;
 	HRESULT hr = m_system->getImmediateDeviceContext()->mapResourceRead(m_output_cpu_readable, &mapped_resource);
-
-
 	m_output_data = mapped_resource.pData;
-	//if (SUCCEEDED(hr))
-	//{
-	//	ParticleData* dataView = reinterpret_cast<ParticleData*>(mappedResource.pData);
-
-	//	// Update particle positions and velocities
-	//	mParticleSystem.UpdatePositionAndVelocity(dataView);
-
-	//	mDeviceContext->Unmap(mOutputResultBuffer, 0);
-	//}
-
 }
 
 void ComputeShader::unmapCPUReadable()
 {
 	m_system->getImmediateDeviceContext()->unmapResource(m_output_cpu_readable);
+}
+
+void ComputeShader::releaseCPUReadable()
+{
+	m_output_cpu_readable->Release();
 }
 
 ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D size)
@@ -196,5 +172,6 @@ ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D siz
 	ID3D11ShaderResourceView* temp;
 	HRESULT hr = GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateTexture2D(&desc, &initData, &tex);
 	GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateShaderResourceView(tex, NULL, &temp);
+	tex->Release();
 	return temp;
 }

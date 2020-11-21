@@ -17,6 +17,19 @@ cbuffer constant: register(b5)
 	float  m_per_lacunarity;
 	float  m_per_amplitude;
 	float  m_per_cell_size;
+
+	//for compute shader
+	float m_yscale;
+	float m_xscale;
+	float m_compute_cell_size;
+	float m_seed;
+
+	float  m_ridged_per_octaves;
+	float  m_ridged_per_frequency;
+	float  m_ridged_per_gain;
+	float  m_ridged_per_lacunarity;
+	float  m_ridged_per_amplitude;
+	float  m_ridged_per_cell_size;
 }
 
 float rand1dTo1d(float3 value, float mutator = 0.546)
@@ -368,7 +381,7 @@ float brownianPerlin(float3 value, int octaves, float gain, float lacunarity, fl
 
 	for (int i = 0; i < octaves; i++)
 	{
-		result += (perlinNoise(value) + 0.5) * amplitude;
+		result += (perlinNoise(value)) * amplitude;
 		value *= lacunarity;
 		amplitude *= gain;
 	}

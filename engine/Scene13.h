@@ -18,12 +18,30 @@ private:
     TerrainPtr m_terrain[1024];
 
     IndexBufferPtr m_hd, m_md, m_ld;
+    IndexBufferPtr m_LOD_seam_high;
+    IndexBufferPtr m_LOD_seam_mid;
+    IndexBufferPtr m_LOD_seam_low;
 
-    void* compute_image_data;
-    ComputeShaderPtr m_cs;
+    IndexBufferPtr m_LOD_midToHigh;
+    IndexBufferPtr m_LOD_highToMid;
+
+    IndexBufferPtr m_LOD_midToLow;
+    IndexBufferPtr m_LOD_lowToMid;
+
+    ComputeShaderPtr m_compute_terrain;
+    ComputeShaderPtr m_compute_noisetex;
     ID3D11ShaderResourceView* m_srv;
     ID3D11RasterizerState* m_rs;
     ID3D11RasterizerState* m_rs2;
+
+    cb_noise m_noise;
+    int m_int_vor_octave;
+    int m_int_vor_frequency;
+    int m_int_per_octave;
+    int m_int_per_frequency;
+    int m_int_ridge_per_octave;
+    int m_int_ridge_per_frequency;
+
 public:
     Scene13(SceneManager*);
     ~Scene13();
@@ -32,7 +50,7 @@ public:
     virtual void imGuiRender() override;
 
     void makeComputeShaderTexture();
-    void getComputerShaderVertexList();
+    void runTerrainComputeShader();
 
     //temp - taken from terrain manager for testing
     void initTerrainBuffers();
@@ -40,6 +58,8 @@ public:
     void initRasterizers();
     //temp - taken from terrain manager for testing
     void initTextures();
+
+    void initNoiseBuffer();
 
 private:
     TexturePtr m_displace1_1;

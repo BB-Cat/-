@@ -40,32 +40,37 @@ Scene13::Scene13(SceneManager* sm) : Scene(sm)
 	listpixels.resize(pixelcount);
 
 	//compile the test compute shader
-	//void* shader_byte_code = nullptr;
-	//size_t size_shader = 0;
-	//GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeTest.hlsl", "CS_main", &shader_byte_code, &size_shader);
-	//m_cs = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
-	//	sizeof(Vector4D), &listpixels[0], pixelcount);
-	//GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+	void* shader_byte_code = nullptr;
+	size_t size_shader = 0;
+	GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeNoiseTex.hlsl", "CS_main", &shader_byte_code, &size_shader);
+	m_compute_noisetex = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
+		sizeof(Vector4D), &listpixels[0], pixelcount);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
 
-	//makeComputeShaderTexture();
 
-	getComputerShaderVertexList();
+	GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeHeightmap.hlsl", "CS_main", &shader_byte_code, &size_shader);
+	m_compute_terrain = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
+		sizeof(VertexMesh), nullptr, 34 * 34 * 1024);
+	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+
+
+
+	//runTerrainComputeShader();
+
+	//std::vector<VertexMesh> temp;
+	//temp.resize(34 * 34);
+	//for (int i = 0; i < 1024; i++)
+	//{
+	//	memcpy(&temp[0], &m_verts[34 * 34 * i], 34 * 34 * sizeof(VertexMesh));
+	//	TerrainPtr t(new Terrain(temp));
+	//	m_terrain[i] = t;
+	//	temp.clear();
+	//	temp.resize(34 * 34);
+	//}
+
 	initTerrainBuffers();
 	initRasterizers();
-	//m_terrain = std::make_shared<Terrain>(new Terrain("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp"));
-	//TerrainPtr t(new Terrain("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp", Vector2D(0, 0)));
-	std::vector<VertexMesh> temp;
-	temp.resize(33 * 33);
-	for (int i = 0; i < 1024; i++)
-	{
-		memcpy(&temp[0], &m_verts[33 * 33 * i], 33 * 33 * sizeof(VertexMesh));
-		TerrainPtr t(new Terrain(temp));
-		m_terrain[i] = t;
-		temp.clear();
-		temp.resize(33 * 33);
-	}
-	//TerrainPtr t(new Terrain(m_verts));
-	//m_terrain = t;
 	initTextures();
 }
 
@@ -73,12 +78,18 @@ Scene13::~Scene13()
 {
 	m_rs->Release();
 	m_rs2->Release();
+	if (m_srv != nullptr) m_srv->Release();
 	
 }
 
 void Scene13::update(float delta, const float& width, const float& height)
 {
 	CameraManager::get()->update(delta, width, height);
+
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetCSNoiseBuffer(m_noise);
+
+	makeComputeShaderTexture();
+
 	m_timer++;
 }
 
@@ -90,34 +101,58 @@ void Scene13::imGuiRender()
 	ImGui::SetNextWindowSize(ImVec2(300, 800));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
-
-
 	//create the test window
 	ImGui::Begin("Scene Settings");
 	ImGui::Text("Press 1 key to display the mouse");
 
-	//ImTextureID t = m_srv;/* Lets make a shader resource view out of the image data we generated and display it here */;
-	//ImGui::Image(t, ImVec2(300, 300));
+	ImTextureID t = m_srv;/* Lets make a shader resource view out of the image data we generated and display it here */;
+	ImGui::Image(t, ImVec2(300, 300));
 
 	if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
+
+
+
+	ImGui::Text("Noise settings");
+
+	if (ImGui::CollapsingHeader("Voronoi Noise"))
+	{
+		ImGui::DragInt("Octaves", &m_int_vor_octave, 0.05f, 0.00f, 10.0f);
+		m_noise.m_vor_octaves = m_int_vor_octave;
+		ImGui::DragFloat("Amplitude", &m_noise.m_vor_amplitude, 0.005f, 0.00f, 5.0f);
+		ImGui::DragFloat("Gain", &m_noise.m_vor_gain, 0.005f, -10.00f, 10.0f);
+		ImGui::DragFloat("Lacunarity", &m_noise.m_vor_lacunarity, 0.005f, -10.00f, 10.0f);
+	}
+	else if (ImGui::CollapsingHeader("Perlin Noise"))
+	{
+		ImGui::DragInt("Octaves", &m_int_per_octave, 0.05f, 0.00f, 10.0f);
+		m_noise.m_per_octaves = m_int_per_octave;
+		ImGui::DragFloat("Amplitude", &m_noise.m_per_amplitude, 0.005f, 0.00f, 5.0f);
+		ImGui::DragFloat("Gain", &m_noise.m_per_gain, 0.005f, -10.00f, 10.0f);
+		ImGui::DragFloat("Lacunarity", &m_noise.m_per_lacunarity, 0.005f, -10.00f, 10.0f);
+	}
+	else if (ImGui::CollapsingHeader("Ridged Perlin Noise"))
+	{
+		ImGui::DragInt("Octaves", &m_int_ridge_per_octave, 0.05f, 0.00f, 10.0f);
+		m_noise.m_per_octaves = m_int_per_octave;
+		ImGui::DragFloat("Amplitude", &m_noise.m_per_amplitude, 0.005f, 0.00f, 5.0f);
+		ImGui::DragFloat("Gain", &m_noise.m_per_gain, 0.005f, -10.00f, 10.0f);
+		ImGui::DragFloat("Lacunarity", &m_noise.m_ridged_per_lacunarity, 0.005f, -10.00f, 10.0f);
+	}
+
+	if (ImGui::CollapsingHeader("General Settings"))
+	{
+		ImGui::InputFloat("Set Seed", &m_noise.m_seed);
+		ImGui::InputFloat("X Scale", &m_noise.m_xscale); //float m_yscale;
+		ImGui::InputFloat("Y Scale", &m_noise.m_yscale); //float m_xscale;
+		ImGui::InputFloat("Cell Size", &m_noise.m_compute_cell_size); //float m_compute_cell_size;
+		VectorToArray v(&m_noise.m_noise_type);
+		ImGui::SliderFloat4("Noise Types", v.setArray(), 0, 1.0f, "%.3f", ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic);
+	}
 
 	if(ImGui::Button("Show Wireframe")) m_show_wire = !m_show_wire;
 	if (ImGui::Button("Show Normals")) m_active_shader = Shaders::TERRAIN_TEST;
 	if (ImGui::Button("HD Shader")) m_active_shader = Shaders::TERRAIN_HD_TOON;
 	if (ImGui::Button("LD Shader")) m_active_shader = Shaders::TERRAIN_LD_TOON;
-	//VectorToArray v(&m_global_light_rotation);
-	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.02f, -6.28f, 6.28f);
-
-
-	//v = VectorToArray(&m_light_color);
-	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
-
-	//v = VectorToArray(&m_ambient_light_color);
-	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-
-
-	//WorldObjectManager::get()->imGuiRender();
 
 	if (m_first_time)
 	{
@@ -143,82 +178,80 @@ void Scene13::shadowRenderPass(float delta)
 void Scene13::mainRenderPass(float delta)
 {
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
-	GraphicsEngine::get()->getShaderManager()->setPipeline(m_active_shader);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_hd);
 
 
-	//set all textures for the terrain
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture3SplatTex(
-		m_tex1, m_displace1_1, m_norm1, m_rough1, m_ambient_occ1,
-		m_tex2, m_displace2_1, m_norm2, m_rough2, m_ambient_occ2,
-		m_tex3, m_displace3_1, m_norm3, m_rough3, m_ambient_occ3,
-		m_tex4, m_displace4_1, m_norm4, m_rough4, m_ambient_occ4);
+
+	//GraphicsEngine::get()->getShaderManager()->setPipeline(m_active_shader);
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_hd);
+
+	////set all textures for the terrain
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture3SplatTex(
+	//	m_tex1, m_displace1_1, m_norm1, m_rough1, m_ambient_occ1,
+	//	m_tex2, m_displace2_1, m_norm2, m_rough2, m_ambient_occ2,
+	//	m_tex3, m_displace3_1, m_norm3, m_rough3, m_ambient_occ3,
+	//	m_tex4, m_displace4_1, m_norm4, m_rough4, m_ambient_occ4);
 
 
-	if(!m_show_wire) GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs);
-	else GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs2);
-	//m_terrain->render(0, 0, 0);
-	for (int i = 0; i < 1024; i++)
-	{
-		m_terrain[i]->render(0, 0, 0);
-	}
+	//if(!m_show_wire) GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs);
+	//else GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs2);
+	////m_terrain->render(0, 0, 0);
+	//for (int i = 0; i < 1024; i++)
+	//{
+	//	m_terrain[i]->render(0, 0, 0);
+	//}
+
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_seam_high);
+	////for (int i = 0; i < forward.high.size(); i++) forward.high[i]->render(0, 1, SeamLOD::HIGH);
+	////for (int i = 0; i < right.high.size(); i++) right.high[i]->render(0, 2, SeamLOD::HIGH);
+	//for (int i = 0; i < 1024; i++)
+	//{
+	//	m_terrain[i]->render(0, 1, SeamLOD::HIGH);
+	//	m_terrain[i]->render(0, 2, SeamLOD::HIGH);
+	//}
 }
 
 void Scene13::makeComputeShaderTexture()
 {
-//temporary function for testing compute shader functionality
-	m_cs->setXDispatchCount(256);
-	m_cs->setYDispatchCount(1);
-	m_cs->runComputeShader();
+	//temporary function for testing compute shader functionality
+	m_compute_noisetex->setXDispatchCount(256);
+	m_compute_noisetex->setYDispatchCount(1);
+	m_compute_noisetex->runComputeShader();
 
-	m_srv = m_cs->createTextureSRVFromOutput(Vector2D(512, 512));
+	//make sure we are releasing data properly
+	if (m_srv != nullptr) m_srv->Release();
+	m_srv = m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));
+	//m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));
 
-	m_cs->unmapCPUReadable();
+	m_compute_terrain->unmapCPUReadable();
 }
 
-void Scene13::getComputerShaderVertexList()
+void Scene13::runTerrainComputeShader()
 {
 	//compile the test compute shader
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 
-	GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeHeightmap.hlsl", "CS_main", &shader_byte_code, &size_shader);
-	m_cs = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
-		sizeof(VertexMesh), nullptr, 33 * 33 * 1024);
-	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-	m_cs->setXDispatchCount(33792);
-	m_cs->setYDispatchCount(1);
+	m_compute_terrain->setXDispatchCount(34);//33792);
+	m_compute_terrain->setYDispatchCount(1);
 
 	high_resolution_timer t;
 	t.start();
 
-	m_cs->runComputeShader();
+	m_compute_terrain->runComputeShader();
 
 
 
 	
-	m_verts.resize(33 * 33 * 1024);
+	m_verts.resize(34 * 34 * 1024);
 	VertexMesh* temp;
-	temp = reinterpret_cast<VertexMesh*>(m_cs->getOutputData());
+	temp = reinterpret_cast<VertexMesh*>(m_compute_terrain->getOutputData());
 
-	memcpy(&m_verts[0], m_cs->getOutputData(), 33 * 33 * sizeof(VertexMesh) * 1024);
+	memcpy(&m_verts[0], m_compute_terrain->getOutputData(), 34 * 34 * sizeof(VertexMesh) * 1024);
 
 	t.tick();
 	float value = t.time_interval();
 
-	m_cs->unmapCPUReadable();
-
-	//high_resolution_timer t2;
-	//t2.start();
-
-	//TerrainPtr terr(new Terrain("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp", Vector2D(1, 1)));
-	//TerrainPtr terr2(new Terrain("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp", Vector2D(1, 1)));
-
-	//t2.tick();
-	//float value2 = t2.time_interval();
-	//int a = 3;
-
+	m_compute_terrain->unmapCPUReadable();
 }
 
 void Scene13::initTerrainBuffers()
@@ -315,6 +348,334 @@ void Scene13::initTerrainBuffers()
 	m_hd = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
 	m_md = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices2[0], (UINT)indices2.size());
 	m_ld = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices3[0], (UINT)indices3.size());
+
+	int total_verts = 33 * 2 + 2; //this is the total amount of vertice data available in each strip
+
+	int verts_high = SEAMLESS_CHUNK;
+	int verts_mid = (SEAMLESS_CHUNK) / 2;
+	int verts_low = (SEAMLESS_CHUNK) / 4;
+
+	//Create the grid
+	int num_faces_MH = verts_high + verts_mid + 2; //2 additional vertexes for the cap at both ends of the seam
+	int num_faces_LM = verts_mid + verts_low + 2;
+
+
+
+	//THESE INDEX BUFFERS ARE UPDATED FOR THE COMPUTE SHADER TERRAIN GENERATOR!
+
+	//===============================================================================
+	//  HIGH INDEX
+	//===============================================================================
+
+	indices.resize(66 * 3); //64 faces in a high res seam plus two additional faces for the space between seams
+
+
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+	k = 3;
+
+	for (int i = 1; i <= verts_high; i++)
+	{
+		indices[k] = i + 1;
+		indices[k + 1] = i + 34;
+		indices[k + 2] = i;
+
+		k += 3;
+	}
+
+	for (int i = 1; i <= verts_high; i++)
+	{
+		indices[k] = i + 33 + 1;
+		indices[k + 1] = i + 33;
+		indices[k + 2] = i;
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] =     67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_seam_high = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+	//===============================================================================
+	//===============================================================================
+
+	//===============================================================================
+	//  MID INDEX
+	//===============================================================================
+
+	indices.clear();
+	indices.resize(34 * 3); //32 faces in a high res seam plus two faces for caps
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+	k = 3;
+
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = (i + 1) * 2 - 1;
+		indices[k + 1] = i * 2 - 1 + 33;
+		indices[k + 2] = i * 2 - 1;
+
+		k += 3;
+	}
+
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = i * 2 - 1 + 35;
+		indices[k + 1] = i * 2 - 1 + 33;
+		indices[k + 2] = (i + 1) * 2 - 1;
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_seam_mid = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+	//===============================================================================
+	//===============================================================================
+
+	//===============================================================================
+	//  LOW INDEX
+	//===============================================================================
+
+	indices.clear();
+	indices.resize(18 * 3); //16 faces in a high res seam plus two faces for caps
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+	k = 3;
+
+	for (int i = 1; i <= verts_low; i++)
+	{
+		indices[k] = i * 4 + 1;
+		indices[k + 1] = (i - 1) * 4 + 34;
+		indices[k + 2] = (i - 1) * 4 + 1;
+
+
+		k += 3;
+	}
+
+	for (int i = 1; i <= verts_low; i++)
+	{
+		indices[k] = i * 4 + 34;
+		indices[k + 1] = i * 4 + 1;
+		indices[k + 2] = (i - 1) * 4 + 34;
+
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_seam_low = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+	//===============================================================================
+	//===============================================================================
+
+
+
+	//===============================================================================
+	//  HIGH TO MID INDEX
+	//===============================================================================
+
+	indices.clear();
+	indices.resize(num_faces_MH * 3);
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+
+	k = 3;
+	//create the high resolution half of the index, with a number of triangles equal to the edge vertexes of a mid resolution chunk
+	for (int i = 1; i <= verts_high; i++)
+	{
+		indices[k] = i + 1;
+		indices[k + 1] = (i / 2) * 2 + 34;
+		indices[k + 2] = i;
+
+
+		k += 3;
+	}
+	//create the second half of the index, with a number of triangles equal to the edge vertexes of a low resolution chunk
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = i * 2 + 34;
+		indices[k + 1] = (i - 1) * 2 + 34;
+		indices[k + 2] = i * 2;
+
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_highToMid = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+	//===============================================================================
+	//===============================================================================
+
+	//===============================================================================
+	//  MID TO HIGH INDEX
+	//===============================================================================
+		/* This is essentially the same as HIGH to MID index, we just reverse the order */
+	indices.clear();
+	indices.resize(num_faces_MH * 3);
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+
+	k = 3;
+	//create the high resolution half of the index, with a number of triangles equal to the edge vertexes of a mid resolution chunk
+	for (int i = 1; i <= verts_high; i++)
+	{
+		indices[k] = i + 1 + 33;
+		indices[k + 1] = (i / 2) * 2 + 1;
+		indices[k + 2] = i + 33;
+
+
+		k += 3;
+	}
+	//create the second half of the index, with a number of triangles equal to the edge vertexes of a low resolution chunk
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = i * 2 + 1;
+		indices[k + 1] = (i - 1) * 2 + 1;
+		indices[k + 2] = i * 2 + 33;
+
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_midToHigh = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+
+	//===============================================================================
+	//===============================================================================
+
+	//===============================================================================
+	//  MID TO LOW INDEX
+	//===============================================================================
+
+
+	indices.clear();
+	indices.resize(num_faces_LM * 3);
+	//std::vector<DWORD> indices2((num_faces_LM * 3));
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+
+	k = 3;
+	//create the mid resolution half of the index, with a number of triangles equal to the edge vertexes of a mid resolution chunk
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = (i + 1) * 2 - 1;
+		indices[k + 1] = (i / 2) * 4 + 34;
+		indices[k + 2] = i * 2 - 1;
+
+
+		k += 3;
+	}
+	//create the second half of the index, with a number of triangles equal to the edge vertexes of a low resolution chunk
+	for (int i = 1; i <= verts_low; i++)
+	{
+		indices[k] = i * 4 + 34;
+		indices[k + 1] = i * 4 + 34 - 4;
+		indices[k + 2] = i * 4 - 1;
+
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_midToLow = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+
+	//===============================================================================
+	//===============================================================================
+
+
+
+	//===============================================================================
+	//  LOW TO MID INDEX
+	//===============================================================================
+
+	indices.clear();
+	indices.resize(num_faces_LM * 3);
+	//std::vector<DWORD> indices2((num_faces_LM * 3));
+
+	//create the index for the top cap
+	indices[0] = 66;
+	indices[1] = 67;
+	indices[2] = 0;
+
+
+	k = 3;
+	//create the mid resolution half of the index, with a number of triangles equal to the edge vertexes of a mid resolution chunk
+	for (int i = 1; i <= verts_mid; i++)
+	{
+		indices[k] = (i + 1) * 2 + 32;
+		indices[k + 1] = (i / 2) * 4 + 1;
+		indices[k + 2] = i * 2 + 32;
+
+
+		k += 3;
+	}
+	//create the second half of the index, with a number of triangles equal to the edge vertexes of a low resolution chunk
+	for (int i = 1; i <= verts_low; i++)
+	{
+		indices[k] = i * 4 + 1;
+		indices[k + 1] = i * 4 + 1 - 4;
+		indices[k + 2] = i * 4 + 32;
+
+
+		k += 3;
+	}
+
+	//create the index for the bottom cap
+	indices[k] = 67;
+	indices[k + 2] = 33;
+	indices[k + 1] = 66;
+
+	m_LOD_lowToMid = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&indices[0], (UINT)indices.size());
+	//===============================================================================
+	//===============================================================================
 }
 
 void Scene13::initRasterizers()
@@ -368,5 +729,36 @@ void Scene13::initTextures()
 	m_rough4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Metallic.png");
 	m_ambient_occ4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_AO.png");
 
+}
+
+void Scene13::initNoiseBuffer()
+{
+	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
+	m_noise.m_show_rgba = Vector4D(1, 0, 0, 0);
+
+	m_noise.m_vor_amplitude = 1.0f;
+	m_noise.m_vor_frequency = 4.0f;
+	m_noise.m_vor_gain = 0.3f;
+	m_noise.m_vor_lacunarity = 2.0f;
+	m_noise.m_vor_octaves = 1;
+	m_noise.m_vor_cell_size = 30.0f;
+
+	m_noise.m_per_amplitude = 0.75f;
+	m_noise.m_per_frequency = 4.0f;
+	m_noise.m_per_gain = 0.5f;
+	m_noise.m_per_lacunarity = 2.0f;
+	m_noise.m_per_octaves = 10;
+	m_noise.m_per_cell_size = 25.0f;
+
+	m_noise.m_compute_cell_size = 2000;
+	m_noise.m_xscale = 10;
+	m_noise.m_yscale = 20;
+
+	m_noise.m_ridged_per_amplitude = 0.75f;
+	m_noise.m_ridged_per_frequency = 4.0f;
+	m_noise.m_ridged_per_gain = 0.5f;
+	m_noise.m_ridged_per_lacunarity = 2.0f;
+	m_noise.m_ridged_per_octaves = 10;
+	m_noise.m_ridged_per_cell_size = 25.0f;
 }
 

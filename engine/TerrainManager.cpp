@@ -527,7 +527,6 @@ void TerrainManager::initChunkIndexes()
 
 void TerrainManager::initSeamIndexes()
 {
-
     int total_verts = 33 * 2 + 2; //this is the total amount of vertice data available in each strip
 
     int verts_high = SEAMLESS_CHUNK;
