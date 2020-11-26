@@ -1,40 +1,31 @@
 #include "noise.fx"
 
 //input
-struct ConstantParticleData
+struct InputData
 {
     float4 position1;
 };
 
 //output
-struct ParticleData
+struct OutputData
 {
     float4 position1;
 };
 
-StructuredBuffer<ConstantParticleData>  inputConstantParticleData   : register(t0);
-RWStructuredBuffer<ParticleData>        outputParticleData          : register(u0);
+StructuredBuffer<InputData>  input : register(t0);
+RWStructuredBuffer<OutputData> output : register(u0);
 
-
-
-//!!!!!!!!!!!!!!!! The number of threads should be a MULTIPLE OF 32 FOR NVIDIA GPU'S
-// all threads in a group should be guaranteed to follow the same branch for maximum efficiency!  otherwise both branches will be
-//calculated at the same time effectively doubling the overall cost.
 [numthreads(1024, 1, 1)]
-void CS_main(int3 dispatchThreadID : SV_DispatchThreadID)
+void CS_main(int3 id : SV_DispatchThreadID)
 {
-    float2 uv = float2((dispatchThreadID.x % 512.0) / 512.0, dispatchThreadID.x / 512.0 / 512.0);
 
-    //new
-    float2 pos = uv * m_xscale;
-    float value = 1 - abs(brownianPerlin(pos / m_compute_cell_size, 5, 0.6, 1.4, 1.0) * m_yscale);
-    //
-
-
-    //float3 value = float3(uv.xy, 1);
-    //float noise = (1.0 - brownianTiledVoronoi(value, (int)2, (int)4, 0.3, 2, 0.8).x);
-    //float3 final = noise;
-    //if (!m_compute_cell_size) final = 0;
-    float3 final = value;
-    outputParticleData[dispatchThreadID.x].position1 = float4(final, 1);
+    //calculate the uv for this pixel
+    float2 uv = float2((id.x % 512.0) / 512.0, id.x / 512.0 / 512.0);
+    //get the basic sample position
+    float2 sample_pos = (uv * m_xscale);
+    //sample_pos /= m_compute_cell_size;
+    //sample the noise 
+    float3 final = calculateHeightMap(sample_pos);
+    //return the result
+    output[id.x].position1 = float4(final, 1);
 }

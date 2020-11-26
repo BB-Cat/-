@@ -16,6 +16,8 @@ private:
     int m_active_shader = Shaders::TERRAIN_TEST;
     std::vector<VertexMesh> m_verts;
     TerrainPtr m_terrain[1024];
+    TerrainManager* m_tman;
+    int m_create_terrain_timer = -1;
 
     IndexBufferPtr m_hd, m_md, m_ld;
     IndexBufferPtr m_LOD_seam_high;
@@ -36,11 +38,11 @@ private:
 
     cb_noise m_noise;
     int m_int_vor_octave;
-    int m_int_vor_frequency;
+    //int m_int_vor_frequency;
     int m_int_per_octave;
-    int m_int_per_frequency;
+    //int m_int_per_frequency;
     int m_int_ridge_per_octave;
-    int m_int_ridge_per_frequency;
+    //int m_int_ridge_per_frequency;
 
 public:
     Scene13(SceneManager*);

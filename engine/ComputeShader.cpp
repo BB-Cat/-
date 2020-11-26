@@ -34,9 +34,6 @@ ComputeShader::ComputeShader(const void* shader_byte_code, size_t byte_code_size
 		hr = m_system->m_d3d_device->CreateBuffer(&constant_data_desc, &sub_data, &m_input);
 	}
 	else hr = m_system->m_d3d_device->CreateBuffer(&constant_data_desc, nullptr, &m_input);
-	
-
-
 
 	//create an SRV using the buffer we just made.
 	D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc;
@@ -73,6 +70,10 @@ ComputeShader::ComputeShader(const void* shader_byte_code, size_t byte_code_size
 	output_desc.BindFlags = 0;
 	output_desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	hr = m_system->m_d3d_device->CreateBuffer(&output_desc, 0, &m_output_cpu_readable);
+	if (hr != S_OK)
+	{
+		hr = m_system->m_d3d_device->GetDeviceRemovedReason();
+	}
 
 	//create an unordered access view for compute shader to write results (not exactly sure what that means yet)
 	D3D11_UNORDERED_ACCESS_VIEW_DESC uav_desc;
@@ -82,6 +83,8 @@ ComputeShader::ComputeShader(const void* shader_byte_code, size_t byte_code_size
 	uav_desc.Buffer.NumElements = input_count * ((output_structure_size) / 4);
 	uav_desc.Format = DXGI_FORMAT_UNKNOWN;
 	uav_desc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+
+	
 
 	hr = m_system->m_d3d_device->CreateUnorderedAccessView(m_output, &uav_desc, &m_output_uav);
 
@@ -97,15 +100,24 @@ ComputeShader::~ComputeShader()
 	m_input_srv->Release();
 	m_output_cpu_readable->Release();
 	m_output_uav->Release();
+
+	m_compute_shader = nullptr;
+	m_input = nullptr;
+	m_output = nullptr;
+	m_input_srv = nullptr;
+	m_output_cpu_readable = nullptr;
+	m_output_uav = nullptr;
 }
 
-void ComputeShader::mapInputData(void* newdata, size_t data_size_in_bytes)
+void ComputeShader::updateInputData(void* newdata, UINT data_size_in_bytes)
 {
 	D3D11_MAPPED_SUBRESOURCE resource;
 	//d3dDeviceContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	m_system->getImmediateDeviceContext()->mapResourceWriteDiscard(m_input, &resource);
 	memcpy(resource.pData, newdata, data_size_in_bytes);
 	m_system->getImmediateDeviceContext()->unmapResource(m_input);
+
+	//m_system->getImmediateDeviceContext()->updateResource(m_input, newdata);
 }
 
 void ComputeShader::runComputeShader()
@@ -129,16 +141,12 @@ void ComputeShader::runComputeShader()
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;
 	HRESULT hr = m_system->getImmediateDeviceContext()->mapResourceRead(m_output_cpu_readable, &mapped_resource);
 	m_output_data = mapped_resource.pData;
+	m_system->getImmediateDeviceContext()->unmapResource(m_output_cpu_readable);
 }
 
 void ComputeShader::unmapCPUReadable()
 {
 	m_system->getImmediateDeviceContext()->unmapResource(m_output_cpu_readable);
-}
-
-void ComputeShader::releaseCPUReadable()
-{
-	m_output_cpu_readable->Release();
 }
 
 ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D size)
@@ -173,5 +181,6 @@ ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D siz
 	HRESULT hr = GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateTexture2D(&desc, &initData, &tex);
 	GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateShaderResourceView(tex, NULL, &temp);
 	tex->Release();
+	//unmapCPUReadable();
 	return temp;
 }

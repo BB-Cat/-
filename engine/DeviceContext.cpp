@@ -225,6 +225,11 @@ void DeviceContext::unmapResource(ID3D11Buffer* resource)
 	m_device_context->Unmap(resource, 0);
 }
 
+void DeviceContext::updateResource(ID3D11Resource* dest, void* data)
+{
+	m_device_context->UpdateSubresource(dest, NULL, NULL, data, NULL, NULL);
+}
+
 void DeviceContext::removeGeometryShader()
 {
 	m_device_context->GSSetShader(nullptr, nullptr, 0);

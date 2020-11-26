@@ -1264,5 +1264,17 @@
     <None Include="cloud.fx">
       <Filter>Shaders\19 VolumetricClouds</Filter>
     </None>
+    <None Include="ZeroToOne.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Sampling.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="General.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Lighting.fx">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -40,25 +40,25 @@ static const float night_max = -0.2;
 //	Noise Generation Functions
 //===============================================================//
 //noise settings
-cbuffer constant: register(b5)
-{
-	float4 m_noise_type;
-	float4 m_rgba;
-
-	float  m_vor_octaves;
-	float  m_vor_frequency;
-	float  m_vor_gain;
-	float  m_vor_lacunarity;
-	float  m_vor_amplitude;
-	float  m_vor_cell_size;
-
-	float  m_per_octaves;
-	float  m_per_frequency;
-	float  m_per_gain;
-	float  m_per_lacunarity;
-	float  m_per_amplitude;
-	float  m_per_cell_size;
-}
+//cbuffer constant: register(b5)
+//{
+//	float4 m_noise_type;
+//	float4 m_rgba;
+//
+//	float  m_vor_octaves;
+//	float  m_vor_frequency;
+//	float  m_vor_gain;
+//	float  m_vor_lacunarity;
+//	float  m_vor_amplitude;
+//	float  m_vor_cell_size;
+//
+//	float  m_per_octaves;
+//	float  m_per_frequency;
+//	float  m_per_gain;
+//	float  m_per_lacunarity;
+//	float  m_per_amplitude;
+//	float  m_per_cell_size;
+//}
 
 ////cloud property settings
 //cbuffer constant: register(b6)
@@ -134,7 +134,7 @@ float4 getCumulus(float3 pos, float3 dir)
 //===============================================================//
 //   Cloud raymarching
 //===============================================================//
-static const float base_num_steps = 20;
+static const float base_num_steps = 10;
 static const float step_size = 0.4f;
 
 float raymarchCloud(float3 pos, float3 dir, float cloud_presence)
@@ -216,9 +216,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//	Cloud retrieval
 	//=================================================================
 	float cloud_color = 0;
-	float cloud2_color = 0;
 	float4 cloud = 0;
-	float4 cloud2 = 0;
 	if (n.y > 0.15)
 	{
 		cloud = getStratus(input.world_pos, n);
@@ -226,20 +224,13 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 		{
 			cloud_color = raymarchCloud(cloud.xyz, n, cloud.w);
 		}
-
-		//cloud2 = getCumulus(input.world_pos, n);
-		//if (cloud_color < 1.0 && cloud2.w > m_per_pixel_fade_threshhold)
-		//{
-		//	cloud2_color = raymarchCloud(cloud2.xyz, n, cloud2.w);
-		//
-		//}
 	}
 
 	//=================================================================
 
 
 	//return float4(1, 1, 1, cloud_color + cloud2_color);
-	float4 final_color = float4(final_sky_color.xyz + float3(1,1,1) * (cloud_color + cloud2_color), 1);
+	float4 final_color = float4(final_sky_color.xyz + float3(1,1,1) * (cloud_color), 1);
 	return final_color;
 	//float3 final_color = cloud.w;
 	//return float4(final_color, 1);

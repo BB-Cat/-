@@ -1,3 +1,7 @@
+#include "General.fx"
+#include "ZeroToOne.fx"
+#include "Sampling.fx"
+
 SamplerState TextureSampler: register(s0);
 
 Texture2D T1: register(t0);
@@ -93,93 +97,61 @@ static const float atmos_fog_range = 2000;
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
-
-////balance colors
-//float3 bias = normalize(input.texbias.rgb);
-//float r = min(max(bias.r - (bias.g + bias.b), -0.1), 0.1);
-//float g = min(max(bias.g - (bias.r + bias.b), -0.1), 0.1);
-//float b = min(max(bias.b - (bias.g + bias.r), -0.1), 0.1);
-//bias = normalize(float3(r,g,b));
-
 	//--------------------------------------------------------------------------------------//
 	//diffuse texture sampling-																//
 	//--------------------------------------------------------------------------------------//
-	float3 sample_color = T1.Sample(TextureSampler, input.texcoord);
+	float3 sample_color  = T1.Sample(TextureSampler, input.texcoord);
 	float3 sample_color2 = T2.Sample(TextureSampler, input.texcoord);
 	float3 sample_color3 = T3.Sample(TextureSampler, input.texcoord);
 
 
 	//since cliffs are applied to skewed (tall) polygons, they need to use triplanar sampling in order to looknormal.
-	//float3 sample_color4 = T4.Sample(TextureSampler, input.cliff_texcoord);
 	float3 triplanar_balance = abs(input.normal);
 	triplanar_balance = pow(max(triplanar_balance, 0), 2);
-	float2 cliff_coord1 = input.world_pos.zx / 10;  // / triplanar_balance.y;
-	float2 cliff_coord2 = input.world_pos.xy / 10;  // / triplanar_balance.z;
-	float2 cliff_coord3 = input.world_pos.zy / 10;  // / triplanar_balance.x;
+	float2 cliff_coord1 = input.world_pos.zx / 10;  //triplanar_balance.y;
+	float2 cliff_coord2 = input.world_pos.xy / 10;  //triplanar_balance.z;
+	float2 cliff_coord3 = input.world_pos.zy / 10;  //triplanar_balance.x;
 	float3 c_sample1 = T4.Sample(TextureSampler, cliff_coord1);
 	float3 c_sample2 = T4.Sample(TextureSampler, cliff_coord2);
 	float3 c_sample3 = T4.Sample(TextureSampler, cliff_coord3);
 
-	float3 sample_color4 = c_sample1 * triplanar_balance.y +c_sample2 * triplanar_balance.z + c_sample3 * triplanar_balance.x;
+	float3 sample_color4 = c_sample1 * triplanar_balance.y + c_sample2 * triplanar_balance.z + c_sample3 * triplanar_balance.x;
 
-	float r = input.texbias.r / (input.texbias.r + input.texbias.g + input.texbias.b);
-	float g = input.texbias.g / (input.texbias.r + input.texbias.g + input.texbias.b);
-	float b = input.texbias.b / (input.texbias.r + input.texbias.g + input.texbias.b);
-	float3 bias = normalize(float3(input.texbias.r, input.texbias.g, input.texbias.b));
 
-	//float3 final_sample = sample_color * r + sample_color2 * g + sample_color3 * b;
-	float3 color = sample_color * (input.texbias.r > input.texbias.g && input.texbias.r > input.texbias.b) +
-		sample_color2 * (input.texbias.g > input.texbias.r && input.texbias.g > input.texbias.b) +
-		sample_color3 * (input.texbias.b >= input.texbias.r && input.texbias.b >= input.texbias.g);
-
-	//color = (sample_color * r + sample_color2 * g + sample_color3 * b);
-	//color = (sample_color * bias.r + sample_color2 * bias.g + sample_color3 * bias.b);
+	float3 color = getTextureSplat(sample_color, sample_color2, sample_color3, input.texbias.rgb);
 
 	//if necessary, mix the cliff texture
-	//float3 final_sample = color * (1.0 - input.cliff_face) + sample_color4 * input.cliff_face;
 	float3 final_sample = color * (input.cliff_face < 0.7) + sample_color4 * (input.cliff_face >= 0.7);
 
 	//-----------------------------------------------------------//
 	//Normal Calculation
 	//-----------------------------------------------------------//
-
 	float3 sample_normal = N1.Sample(TextureSampler, input.texcoord);
 	float3 sample_normal2 = N2.Sample(TextureSampler, input.texcoord);
 	float3 sample_normal3 = N3.Sample(TextureSampler, input.texcoord);
 
-
 	//cliff face sample
-	//float3 sample_normal4 = N4.Sample(TextureSampler, input.cliff_texcoord);
 	float3 n_sample1 = N4.Sample(TextureSampler, cliff_coord1);
 	float3 n_sample2 = N4.Sample(TextureSampler, cliff_coord2);
 	float3 n_sample3 = N4.Sample(TextureSampler, cliff_coord3);
 
 	float3 sample_normal4 = n_sample1 * triplanar_balance.y + n_sample2 * triplanar_balance.z + n_sample3 * triplanar_balance.x;
 
-	float3 normal =
-		sample_normal * (input.texbias.r > input.texbias.g && input.texbias.r > input.texbias.b) +
-		sample_normal2 * (input.texbias.g > input.texbias.r && input.texbias.g > input.texbias.b) +
-		sample_normal3 * (input.texbias.b >= input.texbias.r && input.texbias.b >= input.texbias.g);
+	float3 normal = getTextureSplat(sample_normal, sample_normal2, sample_normal3, input.texbias.rgb);
 
 	//if the texbias for this face is over the cliff threshhold, mix the cliff normal
-	//normal = normal * (1.0 - input.cliff_face) + sample_normal4 * input.cliff_face;
 	normal = normal * (input.cliff_face < 0.7) + sample_normal4 * (input.cliff_face >= 0.7);
 
-
-	//adjust the normal map sample to the normal of the domain
-	float3 vx = normalize(input.tangent);
-	float3 vy = normalize(input.binormal);
-	float3 vz = normalize(input.normal);
-
-	float3x3 inverseMatrix = { vx,vy,vz };
+	//build the domain, then adjust the normal map sample to the normal of the domain
+	float3x3 inverseMatrix = buildInverseMatrix(input.normal, input.binormal, input.tangent);
 	float3 inverseToCamera = normalize(mul(inverseMatrix, input.direction_to_camera));
-
-	float3x3 mat = { vx,vy,vz };
-	normal = normalize(mul(normal, mat));
+	normal = normalize(mul(normal, inverseMatrix));
 	normal = normal * 2 - 1;
 	float temp = normal.z;
 	normal.z = normal.y;
 	normal.y = temp;
+
+	float dist = length(input.world_pos - m_camera_position.xyz);
 
 	//--------------------------------------------------------------------------------------//
 	//AO texture sampling	-																//
@@ -189,15 +161,10 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float sample_ao3 = AO3.Sample(TextureSampler, input.texcoord);
 	float sample_ao4 = AO4.Sample(TextureSampler, input.cliff_texcoord);
 
-	
-	float ao = sample_ao * (input.texbias.r > input.texbias.g && input.texbias.r > input.texbias.b) +
-		sample_ao2 * (input.texbias.g > input.texbias.r && input.texbias.g > input.texbias.b) +
-		sample_ao3 * (input.texbias.b >= input.texbias.r && input.texbias.b >= input.texbias.g);
+	float ao = getTextureSplat(sample_ao, sample_ao2, sample_ao3, input.texbias.rgb);
 
-	//ao = ao * 0.5 +  (sample_ao * r + sample_ao2 * g + sample_ao3 * b) * 0.5;
 	//if necessary, mix the cliff texture
 	ao = ao * (1.0 - input.cliff_face) + sample_ao4 * input.cliff_face;
-	float dist = length(input.world_pos - m_camera_position.xyz);
 	ao = ao * (1 - min(dist / AO_range, 1)) + min(dist / AO_range, 1);
 
 	//--------------------------------------------------------------------------------------//
@@ -208,11 +175,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float sample_rough3 = R3.Sample(TextureSampler, input.texcoord);
 	float sample_rough4 = R4.Sample(TextureSampler, input.cliff_texcoord);
 
-	float roughness = sample_rough * (input.texbias.r > input.texbias.g && input.texbias.r > input.texbias.b) +
-		sample_rough2 * (input.texbias.g > input.texbias.r && input.texbias.g > input.texbias.b) +
-		sample_rough3 * (input.texbias.b >= input.texbias.r && input.texbias.b >= input.texbias.g);
-
-	//roughness = roughness * 0.5 + (sample_rough * r + sample_rough2 * g + sample_rough3 * b) * 0.5;
+	float roughness = getTextureSplat(sample_rough, sample_rough2, sample_rough3, input.texbias.rgb);
 
 	//if necessary, mix the cliff texture
 	roughness = roughness * (1.0 - input.cliff_face) + sample_rough4 * input.cliff_face;

@@ -20,7 +20,7 @@ SceneSelect::SceneSelect(SceneManager* sm) : Scene(sm)
 	CameraManager::get()->setCamState(FREE);
 	CameraManager::get()->setCamPos(Vector3D(8, 7, -6));
 
-	m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\Env.png");
+	//m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\Env.png");
 
 }
 

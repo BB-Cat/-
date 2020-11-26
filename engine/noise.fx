@@ -1,3 +1,5 @@
+#include "ZeroToOne.fx"
+
 //noise settings
 cbuffer constant: register(b5)
 {
@@ -32,10 +34,17 @@ cbuffer constant: register(b5)
 	float  m_ridged_per_cell_size;
 }
 
+static const float DEFAULT_MUTATION = 63758.5453f;
+
+float getMutator()
+{
+	return sin(DEFAULT_MUTATION - frac(m_seed / 8.745f * m_seed / 8.745f) * DEFAULT_MUTATION / 2.0f) + 0.42;
+}
+
 float rand1dTo1d(float3 value, float mutator = 0.546)
 {
 
-	float random = frac(sin(value + mutator) * 143758.5453);
+	float random = frac(sin(value + mutator) * (143758.5453 * getMutator()));
 	return random;
 }
 
@@ -53,7 +62,7 @@ float rand2dTo1d(float2 value, float2 dotDir = float2(12.9898, 78.233))
 {
 	float2 smallValue = sin(value);
 	float random = dot(smallValue, dotDir);
-	random = frac(sin(random) * 143758.5453);
+	random = frac(sin(random) * 143758.5453 * getMutator());
 	return random;
 }
 
@@ -71,7 +80,7 @@ float rand3dTo1d(float3 value, float3 dotDir = float3(12.9898, 78.233, 37.719))
 	//get scalar value from 3d vector
 	float random = dot(smallValue, dotDir);
 	//make value more random by making it bigger and then taking the factional part
-	random = frac(sin(random) * 43758.5453);
+	random = frac(sin(random) * 43758.5453 * getMutator());
 	return random;
 }
 
@@ -84,22 +93,7 @@ float3 rand3dTo3d(float3 value)
 		);
 }
 
-inline float easeIn(float interpolator)
-{
-	return interpolator * interpolator;
-}
 
-float easeOut(float interpolator)
-{
-	return 1 - easeIn(1 - interpolator);
-}
-
-float easeInOut(float interpolator)
-{
-	float easeInValue = easeIn(interpolator);
-	float easeOutValue = easeOut(interpolator);
-	return lerp(easeInValue, easeOutValue, interpolator);
-}
 
 float ValueNoise2d(float2 value)
 {
@@ -361,6 +355,10 @@ float3 tiledVoronoiNoise(float3 value, float period)
 	return float3(minDistToCell, random, minEdgeDistance);
 }
 
+
+
+
+
 float brownianPerlin(float2 value, int octaves, float gain, float lacunarity, float amplitude)
 {
 	float result = 0;
@@ -431,4 +429,30 @@ float3 brownianTiledVoronoi(float3 value, int octaves, int frequency, float gain
 	}
 
 	return result;
+}
+
+float calculateHeightMap(float2 sample_pos)
+{
+	//sample_pos /= m_compute_cell_size;
+
+	//sample for each type of noise////////////////////////////////////
+	float perlin = clamp(brownianPerlin(sample_pos / m_per_cell_size, m_per_octaves, m_per_gain,
+		m_per_lacunarity, m_per_amplitude) + 0.5, 0, 1);
+	perlin *= m_noise_type.x;
+
+	/* the voronoi function needs a 3d value so we will supply 0 for the y value */
+	//float voronoi = clamp(brownianVoronoi(float3(sample_pos.x, 0, sample_pos.y) / m_vor_cell_size, m_vor_octaves, m_vor_gain,
+	//	m_vor_lacunarity, m_vor_amplitude), 0, 1);
+	//voronoi *= m_noise_type.y;
+
+	float ridged = clamp(1.0 - abs(brownianPerlin(sample_pos / m_ridged_per_cell_size, m_ridged_per_octaves,
+		m_ridged_per_gain, m_ridged_per_lacunarity, m_ridged_per_amplitude)), 0, 1);
+	ridged *= m_noise_type.z;
+	///////////////////////////////////////////////////////////////////
+
+	//combine the values
+	//float final = (perlin + voronoi + ridged) / (m_noise_type.x + m_noise_type.y + m_noise_type.z);
+	float final = (perlin + ridged) / (m_noise_type.x + m_noise_type.z);
+
+	return final;
 }

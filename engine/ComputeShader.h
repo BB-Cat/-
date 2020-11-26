@@ -12,7 +12,7 @@ public:
 	~ComputeShader();
 
 	//call this to replace the input data with new data
-	void mapInputData(void* newdata, size_t data_size_in_bytes);
+	void updateInputData(void* newdata, UINT data_size_in_bytes);
 	//call this to run the compute shader. 
 	//data is returned in the form of a void pointer
 	/*! CAUTION ! This Compute Shader class will not clear it's output data 
@@ -21,7 +21,6 @@ public:
 	void runComputeShader();
 	//call this after retrieving data from the compute shader.
 	void unmapCPUReadable();
-	void releaseCPUReadable();
 
 	void setXDispatchCount(UINT x) { m_x_dispatch_count = x; }
 	void setYDispatchCount(UINT y) { m_y_dispatch_count = y; }

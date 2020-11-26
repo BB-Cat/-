@@ -340,8 +340,8 @@ Terrain::Terrain(const std::vector<VertexMesh>& verts)
 
 
     m_vec_vm_chunk = chunkverts;
-    //m_vec_vm_seamR = verts_right_seam;
-    //m_vec_vm_seamF = verts_forward_seam;
+    m_vec_vm_seamR = verts_right_seam;
+    m_vec_vm_seamF = verts_forward_seam;
 }
 
 
@@ -437,11 +437,16 @@ void Terrain::render(int lod, int vb_id, int seam_lod)
 //    return (x_height * (1.0f - z_remainder))  + (z_height * z_remainder);
 //}
 
-Vector2D Terrain::getCenter()
+Vector2D Terrain::getCenterPreloaded()
 {
-    //float center_height = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE) / 2].m_position.m_y;
     return (Vector2D(m_pos.m_x, m_pos.m_y) * (CHUNK_AND_SEAM_SIZE - 1) +
         Vector2D((CHUNK_AND_SEAM_SIZE-1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * PRELOADED_SCALE;
+}
+
+Vector2D Terrain::getCenterComputed()
+{
+    return (Vector2D(m_pos.m_x, m_pos.m_y) * (CHUNK_AND_SEAM_SIZE - 1) +
+        Vector2D((CHUNK_AND_SEAM_SIZE - 1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * COMPUTED_SCALE;
 }
 
 void Terrain::getCorners(Vector3D* corner_array)

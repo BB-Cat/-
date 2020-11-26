@@ -43,6 +43,7 @@ public:
 	HRESULT mapResourceRead(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
 	HRESULT mapResourceWriteDiscard(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
 	void unmapResource(ID3D11Buffer* resource);
+	void updateResource(ID3D11Resource* dest, void* data);
 	//void retrieveComputeShaderOutput();
 
 	void removeGeometryShader();
