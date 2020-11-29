@@ -15,7 +15,7 @@ Scene01::Scene01(SceneManager* sm): Scene(sm)
 
 	m_ground = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr);
 
-	m_mesh = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Earthslime\\earthslime.fbx", true, nullptr);
+	m_mesh = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\ShaderSphere\\sphere.fbx", true, nullptr);
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	//m_sprite = GraphicsEngine::get()->getSpriteManager()->createSpriteFromFile(L"..\\Assets\\GrassBladesTex\\sprite_0059.png");
 
@@ -113,12 +113,6 @@ void Scene01::imGuiRender()
 
 void Scene01::shadowRenderPass(float delta)
 {
-	////m_ground->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), Vector4D(0.7f, 0.8f, 1.0f, 0.3f), Shaders::SHADOWMAP);
-
-	//m_mesh->renderMesh(delta, Vector3D(1.0, 1.0, 1.0), Vector3D(0, 4, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), Vector4D(1.0f, 1.0f, 1.0f, 1.0f), Shaders::SHADOWMAP);
-
-	//m_mesh->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(-2.5f, 8.0, 13.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), Vector4D(1.0f, 1.0f, 1.0f, 1.0f), Shaders::SHADOWMAP);
-
 }
 
 void Scene01::mainRenderPass(float delta)

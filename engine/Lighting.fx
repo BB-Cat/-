@@ -1,3 +1,9 @@
+SamplerState LightingSampler
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
 
 float3 diffuse(float3 normal, float3 light_dir, float3 light_color)
@@ -28,13 +34,26 @@ float3 gradientOneCellDiffuse(float3 normal, float3 light_dir, float3 light_colo
 }
 
 
-float3 hatchDiffuse(float3 normal, float3 light_dir, float3 light_color, float3 world_position, float time, float threshold)
+float3 hatchDiffuse(float3 normal, float3 light_dir, float3 light_color, float3 world_position, float time, float threshold, Texture2D tex)
 {
-	//use trilinear sampling based 70% on world position and 30% on a floored time modulo for that flickering effect
-	//not sure how to do sampling within this function yet.
-
-	//use the sample value to modify the threshold and make heavily hatched areas more likely to be shaded and unhatched areas less likely
-	return 0;
+	//get the sample positions
+	float3 texpos = world_position + 0.7 * float3(floor((time * 9.0) % 3.0));
+	//trilinear sampling
+	float xy_sample = tex.Sample(LightingSampler, texpos.xy * 0.5).r;
+	float xz_sample = tex.Sample(LightingSampler, texpos.xz).r;
+	float yz_sample = tex.Sample(LightingSampler, texpos.yz).r;
+	//blend the values together
+	float3 normal_blend = abs(normal);
+	float hatch = xy_sample * normal_blend.z + xz_sample * normal_blend.y + yz_sample * normal_blend.x;
+	//add hatch if over threshhold of the light dot
+	float dotL = max(0.0, dot(normal, light_dir));
+	hatch = step(-0.5 + hatch * 1.0, dotL);
+	//add gradient for smoother color
+	float3 gradient = light_color * (0.5 + dotL * 0.5);
+	//mix them together
+	float3 color = gradient * 0.5 + float3(hatch * light_color.rgb) * 0.5;
+	//return the result
+	return color;
 }
 
 
