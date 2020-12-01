@@ -18,7 +18,7 @@ private:
     TexturePtr m_blue_noise;
     bool m_show_tex3D = false;
 
-    float m_speed = 0.35f;
+    float m_speed = 3.0f;
 
     Vector2D m_global_light_rotation;
     float m_global_light_strength;
@@ -26,6 +26,10 @@ private:
     Vector3D m_ambient_light_color;
 
     cb_cloud m_cloud_props;
+    cb_cloud m_preset1;
+    cb_cloud m_preset2;
+    cb_cloud m_preset3;
+    cb_cloud m_preset4;
 
 public:
     Scene08(SceneManager*);

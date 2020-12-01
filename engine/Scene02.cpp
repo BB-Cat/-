@@ -14,19 +14,30 @@ Scene02::Scene02(SceneManager* sm) : Scene(sm)
 {
 
 	m_ground = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr);
+	m_ground->setColor(Vector3D(0.6f, 0.6f, 0.6f));
+	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 
 
+	m_mesh1 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\ShaderSphere\\sphere.fbx", true, nullptr);
+	m_mesh1->setColor(Vector3D(0.5f, 0.5f, 0.3f));
 
-	m_mesh1 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\EarthSlime\\earthslime.fbx", true, nullptr);
-	m_mesh2 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\EarthSlime\\earthslime.fbx", true, nullptr);
-	m_mesh3 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\EarthSlime\\earthslime.fbx", true, nullptr);
+	m_mesh2 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr);
+	m_mesh2->setColor(Vector3D(0.8f, 0.8f, 0.5f));
 
+	m_mesh3 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\ShaderSphere\\torus.fbx", true, nullptr);
+	m_mesh3->setColor(Vector3D(0.3f, 0.4f, 0.5f));
 
+	m_mesh4 = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\ShaderSphere\\cone.fbx", true, nullptr);
+	m_mesh4->setColor(Vector3D(0.3f, 0.9f, 0.5f));
 
-	CameraManager::get()->setCamPos(Vector3D(0, 4, -10));
+	m_global_light_rotation = Vector2D(1.84f, 0.0f);
+
+	CameraManager::get()->setCamPos(Vector3D(-7.973f, 4.85f, 6.749f));
+	CameraManager::get()->setCamRot(Vector2D(0.2834f, 2.124f));
 	CameraManager::get()->setCamState(FREE);
 
 	AppWindow::toggleDeferredPipeline(false);
+	//CameraManager::get()->update(delta, width, height);
 }
 
 Scene02::~Scene02()
@@ -36,8 +47,14 @@ Scene02::~Scene02()
 
 void Scene02::update(float delta, const float& width, const float& height)
 {
+	
+
+	Matrix4x4 cam = CameraManager::get()->getCamera();
+	Vector3D right = cam.getXDirection();
+	//CameraManager::get()->setCamPos(cam.getTranslation() + right * 0.05f);
 
 	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->beginLookAt(Vector3D(0, 0, 0), 0);
 
 	Lighting::get()->updateSceneLight(Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x)), Vector3D(1.0f, 1.0f, 1.0f), 0.85f, Vector3D(0.2, 0.3, 0.4));
 
@@ -50,21 +67,32 @@ void Scene02::update(float delta, const float& width, const float& height)
 
 void Scene02::imGuiRender()
 {
-	//=====================================================
-	//  Create the scene interface window
-	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(250, 400));
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
 
-	//create the test window
-	ImGui::Begin("Shadow Mapping");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	//ImGui::SetNextWindowSize(ImVec2(250, 400));
+	//ImGui::SetNextWindowPos(ImVec2(0, 65));
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	////create the test window
+	//ImGui::Begin("Shadow Mapping", 0, ImGuiWindowFlags_AlwaysAutoResize);
 
+
+	//VectorToArray v(&m_global_light_rotation);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
+	//if (m_global_light_rotation.m_y < 0) m_global_light_rotation.m_y = 0;
+
+
+	ImGui::SetNextWindowPos(ImVec2(0, 680));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("ShadowMapping", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	
 	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
+	if (m_global_light_rotation.m_y < 0) m_global_light_rotation.m_y = 0;
 
 	if (m_first_time)
 	{
@@ -89,26 +117,29 @@ void Scene02::imGuiRender()
 
 void Scene02::shadowRenderPass(float delta)
 {
-	m_mesh1->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(-1.5f, 0, 1.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
+	m_mesh1->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(-1.5f, 1, 1.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
 
-	m_mesh1->renderMesh(delta, Vector3D(2.0f, 2.0f, 2.0f), Vector3D(-1.5f, 6, 3.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
+	m_mesh4->renderMesh(delta, Vector3D(2.0f, 2.0f, 2.0f), Vector3D(-1.5f, 1, 3.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
 
-	m_mesh2->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0.0f, 0, 4.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
+	m_mesh2->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(1.0f, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
 
-	m_mesh3->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(0.5f, 0, 0.0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
+	m_mesh3->renderMesh(delta, Vector3D(2.5f, 2.5f, 2.5f), Vector3D(0.5f, 1, 0.0), Vector3D(75 * 0.01745f, 0 * 0.01745f, 30 * 0.01745f), SHADOWMAP);
 
 }
 
 void Scene02::mainRenderPass(float delta)
 {
-	m_ground->renderMesh(delta, Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT_TEX);
+	m_sky->renderMesh(delta, Vector3D(1100, 1100, 1100), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
 
-	m_mesh1->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(-1.5f, 0, 1.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT_TEX);
 
-	m_mesh1->renderMesh(delta, Vector3D(2.0f, 2.0f, 2.0f), Vector3D(-1.5f, 6, 3.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT_TEX);
+	m_ground->renderMesh(delta, Vector3D(1.0f, 1.0f, 1.0f), Vector3D(0, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT);
 
-	m_mesh2->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0.0f, 0, 4.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT_TEX);
+	m_mesh1->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(0, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT);
 
-	m_mesh3->renderMesh(delta, Vector3D(0.5f, 0.5f, 0.5f), Vector3D(0.5f, 0, 0.0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT_TEX);
+	m_mesh4->renderMesh(delta, Vector3D(2.0f, 2.0f, 2.0f), Vector3D(-1.5f, 1, 3.5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT);
+
+	m_mesh2->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(1.0f, 0, 0), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), FLAT);
+
+	m_mesh3->renderMesh(delta, Vector3D(2.5f, 2.5f, 2.5f), Vector3D(0.5f, 1, 0.0), Vector3D(75 * 0.01745f, 0 * 0.01745f, 30 * 0.01745f), FLAT);
 }
 

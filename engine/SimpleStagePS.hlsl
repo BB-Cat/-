@@ -71,16 +71,15 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 		* pow(max(0, dot(reflect(-lightDir.xyz, normal), dir)), shininess);
 	float4 spec_color = float4(0.2, 0.2, 0.2, 0.2);
 
-	//float mod = (
-	//	(floor(acos(pos1.x / pos1.z) * 10) % 4 == 0 
-	//	|| floor(acos(pos1.z / pos1.x) * 10) % 4 == 0
-	//	|| (floor(len1) % 10 == 0))
-	//	&& !(len1 > ring_range * 0.8));
-
 	float mod = (floor(len1 * 3) % 30 == 0 && !(len1 > ring_range * 0.8));
-
 	specular *= mod;
-	float4 final = (color1 + color2 + color3) + float4(edge_light, 1) * edge_light_amount + spec_color * specular;
+
+	float4 tiles = float4(-0.2, -0.2, -0.2, 0) * (floor(pos1.x * 3) % 20 != 0 && floor(pos1.z * 3) % 20 != 0);
+
+	float4 final = (color1 + color2 + color3 + tiles) + float4(edge_light, 1) * edge_light_amount + spec_color * specular;
+
+
+
 	final -= float4(0.2, 0.2, 0.2, 0.2) * max(0, dot(reflect(-lightDir.xyz, normal), -dir)) * mod;
 
 

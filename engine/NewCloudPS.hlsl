@@ -1,4 +1,5 @@
 #include "cloud.fx"
+#include "noise.fx"
 
 struct PS_INPUT
 {
@@ -50,9 +51,10 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//random starting offset (to make low resolution noise look less jagged)
 	/* this offset should be changed to offset in 3 dimensions, not one.  right now one offset causes the clouds to look blocky 
 	in areas where they ray goes directly through one row of voxels. other areas are looking great.*/
-
 	float random_offset = BlueNoise.SampleLevel(TextureSampler, input.position.xy / 1024.0 * 3, 0);
 	random_offset *= m_ray_offset_strength;
+	//EDIT 20/12 -- ADD AN ENTRY POINT OFFSET BASED ON BLUE NOISE
+	entry_point += (rand1dTo3d(random_offset) * m_ray_offset_strength * 2) - float3(1, 1, 1);
 
 	//Phase function makes clouds brighter around sun
 	float cos_angle = dot(ray_dir, normalize(m_global_light_dir));

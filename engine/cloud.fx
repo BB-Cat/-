@@ -113,15 +113,6 @@ float sampleDensity(float3 ray_pos, float3 size, float3 bounds_min, float3 bound
     const float base_scale = 1 / 1000.0;
     const float offsetSpeed = 1 / 100.0;
 
-    // Calculate texture sample positions
-    float time = m_time * m_speed;
-    //float3 size = bounds_max - bounds_min;
-    //float3 bounds_center = center;
-    float3 uvw = (size * .5 + ray_pos) * base_scale * m_sampling_resolution.x;
-    //float3 shapeSamplePos = uvw + shapeOffset * offsetSpeed + float3(time, time * 0.1, time * 0.2) * baseSpeed;
-    float3 shape_sample_pos = uvw + float3(time, time * 0.1, time * 0.2) * m_speed;
-
-
     // Calculate falloff at along x/z edges of the cloud container
     const float edge_fade_distance = 50;
     float edgeX_dist = min(edge_fade_distance, min(ray_pos.x - bounds_min.x, bounds_max.x - ray_pos.x));
@@ -129,17 +120,39 @@ float sampleDensity(float3 ray_pos, float3 size, float3 bounds_min, float3 bound
     float edge_weight = min(edgeZ_dist, edgeX_dist) / edge_fade_distance;
 
     // Calculate height gradient from weather map
-    //float2 weatherUV = (size.xz * .5 + (rayPos.xz-boundsCentre.xz)) / max(size.x,size.z);
-    //float weatherMap = WeatherMap.SampleLevel(samplerWeatherMap, weatherUV, mipLevel).x;
     float gMin = .2;
     float gMax = .7;
     float height_percent = (ray_pos.y - bounds_min.y) / size.y;
     float height_gradient = saturate(remap(height_percent, 0.0, gMin, 0, 1)) * saturate(remap(height_percent, 1, gMax, 0, 1));
-    //float height_gradient = 
     height_gradient *= edge_weight;
 
+    // Calculate texture sample positions
+    float time = m_time * m_speed;
+    //==============================================================================================//
+    //==============================================================================================//
+    /* CHANGE 12/01 - sampling per seperate resolution */
+    //==============================================================================================//
+    float3 uvw = (size * .5 + ray_pos) * base_scale * m_sampling_resolution.x;
+    float3 shape_sample_pos = uvw + time * m_move_dir;
+
+    float4 shape_noise = Texture.SampleLevel(TextureSampler, shape_sample_pos, 0); //no mip levels for my 3d textures
+
+
+    //float3 uvw = (size * .5 + ray_pos) * base_scale * m_sampling_resolution.x;
+    //float3 shape_sample_pos1 = uvw * m_sampling_resolution.x + time * m_move_dir;
+    //float3 shape_sample_pos2 = uvw * m_sampling_resolution.y + time * m_move_dir;
+    //float3 shape_sample_pos3 = uvw * m_sampling_resolution.z + time * m_move_dir;
+    //float3 shape_sample_pos4 = uvw * m_sampling_resolution.w + time * m_move_dir;
+
+    //float4 shape_noise;
+    //shape_noise.x = Texture.SampleLevel(TextureSampler, shape_sample_pos1, 0).x;
+    //shape_noise.y = Texture.SampleLevel(TextureSampler, shape_sample_pos2, 0).y;
+    //shape_noise.z = Texture.SampleLevel(TextureSampler, shape_sample_pos3, 0).z;
+    //shape_noise.w = Texture.SampleLevel(TextureSampler, shape_sample_pos4, 0).w;
+
+    //==============================================================================================//
+    //==============================================================================================//
     // Calculate base shape density
-    float4 shape_noise = Texture.SampleLevel(TextureSampler, shape_sample_pos, 0); //no mip levels for our 3d textures
     float4 normalized_shape_weights = m_sampling_weight / dot(m_sampling_weight, 1);
     float shapeFBM = dot(shape_noise, normalized_shape_weights) * height_gradient;
     float base_shape_density = shapeFBM + m_density_offset * 0.1;
@@ -148,10 +161,9 @@ float sampleDensity(float3 ray_pos, float3 size, float3 bounds_min, float3 bound
     if (base_shape_density > 0) 
     {
         // Sample detail noise
-        //float3 detail_sample_pos = uvw * m_detail_noise_scale + detailOffset * offsetSpeed + float3(time * .4, -time, time * 0.1) * detailSpeed;
-        float3 detail_sample_pos = uvw * m_detail_noise_scale + float3(time * .4, -time, time * 0.1) * m_detail_speed;
+        float3 detail_sample_pos = uvw * m_detail_noise_scale + time * m_move_dir * m_detail_speed;
 
-        float4 detail_noise = DetailTexture.SampleLevel(TextureSampler, detail_sample_pos, 0); //no mip levels for our 3D textures
+        float4 detail_noise = DetailTexture.SampleLevel(TextureSampler, detail_sample_pos, 0); //no mip levels for my 3D textures
         float3 normalized_detail_weights = m_detail_sampling_weight / dot(m_detail_sampling_weight, 1);
         float detailFBM = dot(detail_noise, normalized_detail_weights);
 

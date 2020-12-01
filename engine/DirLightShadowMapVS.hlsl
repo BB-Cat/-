@@ -61,7 +61,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	//SCREEN SPACE
 	float4 pos = output.position;
 	output.position = 
-		mul(output.position, m_light_proj) * (m_active_proj.x == 0)+
+		mul(output.position, m_light_proj) * (m_active_proj.x == 0) +
 		mul(output.position, m_light_proj2) * (m_active_proj.x == 1)+
 		mul(output.position, m_light_proj3) * (m_active_proj.x == 2);
 

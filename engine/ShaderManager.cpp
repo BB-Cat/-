@@ -49,6 +49,9 @@ int shader_settings[][5] =
 	{WEATHER_ATMOSPHERE_VS,			WEATHER_ATMOSPHERE_PS,			HSNONE,					DSNONE,					GSNONE},		//ATMOSPHERE SHADER WITH WEATHER
 	{SIMPLE_STAGE_VS,				SIMPLE_STAGE_PS,				HSNONE,					DSNONE,					GSNONE},		//SHADER FOR PLAYER MOVEMENT SCENE GROUND
 	{TRIPLANAR_TEXTURE_VS,			TRIPLANAR_TEXTURE_PS,			HSNONE,					DSNONE,					GSNONE},		//SHADER FOR 3D TEXTURE MAPPING
+	{TOON_MODEL_VS,					TOON_MODEL_PS,					HSNONE,					DSNONE,					GSNONE},		//TOON SHADER FOR MODELS
+	{TOON_MODEL_TEX_VS,				TOON_MODEL_TEX_PS,				HSNONE,					DSNONE,					GSNONE},		//TOON SHADER FOR MODELS WITH TEXTURING
+
 };
 
 ShaderManager::ShaderManager() : m_tess_active(false)
@@ -223,6 +226,21 @@ void ShaderManager::compileShaders()
 	m_triplanar_texture->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
 	//***************************************************************************//
 
+	m_toon_model = std::shared_ptr<Shader>(new Shader(L"ToonVS.hlsl", L"ToonPS.hlsl", shader_byte_code, size_shader));
+	m_toon_model->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+	
+	m_toon_tex_model = std::shared_ptr<Shader>(new Shader(L"ToonTexVS.hlsl", L"ToonTexPS.hlsl", shader_byte_code, size_shader));
+	m_toon_tex_model->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_gradient = std::shared_ptr<Shader>(new Shader(L"TriplanarTextureVS.hlsl", L"TriplanarTexturePS.hlsl", shader_byte_code, size_shader));
+	m_gradient->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_hatch = std::shared_ptr<Shader>(new Shader(L"TriplanarTextureVS.hlsl", L"TriplanarTexturePS.hlsl", shader_byte_code, size_shader));
+	m_hatch->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
 
 	//***************************************************************************//
 	//   GEOMETRY SHADERS							                             //
@@ -337,6 +355,8 @@ void ShaderManager::recompileErrorShaders()
 	m_3D_tex->ifErrorRecompile(m_error);
 	m_simple_stage->ifErrorRecompile(m_error);
 	m_triplanar_texture->ifErrorRecompile(m_error);
+	m_toon_model->ifErrorRecompile(m_error);
+	m_toon_tex_model->ifErrorRecompile(m_error);
 }
 
 void ShaderManager::recompileShader(int shader)
@@ -380,6 +400,8 @@ void ShaderManager::recompileShader(int shader)
 	case Shaders::WEATHER_ATMOSPHERE:			m_weather_atmosphere->recompile(m_error); break;
 	case Shaders::SIMPLE_STAGE:					m_simple_stage->recompile(m_error); break;
 	case Shaders::TRIPLANAR_TEXTURE:			m_triplanar_texture->recompile(m_error); break;
+	case Shaders::TOON_MODEL:					m_toon_model->recompile(m_error); break;
+	case Shaders::TOON_TEX_MODEL:				m_toon_tex_model->recompile(m_error); break;
 	}
 }
 
@@ -387,7 +409,7 @@ void ShaderManager::imGuiMenuShaderCompile()
 {
 	if (ImGui::BeginMenu("Recompile"))
 	{
-		ImVec2 size = ImVec2(120, 20);
+		ImVec2 size = ImVec2(200, 20);
 		if (ImGui::Button("Flat", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::FLAT);
 		if (ImGui::Button("Flat Tex", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::FLAT_TEX);
 		if (ImGui::Button("Lambert", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::LAMBERT);
@@ -423,6 +445,8 @@ void ShaderManager::imGuiMenuShaderCompile()
 		if (ImGui::Button("Weather Atmosphere", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::WEATHER_ATMOSPHERE);
 		if (ImGui::Button("Simple Stage", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::SIMPLE_STAGE);
 		if (ImGui::Button("Triplanar Texture", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TRIPLANAR_TEXTURE);
+		if (ImGui::Button("Toon Model", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TOON_MODEL);
+		if (ImGui::Button("Toon Model Textured", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TOON_TEX_MODEL);
 		ImGui::EndMenu();
 	}
 }
@@ -555,6 +579,12 @@ void ShaderManager::setPixelShader(int type)
 	case TRIPLANAR_TEXTURE_PS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_triplanar_texture->m_ps);
 		break;
+	case TOON_MODEL_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_toon_model->m_ps);
+		break;
+	case TOON_MODEL_TEX_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_toon_tex_model->m_ps);
+		break;
 	}
 }
 
@@ -595,9 +625,6 @@ void ShaderManager::setVertexShader(int type)
 	case TEXTURE_TESS_TERRAIN_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_tess_terrain->m_vs);
 		break;
-	//case TEXTURE_TESS_FLUID_TERRAIN_VS:
-	//	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_TessFluidTerrainVS);
-	//	break;
 	case DEFERRED1_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_deferred->m_vs);
 		break;
@@ -660,6 +687,12 @@ void ShaderManager::setVertexShader(int type)
 		break;
 	case TRIPLANAR_TEXTURE_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_triplanar_texture->m_vs);
+		break;
+	case TOON_MODEL_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_toon_model->m_vs);
+		break;
+	case TOON_MODEL_TEX_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_toon_tex_model->m_vs);
 		break;
 	}
 }

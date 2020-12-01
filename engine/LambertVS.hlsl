@@ -10,7 +10,8 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 position: SV_POSITION;
-	float4 lightcolor: TEXCOORD0;
+	float3 normal : NORMAL0;
+	float4 lightcolor: TEXCOORD1;
 };
 
 
@@ -55,12 +56,15 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	if (p.x != 0 || p.y != 0 || p.z != 0)
 	{
 		output.position = float4(p, 1.0f);
+		output.normal = float4(n, 0.0f);
 	}
 	else
 	{
 		output.position = input.position;
-		n = input.normal;
+		output.normal = input.normal;
 	}
+
+	output.normal = normalize(mul(float4(output.normal.xyz, 0), m_global).xyz);
 
 	////WORLD SPACE
 	output.position = mul(mul(output.position, m_world), m_global);
@@ -69,12 +73,8 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	////SCREEN SPACE
 	output.position = mul(output.position, m_proj);
 
-	float atten = 1.0;
-	float3 lightDirection = normalize(m_global_light_dir);
 
-	float3 diffuseReflection = atten * m_global_light_color * max(0.0, dot(n, lightDirection));
-
-	output.lightcolor = float4(diffuseReflection + m_ambient_light_color.xyz, 1.0);
+	output.lightcolor = float4(m_ambient_light_color.xyz, 1.0);
 
 	return output;
 

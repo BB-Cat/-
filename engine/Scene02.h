@@ -13,8 +13,10 @@ private:
     SkinnedMeshPtr m_mesh1;
     SkinnedMeshPtr m_mesh2;
     SkinnedMeshPtr m_mesh3;
+    SkinnedMeshPtr m_mesh4;
 
     SkinnedMeshPtr m_ground;
+    SkinnedMeshPtr m_sky;
 
 private: //ImGui variables
     Vector2D m_global_light_rotation;

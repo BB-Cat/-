@@ -1,10 +1,12 @@
+#include "Lighting.fx"
+
 struct PS_INPUT
 {
 	float4 position: SV_POSITION;
 	float4 world_pos : TEXCOORD0;
 	float3 normal : NORMAL0;
 	float3 direction_to_camera : NORMAL1;
-	float4 lightcolor: TEXCOORD1;
+	float4 light_ambient: TEXCOORD1;
 };
 
 //mesh lighting characteristics 
@@ -32,19 +34,17 @@ cbuffer constant: register(b2)
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
+	float atten = m_global_light_strength;
+	float3 light_dir = normalize(m_global_light_dir.xyz);
+
 	//diffuse
-	float atten = 1.0;
-	float3 lightDir = normalize(m_global_light_dir.xyz);
-	float3 diffuseReflection = atten * m_global_light_color.xyz * max(0.0, dot(input.normal, lightDir));
+	float3 diffuse_reflection = diffuse(input.normal, light_dir, m_global_light_color.rgb);
 
 	//specular
-	float3 specularReflection = m_specularColor.rgb * max(0.0, dot(input.normal, lightDir.xyz))
-		* pow(max(0.0, dot(reflect(-lightDir.xyz, input.normal), -input.direction_to_camera)), m_shininess);
+	float3 specular_reflection = spec(input.normal, light_dir, m_specularColor.rgb, input.direction_to_camera, m_shininess);
 
-
-	float3 lightFinal = diffuseReflection + specularReflection + input.lightcolor;
-
-
-	return float4(m_diffuseColor.xyz * lightFinal, m_d);
+	//final
+	float3 lightFinal = (diffuse_reflection + specular_reflection) * atten + input.light_ambient;
+	return float4(m_diffuseColor.rgb * lightFinal, m_d);
 
 }

@@ -194,6 +194,14 @@ private:
 
 	ShaderPtr m_triplanar_texture;
 
+	ShaderPtr m_toon_model;
+
+	ShaderPtr m_toon_tex_model;
+
+	ShaderPtr m_gradient;
+
+	ShaderPtr m_hatch;
+
 	//FINAL PASS VS PS SHADERS
 	//VertexShaderPtr m_FinalBasicVS;
 	//PixelShaderPtr m_FinalBasicPS;

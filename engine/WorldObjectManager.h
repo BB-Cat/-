@@ -20,6 +20,8 @@ public:
 
 	void imGuiRender();
 	void render();
+    //function to render the currently selected object with a highlight
+    void renderSelectedHighlight();
 
     Vector3D CubeAABBCollision(Vector3D old_pos, Vector3D new_pos, Vector3D size);
 

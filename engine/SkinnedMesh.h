@@ -39,12 +39,15 @@ public:
 	void setBlendAnimation(int type);
 	void setBlendAnmFrame(float percent);
 	void setAnmPercentTick(float tick);
+	void setColor(Vector3D color);
 
 	void triggerAnimationFinish(bool trigger);
 
 	void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, 
 		bool is_textured = true, float animation_speed = 1.0f) override;
 
+	//this function does not start a new imgui window, so you need to set the 
+	//window size and position as well as end the window outside this function
 	void ImGui_LightProperties();
 
 	void toggleRaster() { m_raster = !m_raster; }

@@ -13,7 +13,7 @@ struct VS_OUTPUT
 	float4 world_pos : TEXCOORD0;
 	float3 normal : NORMAL0;
 	float3 direction_to_camera : NORMAL1;
-	float4 lightcolor: TEXCOORD1;
+	float4 light_ambient: TEXCOORD1;
 };
 
 
@@ -77,12 +77,8 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	////SCREEN SPACE
 	output.position = mul(output.position, m_proj);
 
-	float atten = 1.0;
-	float3 lightDirection = normalize(m_global_light_dir);
 
-	//float3 diffuseReflection = atten * m_global_light_color * max(0.0, dot(n, lightDirection));
-
-	output.lightcolor = float4(m_ambient_light_color.xyz, 1.0);
+	output.light_ambient = float4(m_ambient_light_color.xyz, 1.0);
 
 	return output;
 

@@ -9,16 +9,16 @@ class Scene01 : public Scene
 {
 private:
     SkinnedMeshPtr m_mesh;
-    SkinnedMeshPtr m_ground;
     SkinnedMeshPtr m_sky;
-    Terrain* m_terrain;
-    int m_lightID;
-    SpritePtr m_sprite;
+
+    TexturePtr m_diffuse;
+    TexturePtr m_normal;
+    TexturePtr m_roughness;
+    TexturePtr m_ao;
+
     Vector3D m_light_pos;
 
-
     bool m_first_time = true;
-    ParticleSystem* m_particle_system;
 
     float m_tesselation;
     float m_seconds;

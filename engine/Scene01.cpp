@@ -7,36 +7,39 @@
 #include "Lighting.h"
 #include "Terrain.h"
 #include "VectorToArray.h"
+#include "DeviceContext.h"
 
 
 Scene01::Scene01(SceneManager* sm): Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 
-	m_ground = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr);
-
 	m_mesh = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\ShaderSphere\\sphere.fbx", true, nullptr);
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
-	//m_sprite = GraphicsEngine::get()->getSpriteManager()->createSpriteFromFile(L"..\\Assets\\GrassBladesTex\\sprite_0059.png");
 
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 7, -2));
+	CameraManager::get()->setCamPos(Vector3D(0, 0, 0));
 	CameraManager::get()->setCamRot(Vector2D(0, 0));
 
-	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
-	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(1.0,1.0,1.0);
-	m_ambient_light_color = Vector3D(0.2, 0.3, 1.0);
+	m_global_light_rotation = Vector2D(4.2f, 0.75f);
+	m_global_light_strength = 1.0f;
+	m_light_color = Vector3D(1.0,1.0,0.8);
+	m_ambient_light_color = Vector3D(0.75f, 0.5f, 0.75f);
 
 	m_seconds = 0.0f;
 	m_show_sky = true;
 	m_shader_type = 0;
 
+	m_diffuse = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Basecolor.png");
+	m_normal = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Normal.png");
+	m_roughness = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Metallic.png");
+	m_ao = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\Env.png");
+
 }
 
 Scene01::~Scene01()
 {
-	if (m_particle_system != nullptr) delete m_particle_system;
+
 }
 
 void Scene01::update(float delta, const float& width, const float& height)
@@ -54,7 +57,6 @@ void Scene01::update(float delta, const float& width, const float& height)
 	t.m_time = (m_seconds += delta);
 	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetTimeBuffer(t);
 
-	//if (AppWindow::getKeyTrigger(' '))  p_manager->changeScene(SceneManager::SCENE02, false);
 	m_timer++;
 }
 
@@ -63,30 +65,51 @@ void Scene01::imGuiRender()
 //=====================================================
 //  Create the scene interface window
 //-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(250, 400));
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(1004, 205));
+	ImGui::SetNextWindowPos(ImVec2(0, 520));
+	ImGui::SetNextWindowBgAlpha(0.6f);
 
 	//create the test window
-	ImGui::Begin("Shaders");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	ImGui::Begin("Lighting Options");
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	//if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 
-	if (ImGui::Button("Toggle Sky")) m_show_sky = !m_show_sky;
-	if (ImGui::Button("Toggle Raster")) m_mesh->toggleRaster();
+	//if (ImGui::Button("Toggle Sky")) m_show_sky = !m_show_sky;
+	//if (ImGui::Button("Toggle Raster")) m_mesh->toggleRaster();
 
-	ImGui::DragInt("Shader Type", &m_shader_type, 0.05f, FLAT, TRIPLANAR_TEXTURE);
+	//ImGui::DragInt("Shader Type", &m_shader_type, 0.05f, FLAT, TRIPLANAR_TEXTURE);
 
+	ImGui::PushItemWidth(200);
 	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
 
-	v = VectorToArray(&m_light_color);
-	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
+	ImGui::SameLine();
+
+	ImGui::PushItemWidth(200);
 	ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
 
+	v = VectorToArray(&m_light_color);
+	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
+	ImGui::PushItemWidth(170);
+	ImGui::ColorPicker3("Light Color", v.setArray(), ImGuiColorEditFlags_NoInputs);
+
+	ImGui::SameLine();
+
 	v = VectorToArray(&m_ambient_light_color);
-	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+	ImGui::PushItemWidth(170);
+	ImGui::ColorPicker3("Ambient Color", v.setArray(), ImGuiColorEditFlags_NoInputs);
+
+	ImGui::SameLine();
+
+	m_mesh->ImGui_LightProperties();
+
 
 	if (m_first_time)
 	{
@@ -106,6 +129,7 @@ void Scene01::imGuiRender()
 		ImGui::EndPopup();
 	}
 
+
 	ImGui::End();
 
 
@@ -119,5 +143,27 @@ void Scene01::mainRenderPass(float delta)
 {
 	if (m_show_sky) m_sky->renderMesh(delta, Vector3D(100, 100, 100), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::FLAT_TEX);
 
-	m_mesh->renderMesh(delta, Vector3D(1.0, 1.0, 1.0), Vector3D(0, 4, 5), Vector3D(0 * 0.01745f, 0 * 0.01745f, 0), m_shader_type);
+	//set textures for the pixel shader
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseNormalGlossEnvironTexPS
+	(
+		m_diffuse,
+		m_normal,
+		m_roughness,
+		m_ao
+	);
+
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(-6, 0, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::FLAT, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(-3, 0, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::LAMBERT, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D( 0, 0, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::LAMBERT_SPECULAR, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D( 3, 0, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(6, 0, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TOON_MODEL, false);
+
+	
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(-6, 3, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TEXTURE, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(-3, 3, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TEXTURE_NORMAL, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D( 0, 3, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TEXTURE_NORMAL_GLOSS, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(3, 3, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TEXTURE_ENVIRONMENT, false);
+	m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D(6, 3, 11), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::TOON_TEX_MODEL, false);
+	
+	//m_mesh->renderMesh(delta, Vector3D(1.4, 1.4, 1.4), Vector3D( 3, 3, 10), Vector3D(0, m_seconds * 90 * 0.01745f, 0), Shaders::LAMBERT);
 }

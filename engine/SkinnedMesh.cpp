@@ -52,15 +52,14 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 
 	m_raster = true;
 
-	m_mat.m_diffuse_color = Vector3D(0.6f, 0.7f, 0.6f);	
+	m_mat.m_diffuse_color = Vector3D(0.5f, 0.85f, 0.6f);	
 	m_mat.m_transparency = 1.0f;
-	m_mat.m_diffuse_color = Vector3D(0.7f, 0.7f, 0.7f);
-	m_mat.m_metallicAmount = 0.445f;
-	m_mat.m_shininess = 30;
-	m_mat.m_specular_color = Vector3D(0.5, 0.2, 0.5);
-	m_mat.m_rim_color = Vector3D(0.4f, 0.7f, 0.7f);
+	m_mat.m_metallicAmount = 0.4f;
+	m_mat.m_shininess = 12;
+	m_mat.m_specular_color = Vector3D(0.95, 0.65, 0.7);
+	m_mat.m_rim_color = Vector3D(1.0f, 1.0f, 1.0f);
 	m_mat.m_rim_color.m_w = 1.0f;
-	m_mat.m_rim_power = 4.4f;
+	m_mat.m_rim_power = 2.0f;
 
 	//set the mesh to not animate by default
 	m_active_animation = -1;
@@ -142,6 +141,11 @@ void SkinnedMesh::setBlendAnmFrame(float percent)
 void SkinnedMesh::setAnmPercentTick(float tick)
 {
 	m_percent_tick = tick;
+}
+
+void SkinnedMesh::setColor(Vector3D color)
+{
+	m_mat.m_diffuse_color = color;
 }
 
 bool SkinnedMesh::getIfAnimInterruptable()
@@ -320,41 +324,36 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D positi
 
 void SkinnedMesh::ImGui_LightProperties()
 {
-	ImGui::SetNextWindowSize(ImVec2(200, 400));
-	ImGui::SetNextWindowPos(ImVec2(0, 400));
+	//ImGui::SetNextWindowSize(ImVec2(200, 400));
+	//ImGui::SetNextWindowPos(ImVec2(0, 400));
 
 	//create the test window
-	ImGui::Begin("Mesh Light Properties");
+	//ImGui::Begin("Mesh Light Properties");
 	//if (ImGui::Button("Toggle Sky")) m_show_sky = !m_show_sky;
 	//if (ImGui::Button("Toggle Raster")) m_mesh->toggleRaster();
 	//ImGui::DragInt("Shader Type", &m_shader_type, 0.1f, FLAT, TEXTURE_TESS_MODEL);
 	VectorToArray v(&m_mat.m_diffuse_color);
-	ImGui::DragFloat3("Diffuse Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Transparency", &m_mat.m_transparency, 0.01f, 0, 1.0);
+	ImGui::PushItemWidth(170);
+	ImGui::ColorPicker3("Diffuse", v.setArray(), ImGuiColorEditFlags_NoInputs);
+
+	ImGui::SameLine();
 
 	v = VectorToArray(&m_mat.m_specular_color);
-	ImGui::DragFloat3("Specular Color", v.setArray(), 0.01f, 0, 1.0);
+	ImGui::PushItemWidth(170);
+	ImGui::ColorPicker3("Specular", v.setArray(), ImGuiColorEditFlags_NoInputs);
+
+
+	//v = VectorToArray(&m_mat.m_rim_color);
+	//ImGui::PushItemWidth(170);
+	//ImGui::ColorPicker3("Rimlight", v.setArray(), ImGuiColorEditFlags_NoInputs);
+
+
+	ImGui::DragFloat("Transparency", &m_mat.m_transparency, 0.01f, 0, 1.0);
 	ImGui::DragFloat("Specular Power", &m_mat.m_shininess, 0.01f, 0, 100.0);
-
-	v = VectorToArray(&m_mat.m_rim_color);
-	ImGui::DragFloat3("Rim Color", v.setArray(), 0.01f, 0, 1.0);
 	ImGui::DragFloat("Rim Power", &m_mat.m_rim_power, 0.01f, 0, 100.0);
-
 	ImGui::DragFloat("Metallicness", &m_mat.m_metallicAmount, 0.01f, 0, 1.0);
 
-	//ImGui::DragInt("Shader Type", &m_shader_type, 0.1f, FLAT, TEXTURE_TESS_MODEL);
-	//ImGui::DragInt("Shader Type", &m_shader_type, 0.1f, FLAT, TEXTURE_TESS_MODEL);
-
-	//mat.m_d = 1.0f;
-	//mat.m_diffuseColor = Vector3D(0.7f, 0.7f, 0.7f);
-	//mat.m_metallicAmount = 0.445f;
-	//mat.m_shininess = 30;
-	//mat.m_specularColor = m_meshdata[i].m_subs[j].specular.m_color;
-	//mat.m_rimColor = Vector3D(0.4f, 0.7f, 0.7f);
-	//mat.m_rimColor.m_w = 1.0f;
-	//mat.m_rimPower = 4.4f;
-
-	ImGui::End();
+	//ImGui::End();
 }
 
 //void SkinnedMesh::setTextureResources(int shadertype, const Subset_FBX& sub)

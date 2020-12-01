@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Cube.h"
 #include "VectorToArray.h"
+#include "Blend.h"
 
 #include <iostream>
 #include <fstream>  
@@ -223,6 +224,12 @@ void WorldObjectManager::imGuiRender()
 {
 	VectorToArray v(&Vector3D());
 
+
+	ImGui::SetNextWindowSize(ImVec2(600, 250));
+	ImGui::SetNextWindowPos(ImVec2(0, 515));
+	ImGui::Begin("Scene Options");
+	if (ImGui::IsWindowCollapsed()) ImGui::SetWindowPos(ImVec2(0, 765));
+	
 	if (ImGui::Button("Spawn Cube"))
 	{
 		m_show_obj_window = true;
@@ -244,10 +251,40 @@ void WorldObjectManager::imGuiRender()
 
 	if (ImGui::Button("Clear Scene")) clear();
 
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(405, 250));
+	ImGui::SetNextWindowPos(ImVec2(600, 515));
+	ImGui::Begin("Primitive Textures");
+
+	ImGui::InputText("Load Texture", m_texname, ARRAYSIZE(m_texname));
+	if (ImGui::Button("Load") && m_texname[0] != 0)
+	{
+		int num = PrimitiveGenerator::get()->getTextures().size();
+
+		wchar_t tempwchar[128];
+		mbstowcs(tempwchar, m_texname, 128);
+		PrimitiveGenerator::get()->loadTexture(std::wstring(tempwchar), "NewTexture(" + std::to_string(num) + ")");
+		memset(m_texname, 0, sizeof(m_texname));
+	}
+
+	std::vector<TexturePtr> temp_tex = PrimitiveGenerator::get()->getTextures();
+	std::vector<std::string> temp_names = PrimitiveGenerator::get()->getTextureNames();
+
+	for (int i = 0; i < temp_tex.size(); i++)
+	{
+		ImTextureID t = temp_tex[i]->getSRV();
+		ImGui::Image(t, ImVec2(40, 40));
+		ImGui::SameLine();
+		ImGui::Text(temp_names[i].c_str());
+	}
+
+	ImGui::End();
+
 	if (m_show_obj_window)
 	{
-		ImGui::SetNextWindowSize(ImVec2(200, 200));
-		ImGui::SetNextWindowPos(ImVec2(105, 250));
+		ImGui::SetNextWindowSize(ImVec2(220, 300));
+		ImGui::SetNextWindowPos(ImVec2(785, 20));
 		ImGui::Begin("Object Settings");
 
 		v = VectorToArray(&m_spawn_pos);
@@ -255,7 +292,7 @@ void WorldObjectManager::imGuiRender()
 		v = VectorToArray(&m_spawn_scale);
 		ImGui::DragFloat3("Scale", v.setArray(), 0.05f, -100.0f, 100.0f);
 		v = VectorToArray(&m_spawn_rot);
-		ImGui::DragFloat3("Rot", v.setArray(), 0.01f, -100.0f, 100.0f);
+		ImGui::DragFloat3("Rotation", v.setArray(), 0.01f, -100.0f, 100.0f);
 
 		if (m_cubes.size())
 		{
@@ -264,7 +301,8 @@ void WorldObjectManager::imGuiRender()
 			m_cubes[m_cube_ID]->setRotation(m_spawn_rot);
 		}
 
-		if (ImGui::Button("Shader")) m_show_shader_window = true;
+		ImVec2 button_size = ImVec2(200, 20);
+		if (ImGui::Button("Shader", button_size)) m_show_shader_window = true;
 
 		if (m_show_shader_window)
 		{
@@ -313,7 +351,7 @@ void WorldObjectManager::imGuiRender()
 			ImGui::End();
 		}
 
-		if (ImGui::Button("Texture")) m_show_texture_window = true;
+		if (ImGui::Button("Texture", button_size)) m_show_texture_window = true;
 		if (m_show_texture_window)
 		{
 			ImGui::SetNextWindowSize(ImVec2(200, 200));
@@ -341,7 +379,7 @@ void WorldObjectManager::imGuiRender()
 			ImGui::End();
 		}
 
-		if (ImGui::Button("Material Properties"))
+		if (ImGui::Button("Material Properties", button_size))
 		{
 			m_show_mat_window = true;
 			m_spawn_mat = m_cubes[m_cube_ID]->getMaterial();
@@ -375,48 +413,22 @@ void WorldObjectManager::imGuiRender()
 
 			ImGui::End();
 		}
-
+		ImGui::NewLine();
+		ImGui::NewLine();
 		if (ImGui::Button("Accept")) m_show_obj_window = false;
-
-		ImGui::SetNextWindowSize(ImVec2(300, 200));
-		ImGui::SetNextWindowPos(ImVec2(0, 450));
-		ImGui::Begin("Primitive Textures");
-
-		ImGui::InputText("Load Texture", m_texname, ARRAYSIZE(m_texname));
-		if (ImGui::Button("Load") && m_texname[0] != 0)
-		{
-			int num = PrimitiveGenerator::get()->getTextures().size();
-
-			wchar_t tempwchar[128];
-			mbstowcs(tempwchar, m_texname, 128);
-			PrimitiveGenerator::get()->loadTexture(std::wstring(tempwchar), "NewTexture(" + std::to_string(num) + ")");
-			memset(m_texname, 0, sizeof(m_texname));
-		}
-
-		std::vector<TexturePtr> temp_tex = PrimitiveGenerator::get()->getTextures();
-		std::vector<std::string> temp_names = PrimitiveGenerator::get()->getTextureNames();
-
-		for (int i = 0; i < temp_tex.size(); i++)
-		{
-			ImTextureID t = temp_tex[i]->getSRV();
-			ImGui::Image(t, ImVec2(40, 40));
-			ImGui::SameLine();
-			ImGui::Text(temp_names[i].c_str());
-		}
-
-		ImGui::End();
 
 		ImGui::End();
 	}
 
-	ImGui::SetNextWindowSize(ImVec2(100, 200));
-	ImGui::SetNextWindowPos(ImVec2(0, 250));
+	ImGui::SetNextWindowSize(ImVec2(150, 450));
+	ImGui::SetNextWindowPos(ImVec2(0, 65));
 	ImGui::Begin("Scene Objects");
+	ImVec2 button_size = ImVec2(130, 20);
 
 	for (int i = 0; i < m_cubes.size(); i++)
 	{
 		std::string name = "Cube " + std::to_string(i);
-		if (ImGui::Button(name.c_str()))
+		if (ImGui::Button(name.c_str(), button_size))
 		{
 			m_show_obj_window = true;
 			m_spawn_pos = m_cubes[i]->getPosition();
@@ -427,6 +439,10 @@ void WorldObjectManager::imGuiRender()
 	}
 
 	ImGui::End();
+
+
+
+
 }
 
 void WorldObjectManager::render()
@@ -435,6 +451,34 @@ void WorldObjectManager::render()
 	{
 		m_cubes[i]->render(-1, true);
 	}
+}
+
+void WorldObjectManager::renderSelectedHighlight()
+{
+	if (m_cubes.size() < 1 || m_show_obj_window != true) return;
+
+	//set the blend to screen
+	BlendMode::get()->SetBlend(SCREEN);
+	
+	Vector3D s = m_cubes[m_cube_ID]->getScale() + 0.05f;
+	Vector3D p = m_cubes[m_cube_ID]->getPosition();
+	Vector3D r = m_cubes[m_cube_ID]->getRotation();
+
+	//get the material of the object
+	Material_Obj m = m_cubes[m_cube_ID]->getMaterial();
+	//save the original transparency of the object
+	Vector4D temp = m.m_diffuse_color;
+	//reduce the transparency before rendering
+	m.m_diffuse_color = Vector4D(0.7f, 0.5f, 0.5f, 1.0f);
+	m_cubes[m_cube_ID]->setMaterial(m);
+
+	//render
+	m_cubes[m_cube_ID]->render(s, p, r, FLAT, false);
+
+	//return settings to how they were
+	BlendMode::get()->SetBlend(ALPHA);
+	m.m_diffuse_color = temp;
+	m_cubes[m_cube_ID]->setMaterial(m);
 }
 
 Vector3D WorldObjectManager::CubeAABBCollision(Vector3D old_pos, Vector3D new_pos, Vector3D size)

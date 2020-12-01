@@ -124,29 +124,39 @@ public:
 		m_mat[0][0] = side.m_x;
 		m_mat[0][1] = side.m_y;
 		m_mat[0][2] = side.m_z;
-		//m_mat[0][3] = -(Vector3D::dot(side, pos));
 
 		m_mat[1][0] = upward.m_x;
 		m_mat[1][1] = upward.m_y;
 		m_mat[1][2] = upward.m_z;
-		//m_mat[1][3] = -(Vector3D::dot(upward, pos));
 
 		m_mat[2][0] = forward.m_x;
 		m_mat[2][1] = forward.m_y;
 		m_mat[2][2] = forward.m_z;
-		//m_mat[2][3] = -(Vector3D::dot(forward, pos));
 
 		m_mat[3][0]	 = 0;
 		m_mat[3][1]	 = 0;
 		m_mat[3][2]	 = 0;
 
-		//Matrix4x4 temp;
-		//temp.setIdentity();
-		//temp.setTranslation(pos);
-
-		//*this *= temp;
 	}
 
+	float getRoll()
+	{
+		//roll = arctan2(A31, A32)
+		return atan2(m_mat[2][1], m_mat[2][2]);
+	}
+	
+	float getPitch()
+	{
+		//pitch = arccos(A33)
+		//return acos(m_mat[2][2]);
+		return -atan2(-m_mat[2][0], sqrt(m_mat[2][1] * m_mat[2][1] + m_mat[2][2] * m_mat[2][2]));
+	}
+
+	float getYaw()
+	{
+		//yaw = -arctan2(A13, A23)
+		return atan2(m_mat[1][0], m_mat[0][0]);
+	}
 
 
 	void operator *=(const Matrix4x4& matrix)

@@ -82,6 +82,8 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	//texture coordinates
 	output.texcoord = input.texcoord;
 
+	output.lightcolor = float4(m_ambient_light_color.xyz, 1.0);
+
 	return output;
 
 }

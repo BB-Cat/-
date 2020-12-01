@@ -1,3 +1,5 @@
+#include "Lighting.fx"
+
 struct PS_INPUT
 {
 	float4 position: SV_POSITION;
@@ -33,29 +35,24 @@ cbuffer constant: register(b2)
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
 	
-	//diffuse
-	float atten = 1.0;
-	float3 lightDir = normalize(m_global_light_dir.xyz);
-	float3 diffuseReflection = atten * m_global_light_color.xyz * max(0.0, dot(input.normal, lightDir));
+	float atten = m_global_light_strength;
+	float3 light_dir = normalize(m_global_light_dir.xyz);
 
-	//ambient lighting
-	float3 ambientLightDir = normalize(m_global_light_dir.xyz) * -1;
-	float3 ambientReflection = 0.5 * m_ambient_light_color.xyz * max(0.0, dot(input.normal, ambientLightDir));
-	
+	//diffuse
+	float3 diffuse_reflection = diffuse(input.normal, light_dir, m_global_light_color);
+
 	//specular
-	float3 specularReflection = min(1.0, m_specularColor.rgb * max(0.0, dot(input.normal, m_global_light_dir.xyz))
-		* pow(max(0.0, dot(reflect(-lightDir.xyz, input.normal), -input.direction_to_camera)), m_shininess)) * m_specularColor.a;
+	float3 specular_reflection = spec(input.normal, light_dir, m_specularColor.rgb, input.direction_to_camera, m_shininess);
+
+	//ambient
+	float3 ambient_dir = normalize(m_global_light_dir.xyz) * -1;
+	float3 ambient_reflection = 0.5 * m_ambient_light_color.rgb * max(0.0, dot(input.normal, ambient_dir));
 
 	//rim lighting
-	float rim = 1 - saturate(dot(-input.direction_to_camera, input.normal));
-	float rimlight_amount = max(dot(lightDir, input.normal), 0);
-	float3 rimLighting = m_rimColor.w * atten * m_global_light_color.rgb * m_rimColor.xyz * rimlight_amount * pow(rim, m_rimPower);
+	float3 rim_reflection = rim(input.normal, light_dir, m_rimColor.rgb, input.direction_to_camera, m_rimPower);
 
 	
-	float3 lightFinal = rimLighting + diffuseReflection + specularReflection + ambientReflection;
-	//float3 lightFinal = specularReflection;
-	
+	float3 lightFinal = (rim_reflection + diffuse_reflection + specular_reflection + ambient_reflection) * atten + input.lightcolor;
+
 	return float4(m_diffuseColor.xyz * lightFinal, m_d);
-	//return float4(rimLighting + specularReflection, m_d);
-	//return float4(ambientReflection + specularReflection, m_d);
 }

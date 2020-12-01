@@ -60,21 +60,16 @@ Scene10::Scene10(SceneManager* sm) : Scene(sm)
 
 	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
 
-	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
+	m_global_light_rotation = Vector2D(3.521f, 0.181f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(0.4, 0.6, 0.0);
-	m_ambient_light_color = Vector3D(1.0, 1.0, 0.8);
+	m_light_color = Vector3D(1.0f, 1.0f, 0.8f);
+	m_ambient_light_color = Vector3D(1.0, 0.59f, 0.38f);
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
 
-
-
-	//temp
-	//m_cube = std::shared_ptr<Cube>(new Cube());
-	//m_cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, Vector3D(3, 1, 1), Vector3D(0, 0, 0), Vector3D(0, 0, 0), nullptr);
 }
 
 Scene10::~Scene10()
@@ -105,32 +100,36 @@ void Scene10::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(400, 200));
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
 
-	//create the test window
-	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	//ImGui::SetNextWindowSize(ImVec2(400, 200));
+	//ImGui::SetNextWindowPos(ImVec2(0, 20));
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
-	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
+	////create the test window
+	//ImGui::Begin("Test Window");
+	//ImGui::Text("Press 1 key to");
+	//ImGui::Text("display the mouse");
 
-	//ImGui::DragFloat("Blend Animation", &m_blend, 0.003f, 0.00f, 1.0f);
-	//m_model->setBlend(m_blend);
+	//if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	////ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
+	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
-	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	//VectorToArray v(&m_global_light_rotation);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
 
-	v = VectorToArray(&m_light_color);
-	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_light_color);
+	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
+	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
 
-	v = VectorToArray(&m_ambient_light_color);
-	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_ambient_light_color);
+	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
 
-
+	ActorManager::get()->activePlayerImGui();
 
 	if (m_first_time)
 	{
@@ -154,7 +153,7 @@ void Scene10::imGuiRender()
 		ImGui::EndPopup();
 	}
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void Scene10::shadowRenderPass(float delta)
@@ -171,7 +170,7 @@ void Scene10::mainRenderPass(float delta)
 	//m_cube->render(Vector3D(3, 3, 3), Vector3D(), Vector3D(), Shaders::LAMBERT_SPECULAR, false);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);
+	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
 	m_floor->renderMesh(delta, Vector3D(10, 10, 10), Vector3D(campos.m_x, 0, campos.m_z), Vector3D(0, 0, 0), Shaders::SIMPLE_STAGE, false);
 
 

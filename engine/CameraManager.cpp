@@ -17,7 +17,7 @@ CameraManager::~CameraManager()
 
 }
 
-void CameraManager::update(const float& delta, const int& width, const int& height)
+void CameraManager::update(const float& delta, const int& width, const int& height, bool exclude_Y_movement)
 {
 	updateInput();
 
@@ -32,7 +32,9 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	temp.setScale(Vector3D(1.0f, 1.0f, 1.0f));
 	worldcam *= temp;
 
+
 	Vector3D new_pos = m_world_camera.getTranslation();
+	float old_y = new_pos.m_y;
 
 	//declare variables necessary for camera update
 	Vector3D cam_position = m_world_camera.getTranslation();
@@ -43,8 +45,8 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	//we will only make the call if the camera has been set to a camera state which needs player data.
 	if (m_cam_state != FREE)
 	{
-		Vector3D player_position = ActorManager::get()->getActivePlayerPosition();
-		Vector3D player_dir = ActorManager::get()->getActivePlayerDirection();
+		player_position = ActorManager::get()->getActivePlayerPosition();
+		player_dir = ActorManager::get()->getActivePlayerDirection();
 	}
 
 	Vector3D target_view = (player_position + Vector3D(0, 3.0f, 0));
@@ -76,38 +78,6 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 		break;
 
 	case (TP):
-
-		////if (target_view_to_cam.length() > target_dist)
-		////{
-		////	target_view_to_cam.normalize();
-		////	new_pos = Vector3D::lerp(cam_position, target_view + target_view_to_cam * target_dist, delta * 10.0f);
-		////}
-		////else if (target_view_to_cam.length() < min_dist)
-		////{
-		////	target_view_to_cam.normalize();
-		////	new_pos = Vector3D::lerp(cam_position, target_view + target_view_to_cam * min_dist, delta * 10.0f);
-		////}
-		////else new_pos = cam_position;
-
-		////worldcam.lookAt(player_position, new_pos, Vector3D(0, -1, 0));
-
-		//temp.setIdentity();
-		//temp.setRotationX(m_camera_rot.m_x);
-		//worldcam *= temp;
-
-		////temp_dir = Vector3D(
-		////	sinf(sinf(m_camera_rot.m_y) * m_camera_rot.m_y), 
-		////	cosf(m_camera_rot.m_x), 
-		////	sinf(cosf(m_camera_rot.m_y) * m_camera_rot.m_y));
-		////new_pos = target_view - temp_dir * target_dist;
-
-		//temp_dir = (player_position - new_pos);
-		//temp_dir.normalize();
-		//angle_to_player = atan2(temp_dir.m_x, temp_dir.m_z);
-		//temp.setIdentity();
-		//temp.setRotationY(angle_to_player);
-		//worldcam *= temp;
-
 		new_pos = cam_position + m_world_camera.getYDirection() * (mouse_delta.m_x * m_speed * 50);
 		new_pos = new_pos + m_world_camera.getXDirection() * (-mouse_delta.m_y * m_speed * 50);
 
@@ -117,15 +87,6 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 		new_pos = target_view - temp_dir * 10;
 
 		worldcam.lookAt(target_view, new_pos, Vector3D(0, -1, 0));
-
-		//temp.setIdentity();
-		//temp.setRotationX(m_camera_rot.m_x);
-		//worldcam *= temp;
-
-		//temp.setIdentity();
-		//temp.setRotationY(m_camera_rot.m_y);
-		//worldcam *= temp;
-		//
 		break;
 
 	case (TOPDOWN):
@@ -139,10 +100,21 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 		break;
 
 	case (STATIC): 
-		break;
+		new_pos = cam_position;
+		new_pos = new_pos;
 
+		temp.setIdentity();
+		temp.setRotationX(m_camera_rot.m_x);
+		worldcam *= temp;
+
+		temp.setIdentity();
+		temp.setRotationY(m_camera_rot.m_y);
+		worldcam *= temp;
+
+		break;
 	}
 
+	if (exclude_Y_movement == true) new_pos.m_y = old_y;
 	worldcam.setTranslation(new_pos);
 
 	cc.m_camera_position = new_pos;
@@ -160,17 +132,42 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	m_frustum.constructFrustum(depth, cc.m_projection, cc.m_view);
 }
 
-void CameraManager::lookAtPosition(const Vector3D& target, float seconds, float delta)
+void CameraManager::beginLookAt(const Vector3D& target, float seconds)
 {
-	Matrix4x4 mat; 
-	mat.lookAt(target, m_world_camera.getTranslation(), Vector3D(0, 1, 0));
-	m_world_camera = m_world_camera * (1.0f - seconds * delta) + mat * (seconds * delta);
+	//Matrix4x4 mat; 
+	//mat.lookAt(target, m_world_camera.getTranslation(), Vector3D(0, 1, 0));
+	//mat.setTranslation(m_world_camera.getTranslation());
+	//m_world_camera = m_world_camera * (1.0f - seconds * delta) + mat * (seconds * delta);
+	//if (seconds == 0) m_world_camera = mat;
+
+	m_lookat = true;
+	m_lookat_target = target;
+	m_lookat_duration_until_complete = seconds;
+
 }
 
-void CameraManager::moveToPosition(Vector3D target, float seconds, float delta)
+void CameraManager::cancelLookAt()
 {
-	Vector3D pos = m_world_camera.getTranslation();
-	pos = pos * (1.0f - seconds * delta) + target * (seconds * delta);
+	m_lookat = false;
+	m_lookat_duration_until_complete = -1;
+	m_lookat_target = {};
+}
+
+void CameraManager::beginMoveTo(Vector3D target, float seconds)
+{
+	//Vector3D pos = m_world_camera.getTranslation();
+	//pos = pos * (1.0f - seconds * delta) + target * (seconds * delta);
+
+	m_moveto = true;
+	m_moveto_target = target;
+	m_moveto_duration_until_complete = seconds;
+}
+
+void CameraManager::cancelMoveTo()
+{
+	m_moveto = false;
+	m_moveto_duration_until_complete = -1;
+	m_moveto_target = {};
 }
 
 void CameraManager::moveCamera(Vector3D move_amount)
@@ -266,6 +263,7 @@ CameraManager::CameraManager()
 
 void CameraManager::updateInput()
 {
+	if (m_cam_state == STATIC) return;
 
 	m_forward = 0.0f;
 	m_rightward = 0.0f;
@@ -289,4 +287,39 @@ void CameraManager::updateInput()
 
 	m_camera_rot = m_camera_rot + AppWindow::getMouseDelta();
 	if (m_camera_rot.m_x < -1.57f) m_camera_rot.m_x = -1.57f;
+}
+
+void CameraManager::moveTo(float delta)
+{
+	Vector3D pos = m_world_camera.getTranslation();
+	pos = pos * (1.0f - m_moveto_duration_until_complete * delta) 
+		+ m_moveto_target * (m_moveto_duration_until_complete * delta);
+	m_world_camera.setTranslation(pos);
+
+	if (m_moveto_duration_until_complete < 0.0001f) m_world_camera.setTranslation(m_moveto_target);
+
+	if ((m_world_camera.getTranslation() - m_moveto_target).length() < 0.001f)
+	{
+		m_moveto = false;
+		m_moveto_duration_until_complete = -1;
+		m_moveto_target = {};
+	}
+}
+
+void CameraManager::lookAt(float delta)
+{
+	Matrix4x4 mat;
+	mat.lookAt(m_lookat_target, m_world_camera.getTranslation(), Vector3D(0, 1, 0));
+	mat.setTranslation(m_world_camera.getTranslation());
+	m_world_camera = m_world_camera * (1.0f - m_lookat_duration_until_complete * delta)
+		+ mat * (m_lookat_duration_until_complete * delta);
+
+	if (m_lookat_duration_until_complete < 0.0001f) m_world_camera = mat;
+
+	if (Vector3D::dot(m_world_camera.getZDirection(), mat.getZDirection()) < -0.999f )
+	{
+		m_lookat = false;
+		m_lookat_duration_until_complete = -1;
+		m_lookat_target = {};
+	}
 }

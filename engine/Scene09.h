@@ -11,7 +11,10 @@ private:
 
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
-    Texture3DPtr m_tex;
+    Texture3DPtr m_tex3D_main;
+    Texture3DPtr m_tex3D_detail;
+    TexturePtr m_blue_noise;
+
     bool m_first_time = true;
 
     float m_speed = 0.35f;

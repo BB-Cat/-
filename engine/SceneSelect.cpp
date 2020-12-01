@@ -54,23 +54,27 @@ void SceneSelect::imGuiRender()
 	//-----------------------------------------------------
 	ImGui::SetNextWindowSize(ImVec2(1000, 700));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.5f);
+	////create the test window
+	ImGui::Begin("Scene Selection", 0, ImGuiWindowFlags_NoDecoration);
 
-	//create the test window
-	ImGui::Begin("Scene Selection");
+	ImVec2 size = ImVec2(280.0f, 30.0f);
 	ImGui::Text("Press 1 key to display the mouse");
-	if (ImGui::Button("Shaders", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE01, true);
-	if (ImGui::Button("ShadowMapping", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE02, true);
-	if (ImGui::Button("Terrain Generator", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE03, true);
-	if (ImGui::Button("Dynamic Terrain", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE04, true);
-	if (ImGui::Button("Tesselation", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE05, true);
-	if (ImGui::Button("Character Animation", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE06, true);
-	if (ImGui::Button("Noise", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE07, true);
-	if (ImGui::Button("Volumetric Clouds", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE08, true);
-	if (ImGui::Button("Weather Map", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE09, true);
-	if (ImGui::Button("Character Movement", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE10, true);
-	if (ImGui::Button("Stage Creator", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE11, true);
-	if (ImGui::Button("Stage Example", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE12, true);
-	if (ImGui::Button("Compute Shader", ImVec2(980, 30))) p_manager->changeScene(SceneManager::SCENE13, true);
+	if (ImGui::Button("Shaders",			size)) p_manager->changeScene(SceneManager::SCENE01, true);
+	if (ImGui::Button("ShadowMapping",		size)) p_manager->changeScene(SceneManager::SCENE02, true);
+	if (ImGui::Button("Terrain Generator",	size)) p_manager->changeScene(SceneManager::SCENE03, true);
+	if (ImGui::Button("Dynamic Terrain",	size)) p_manager->changeScene(SceneManager::SCENE04, true);
+	if (ImGui::Button("Tesselation",		size)) p_manager->changeScene(SceneManager::SCENE05, true);
+	if (ImGui::Button("Character Animation",size)) p_manager->changeScene(SceneManager::SCENE06, true);
+	if (ImGui::Button("Noise",				size)) p_manager->changeScene(SceneManager::SCENE07, true);
+	if (ImGui::Button("Volumetric Clouds",	size)) p_manager->changeScene(SceneManager::SCENE08, true);
+	if (ImGui::Button("Weather Map",		size)) p_manager->changeScene(SceneManager::SCENE09, true);
+	if (ImGui::Button("Character Movement",	size)) p_manager->changeScene(SceneManager::SCENE10, true);
+	if (ImGui::Button("Stage Creator",		size)) p_manager->changeScene(SceneManager::SCENE11, true);
+	if (ImGui::Button("Stage Example",		size)) p_manager->changeScene(SceneManager::SCENE12, true);
+	if (ImGui::Button("Compute Shader",		size)) p_manager->changeScene(SceneManager::SCENE13, true);
+
+	int a = 3;
 
 	ImGui::End();
 }

@@ -24,7 +24,8 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(CAMERA_STATE::FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 4, -5));
+	CameraManager::get()->setCamPos(Vector3D(0, 1.5f, -5));
+	CameraManager::get()->setCamRot(Vector2D(0, 0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -55,7 +56,7 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 	m_cloud_props.m_speed = 0.7f;
 	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
 
-	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
+	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("voronoiPerlin128x.txt"));
 
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
@@ -73,7 +74,7 @@ Scene11::~Scene11()
 void Scene11::update(float delta, const float& width, const float& height)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta, width, height, AppWindow::getMouseState(true));
 
 	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
 	m_scene_light_dir.normalize();
@@ -91,25 +92,29 @@ void Scene11::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(400, 230));
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
 
-	//create the test window
-	ImGui::Begin("Scene Settings");
-	ImGui::Text("Press 1 key to display the mouse");
+	////create the test window
+	//ImGui::Begin("Scene Settings");
+	//ImGui::Text("Press 1 key to display the mouse");
 
-	if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
+	//if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
-	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.02f, -6.28f, 6.28f);
+	//VectorToArray v(&m_global_light_rotation);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.02f, -6.28f, 6.28f);
 
-	v = VectorToArray(&m_light_color);
-	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_light_color);
+	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
+	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
 
-	v = VectorToArray(&m_ambient_light_color);
-	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_ambient_light_color);
+	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
 
 	//GameSceneManager::get()->imGuiRender();
 	WorldObjectManager::get()->imGuiRender();
@@ -132,7 +137,7 @@ void Scene11::imGuiRender()
 		ImGui::EndPopup();
 	}
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void Scene11::shadowRenderPass(float delta)
@@ -142,9 +147,10 @@ void Scene11::shadowRenderPass(float delta)
 void Scene11::mainRenderPass(float delta)
 {
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
+	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
 
 	WorldObjectManager::get()->render();
+	WorldObjectManager::get()->renderSelectedHighlight();
 
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);
+	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
 }

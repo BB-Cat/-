@@ -68,6 +68,8 @@ void Cube::render(Vector3D scale, Vector3D position, Vector3D rotation, int shad
 	//set the shader
 	if (shader >= 0) GraphicsEngine::get()->getShaderManager()->setPipeline(shader);
 	else GraphicsEngine::get()->getShaderManager()->setPipeline(m_shader);
+	//set the raster state
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_solid_rast);
 
 	if (is_textured)
 	{

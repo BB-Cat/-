@@ -27,9 +27,11 @@ public:
 	static CameraManager* get();
 	~CameraManager();
 	
-	void update(const float& delta, const int& width, const int& height);
-	void lookAtPosition(const Vector3D& target, float seconds, float delta);
-	void moveToPosition(Vector3D target, float seconds, float delta);
+	void update(const float& delta, const int& width, const int& height, bool exclude_Y_movement = false);
+	void beginLookAt(const Vector3D& target, float seconds);
+	void cancelLookAt();
+	void beginMoveTo(Vector3D target, float seconds);
+	void cancelMoveTo();
 	void moveCamera(Vector3D move_amount);
 
 
@@ -56,6 +58,9 @@ private:
 	CameraManager();
 	void updateInput();
 
+	void moveTo(float delta);
+	void lookAt(float delta);
+
 private:
 	Matrix4x4 m_world_camera;
 	int m_cam_state;
@@ -69,4 +74,14 @@ private:
 
 	//frustum class used to calculate culling
 	Frustum m_frustum;
+
+private:
+	bool m_lookat;
+	Vector3D m_lookat_target;
+	float m_lookat_duration_until_complete;
+
+private:
+	bool m_moveto;
+	Vector3D m_moveto_target;
+	float m_moveto_duration_until_complete;
 };

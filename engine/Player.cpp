@@ -26,12 +26,12 @@ Player::Player(bool has_shadow) : Actor(has_shadow)
 	m_model->loadAnimation(nullptr, Animation::Player::Stop,		L"..\\Assets\\CharacterRough\\lp_stop.fbx");
 	m_model->loadAnimation(nullptr, Animation::Player::Jump,		L"..\\Assets\\CharacterRough\\lp_jump.fbx", false, true, 0, true, 0.99f);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToIdle,	L"..\\Assets\\CharacterRough\\lp_land.fbx", false, false);
-	m_model->loadAnimation(nullptr, Animation::Player::LandHard,	L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, false);
+	//m_model->loadAnimation(nullptr, Animation::Player::LandHard,	L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToRun,	L"..\\Assets\\CharacterRough\\lp_land_to_run.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::Roll,		L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::DodgeBack,   L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, true, 0.8f);
-	m_model->loadAnimation(nullptr, Animation::Player::Attack1,		L"..\\Assets\\CharacterRough\\lp_slash.fbx", false, true, 0.5f);
-	m_model->loadAnimation(nullptr, Animation::Player::Attack2,		L"..\\Assets\\CharacterRough\\lp_kick.fbx", false, false);
+//	m_model->loadAnimation(nullptr, Animation::Player::Attack1,		L"..\\Assets\\CharacterRough\\lp_slash.fbx", false, true, 0.5f);
+//	m_model->loadAnimation(nullptr, Animation::Player::Attack2,		L"..\\Assets\\CharacterRough\\lp_kick.fbx", false, false);
 
 	//アニメーションの初期設定
 	m_model->setAnimation(-1);
@@ -60,9 +60,12 @@ void Player::update(float delta)
 	cam_dir.normalize();
 	//convert radian result to degrees like the actor class stores
 	m_input.cam_angle = atan2(cam_dir.m_x, cam_dir.m_z) / 0.01745f;
-	if (m_angle > 360) m_angle -= 360;
-	if (abs(m_input.cam_angle + 360 - m_angle) < abs(m_input.cam_angle - m_angle)) m_input.cam_angle += 360;
-	if (abs(m_input.cam_angle - 360 - m_angle) < abs(m_input.cam_angle - m_angle)) m_input.cam_angle -= 360;
+	//prevent spinning by adjusting the angle when cam angle jumps between positive and negative
+	if (abs(m_input.cam_angle - m_angle) > 180)
+	{
+		if (m_input.cam_angle > 0) m_angle += 360.0f;
+		else if (m_input.cam_angle < 0) m_angle -= 360.0f;
+	}
 
 	//更新関数の選択
 	switch (m_state)
@@ -595,9 +598,9 @@ void Player::endJump(float delta)
 
 void Player::imGuiWindow()
 {
-	ImGui::SetNextWindowSize(ImVec2(300, 200));
-	ImGui::SetNextWindowPos(ImVec2(400, 0));
-
+	ImGui::SetNextWindowSize(ImVec2(370, 220));
+	ImGui::SetNextWindowPos(ImVec2(630, 20));
+	ImGui::SetNextWindowBgAlpha(0.4f);
 	//create the test window
 	ImGui::Begin("Player Values");
 
@@ -610,15 +613,15 @@ void Player::imGuiWindow()
 	ImGui::DragFloat("Gravity", &P_GRAVITY, 0.05f, 0.05f, 100.0f);
 	ImGui::DragFloat("Roll Distance", &P_ROLL_DIST, 0.05f, 0.00f, 10.0f);
 
-	if (ImGui::Button("Walk", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Walk);
-	if (ImGui::Button("Walkback", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::WalkBackward);
-	if (ImGui::Button("Run", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Run);
-	if (ImGui::Button("Jump", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Jump);
-	if (ImGui::Button("Land", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::LandToIdle);
-	if (ImGui::Button("Roll", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Roll);
-	if (ImGui::Button("Attack", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Attack1);
-	if (ImGui::Button("Attack2", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Attack2);
-	if (ImGui::Button("Stop", ImVec2(200, 30))) m_model->setAnimation(-1);
+	//if (ImGui::Button("Walk", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Walk);
+	//if (ImGui::Button("Walkback", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::WalkBackward);
+	//if (ImGui::Button("Run", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Run);
+	//if (ImGui::Button("Jump", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Jump);
+	//if (ImGui::Button("Land", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::LandToIdle);
+	//if (ImGui::Button("Roll", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Roll);
+	//if (ImGui::Button("Attack", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Attack1);
+	//if (ImGui::Button("Attack2", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Attack2);
+	//if (ImGui::Button("Stop", ImVec2(200, 30))) m_model->setAnimation(-1);
 
 
 	ImGui::End();

@@ -383,6 +383,15 @@
     <Filter Include="Sources\Scenes\13">
       <UniqueIdentifier>{a3e40173-b724-46d6-8c8b-41659454ed07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Includes">
+      <UniqueIdentifier>{bd10681e-e107-4316-9a7b-c2beed835b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\23 Toon">
+      <UniqueIdentifier>{97a54d2f-28d7-4003-91f5-b35d675e8981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old">
+      <UniqueIdentifier>{aac69f19-3788-4149-96d7-eaabefb18b2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -983,9 +992,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexMeshLayoutShader.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="FlatShaderVS.hlsl">
       <Filter>Shaders\1 Flat</Filter>
     </FxCompile>
@@ -1256,25 +1262,46 @@
     <FxCompile Include="ComputeNoiseTex.hlsl">
       <Filter>ComputeShaders</Filter>
     </FxCompile>
+    <FxCompile Include="VertexMeshLayoutShader.hlsl">
+      <Filter>Shaders\Includes</Filter>
+    </FxCompile>
+    <FxCompile Include="ToonVS.hlsl">
+      <Filter>Shaders\23 Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="ToonPS.hlsl">
+      <Filter>Shaders\23 Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="ToonTexPS.hlsl">
+      <Filter>Shaders\23 Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="ToonTexVS.hlsl">
+      <Filter>Shaders\23 Toon</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherAtmosphereOldPS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
+    </FxCompile>
+    <FxCompile Include="WeatherAtmosphereOldVS.hlsl">
+      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="noise.fx">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="cloud.fx">
       <Filter>Shaders\19 VolumetricClouds</Filter>
     </None>
-    <None Include="ZeroToOne.fx">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Sampling.fx">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="General.fx">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Includes</Filter>
     </None>
     <None Include="Lighting.fx">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="noise.fx">
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="Sampling.fx">
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="ZeroToOne.fx">
+      <Filter>Shaders\Includes</Filter>
     </None>
   </ItemGroup>
 </Project>

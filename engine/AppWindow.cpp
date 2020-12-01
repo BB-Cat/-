@@ -132,7 +132,7 @@ void AppWindow::onCreate()
 
 void AppWindow::onUpdate()
 {
-	m_fps_update_timer += m_delta_time.time_stamp();
+	m_fps_update_timer += m_delta_time.time_interval();
 	m_loop_count++;
 	if (m_fps_update_timer > 0.5f)
 	{
@@ -141,7 +141,7 @@ void AppWindow::onUpdate()
 		m_fps_update_timer = 0;
 		m_loop_count = 0;
 	}
-	m_delta_time.reset();
+	//m_delta_time.reset();
 
 
 	Window::onUpdate();
