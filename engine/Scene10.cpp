@@ -10,7 +10,7 @@
 #include "Texture3D.h"
 #include "DeviceContext.h"
 #include "ActorManager.h"
-#include "Cube.h"
+#include "WorldObject.h"
 
 
 //bool Scene03::m_first_time = true;

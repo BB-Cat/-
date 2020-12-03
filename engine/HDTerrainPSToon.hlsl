@@ -1,6 +1,7 @@
 #include "General.fx"
 #include "ZeroToOne.fx"
 #include "Sampling.fx"
+#include "Lighting.fx"
 
 SamplerState TextureSampler: register(s0);
 
@@ -189,10 +190,12 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 light_direction = normalize(m_global_light_dir.xyz);
 
 	//diffuse lighting
-	float faceDot = max(0.0, dot(input.normal, light_direction));
-	float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
-		* (faceDot > diffuse_thresh);
-	float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
+	//float faceDot = max(0.0, dot(input.normal, light_direction));
+	//float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
+	//	* (faceDot > diffuse_thresh);
+	//float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
+	
+	float3 diffuseReflection = gradientOneCellDiffuse(input.normal, light_direction, m_global_light_color, 0.4f);
 	
 	//specular
 	float specDot = pow(max(0.0, dot(reflect(-light_direction, input.normal), -direction_to_camera)), 10);

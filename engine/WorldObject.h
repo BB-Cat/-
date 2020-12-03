@@ -2,13 +2,14 @@
 #include "Prerequisites.h"
 #include <vector>
 #include "Subset.h"
+#include "Colliders.h"
 
-//primitive cube class
-class Cube
+
+class WorldObject
 {
 public:
-	Cube(VertexBufferPtr vertexes, IndexBufferPtr indexes);
-	~Cube();
+	WorldObject(VertexBufferPtr vertexes, IndexBufferPtr indexes, Collider* collider = nullptr);
+	~WorldObject();
 
 	//render using the cube object's position, rotation and scale values
 	/* (Set the shader to -1 to use the cube's internal shader setting - Lambert by default) */
@@ -41,6 +42,8 @@ public:
 	Material_Obj getMaterial() { return m_mat; }
 	int getShader() { return m_shader; }
 
+	Collider* getCollider() { return m_collider; }
+
 	std::string getDiffuseName() { return m_diffuse_name; }
 	std::string getNormalName() { return m_normal_name; }
 	std::string getRoughnessName() { return m_roughness_name; }
@@ -48,6 +51,7 @@ public:
 private:
 	Matrix4x4 applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate);
 
+private:
 	VertexBufferPtr		m_vertex_buffer;
 	IndexBufferPtr		m_index_buffer;
 	Matrix4x4			m_mesh_world;
@@ -63,6 +67,7 @@ private:
 	Vector3D			m_pos;
 	Vector3D			m_scale;
 	Vector3D			m_rot;
+	Collider*			m_collider;
 
 	int					m_shader;
 

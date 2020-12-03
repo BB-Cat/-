@@ -9,14 +9,14 @@ class Scene08 : public Scene
 {
 private:
 
-    SkinnedMeshPtr m_sky;
+    SkinnedMeshPtr m_light;
     SkinnedMeshPtr m_model;
     bool m_first_time = true;
 
     Texture3DPtr m_tex3D_main;
     Texture3DPtr m_tex3D_detail;
     TexturePtr m_blue_noise;
-    bool m_show_tex3D = false;
+    bool m_show_vertices = false;
 
     float m_speed = 3.0f;
 
@@ -26,6 +26,7 @@ private:
     Vector3D m_ambient_light_color;
 
     cb_cloud m_cloud_props;
+    cb_cloud m_default;
     cb_cloud m_preset1;
     cb_cloud m_preset2;
     cb_cloud m_preset3;

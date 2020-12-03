@@ -110,7 +110,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 background_color = float3(0.3, 0.3, 0.4);
 	float3 cloud_color = light_energy * m_global_light_color;
 	float3 col = background_color * transmittance + cloud_color;
-	return float4(col, 1);
+	return float4(col, 1 - transmittance);
 	//return random_offset;
 
 	//return light_energy;

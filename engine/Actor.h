@@ -10,6 +10,7 @@ public:
 
 	Vector3D getPosition() { return m_pos; };
 	Vector3D getDirectionVector() { return Vector3D(sinf(m_angle * 0.01745f), 0, cosf(m_angle * 0.01745f)); };
+	Vector3D getRightVector() { return Vector3D(sinf((m_angle + 90.0f) * 0.01745f), 0, cosf((m_angle + 90.0f) * 0.01745f)); };
 
 	virtual void update(float delta) = 0;
 	virtual void render(float delta) = 0;

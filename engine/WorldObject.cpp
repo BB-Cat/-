@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "WorldObject.h"
 #include "VertexMesh.h"
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
@@ -7,7 +7,7 @@
 #include "IndexBuffer.h"
 #include "PrimitiveGenerator.h"
 
-Cube::Cube(VertexBufferPtr vertexes, IndexBufferPtr indexes)
+WorldObject::WorldObject(VertexBufferPtr vertexes, IndexBufferPtr indexes, Collider* collider)
 {
 	m_vertex_buffer = vertexes;
 	m_index_buffer = indexes;
@@ -47,19 +47,24 @@ Cube::Cube(VertexBufferPtr vertexes, IndexBufferPtr indexes)
 	if (FAILED(hr))	assert(0 && "Error loading the solid fill rasterizer");
 
 	m_mesh_world.setIdentity();
+
+
+
+	m_collider = collider;
 }
 
-Cube::~Cube()
+WorldObject::~WorldObject()
 {
 	if (m_solid_rast) m_solid_rast->Release();
+	if (m_collider != nullptr) delete m_collider;
 }
 
-void Cube::render(int shader, bool is_textured)
+void WorldObject::render(int shader, bool is_textured)
 {
 	render(m_scale, m_pos, m_rot, shader, is_textured);
 }
 
-void Cube::render(Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured)
+void WorldObject::render(Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured)
 {
 	//set the vertices which will be drawn
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vertex_buffer);
@@ -94,7 +99,7 @@ void Cube::render(Vector3D scale, Vector3D position, Vector3D rotation, int shad
 	(m_index_buffer->getSizeIndexList(), 0, 0);
 }
 
-Matrix4x4 Cube::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
+Matrix4x4 WorldObject::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
 {
 	Matrix4x4 out = global;
 	Matrix4x4 temp;
@@ -122,7 +127,7 @@ Matrix4x4 Cube::applyTransformations(const Matrix4x4& global, Vector3D scale, Ve
 
 }
 
-bool Cube::loadDiffuseTex(const wchar_t* file)
+bool WorldObject::loadDiffuseTex(const wchar_t* file)
 {
 	TexturePtr temp = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(file);
 	if (temp == nullptr) return false;
@@ -131,7 +136,7 @@ bool Cube::loadDiffuseTex(const wchar_t* file)
 	return true;
 }
 
-bool Cube::loadNormalTex(const wchar_t* file)
+bool WorldObject::loadNormalTex(const wchar_t* file)
 {
 	TexturePtr temp = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(file);
 	if (temp == nullptr) return false;
@@ -140,7 +145,7 @@ bool Cube::loadNormalTex(const wchar_t* file)
 	return true;
 }
 
-bool Cube::loadRoughnessTex(const wchar_t* file)
+bool WorldObject::loadRoughnessTex(const wchar_t* file)
 {
 	TexturePtr temp = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(file);
 	if (temp == nullptr) return false;
@@ -149,28 +154,28 @@ bool Cube::loadRoughnessTex(const wchar_t* file)
 	return true;
 }
 
-bool Cube::loadDiffuseTex(TexturePtr tex, std::string name)
+bool WorldObject::loadDiffuseTex(TexturePtr tex, std::string name)
 {
 	m_diffuse = tex;
 	m_diffuse_name = name;
 	return true;
 }
 
-bool Cube::loadNormalTex(TexturePtr tex, std::string name)
+bool WorldObject::loadNormalTex(TexturePtr tex, std::string name)
 {
 	m_normal = tex;
 	m_normal_name = name;
 	return true;
 }
 
-bool Cube::loadRoughnessTex(TexturePtr tex, std::string name)
+bool WorldObject::loadRoughnessTex(TexturePtr tex, std::string name)
 {
 	m_roughness = tex;
 	m_roughness_name = name;
 	return true;
 }
 
-bool Cube::fetchDiffuseTex(std::string name)
+bool WorldObject::fetchDiffuseTex(std::string name)
 {
 	m_diffuse = PrimitiveGenerator::get()->findTexture(name);
 	if(m_diffuse == nullptr) return false;
@@ -179,7 +184,7 @@ bool Cube::fetchDiffuseTex(std::string name)
 	return true;
 }
 
-bool Cube::fetchNormalTex(std::string name)
+bool WorldObject::fetchNormalTex(std::string name)
 {
 	m_normal = PrimitiveGenerator::get()->findTexture(name);
 	if (m_diffuse == nullptr) return false;
@@ -188,7 +193,7 @@ bool Cube::fetchNormalTex(std::string name)
 	return true;
 }
 
-bool Cube::fetchRoughnessTex(std::string name)
+bool WorldObject::fetchRoughnessTex(std::string name)
 {
 	m_roughness = PrimitiveGenerator::get()->findTexture(name);
 	if (m_diffuse == nullptr) return false;

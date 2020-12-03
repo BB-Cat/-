@@ -15,10 +15,12 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(782.7f, 430.62f, 237.45f));
+	CameraManager::get()->setCamPos(Vector3D(950.7f, 333.62f, 407.45f));
 	CameraManager::get()->setCamRot(Vector2D(6.7f, 42.0f));
 
-	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
+	m_light = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_BACK);
+	m_light->setColor(Vector3D(1, 1, 1));
+	
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
 
 	m_global_light_rotation = Vector2D(2.63f, 2.0f);
@@ -27,39 +29,20 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 
 	//initial cloud property settings
 	m_cloud_props.m_cloud_density = 2.0f;
-	m_cloud_props.m_cloud_position = Vector3D(0, -120.0f, 0);
-	m_cloud_props.m_cloud_size = Vector3D(1000, 1000, 1000);
 	m_cloud_props.m_sampling_resolution = Vector4D(1.0f, 0, 0, 0);
-	m_cloud_props.m_sampling_weight = Vector4D(1.0f, 0.5f, 0.0f, 0.33f);
-	m_cloud_props.m_speed = 0.18f;
-	m_cloud_props.m_move_dir = Vector3D(0, 0, 0);
-
+	m_cloud_props.m_sampling_weight = Vector4D(1.0f, 0.0f, 0.19f, 0.42f);
+	m_cloud_props.m_speed = 0.19f;
+	m_cloud_props.m_move_dir = Vector3D(-0.34f, -0.071f, -0.2f);
 	m_cloud_props.m_ray_offset_strength = 9.95f;
-	m_cloud_props.m_phase_parameters = Vector4D(0.03f, 0.3f, 0.08f, 0.0f);
-	m_cloud_props.m_density_offset = 46.0f;
-	m_cloud_props.m_detail_noise_scale = 5.3f;
-	m_cloud_props.m_detail_speed = 0.06f;
-	m_cloud_props.m_detail_sampling_weight = Vector4D(1.0f, 1.0f, 1.0f, 1.0f);
-	m_cloud_props.m_detail_noise_weight = 43.8f;
-	m_cloud_props.m_light_stepcount = 3;
-	m_cloud_props.m_darkness_threshold = 1.5f;
-	m_cloud_props.m_light_absorption_towards_sun = 4.32f;
-	m_cloud_props.m_light_absorption_through_cloud = 0.17f;
-
-
-	//UNMOVING SETTINGS//
-	/*
-	position
-	size
-	ray offset
-	phase parameters
-	detail sampling
-	light steps - 2
-	darkness threshhold
-	light absorption 1
-	light absorption 2
-	*/
-	////////////////////
+	m_cloud_props.m_phase_parameters = Vector4D(0.00f, 0.493f, 0.043f, 0.058f);
+	m_cloud_props.m_density_offset = 60.0f;
+	m_cloud_props.m_detail_noise_scale = 3.0f;
+	m_cloud_props.m_detail_speed = 3.9f;
+	m_cloud_props.m_detail_sampling_weight = Vector4D(1.0f, 0.0f, 1.0f, 1.0f);
+	m_cloud_props.m_detail_noise_weight = 20.0f;
+	m_cloud_props.m_darkness_threshold = 1.35f;
+	m_cloud_props.m_light_absorption_towards_sun = 0.01f;
+	m_cloud_props.m_light_absorption_through_cloud = 0.1f;
 
 	//completely static
 	//position
@@ -71,35 +54,129 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 	//light steps - 2
 	m_cloud_props.m_light_stepcount = 2;
 
+	m_default = m_cloud_props;
+
 	//preset 1
 	m_preset1 = m_cloud_props;
+	//texture resolution
+	m_preset1.m_sampling_resolution.m_x = 1.191f;
+	// sample weight
+	m_preset1.m_sampling_weight = Vector4D(1, 0.5f, 0, 0.33f);
+	//texture density
+	m_preset1.m_cloud_density = 0.335f;
+	//movement direction
+	m_preset1.m_move_dir = Vector3D(0.088f, -0.2f, -0.2f);
+	//movement speed
+	m_preset1.m_speed = 0.39f;
 	//phase parameters
 	m_preset1.m_phase_parameters = Vector4D(0, 0, 0.042f, 0);
+	//density offset
+	m_preset1.m_density_offset = 41.7f;
+	//detail scale
+	m_preset1.m_detail_noise_scale = 3.61f;
+	//detail speed
+	m_preset1.m_detail_speed = 3.94f;
 	//detail sampling
 	m_preset1.m_detail_sampling_weight = Vector4D(1.0f, 1.0f, 1.0f, 1.0f);
+	//detail weight 
+	m_preset1.m_detail_noise_weight = 20.0f;
 	//darkness threshhold
 	m_preset1.m_darkness_threshold = 2.75f;
 	//light absorption 1
-	m_preset1.m_light_absorption_through_cloud = 8.89f;
+	m_preset1.m_light_absorption_through_cloud = 0.11f;
 	//light absorption 2
-	m_preset1.m_light_absorption_towards_sun = 0.11f;
-	//
+	m_preset1.m_light_absorption_towards_sun = 0.89f;
+
 
 	//preset 2
 	m_preset2 = m_cloud_props;
+	//texture resolution
+	m_preset2.m_sampling_resolution.m_x = 1.13f;
+	//movement direction
+	m_preset2.m_move_dir = Vector3D(-0.112f, 0, 0.127f);
+	//movement speed
+	m_preset2.m_speed = 1.63f;
+	// sample weight
+	m_preset2.m_sampling_weight = Vector4D(1, 0.5f, 0, 0.33f);
+	//texture density
+	m_preset2.m_cloud_density = 0.5f;
 	//phase parameters
-	m_preset2.m_phase_parameters = Vector4D(0, 0, 0.042f, 0);
+	m_preset2.m_phase_parameters = Vector4D(0.688f, 1.0f, 0.042f, 0.18f);
+	//density offset
+	m_preset2.m_density_offset = 35.854f;
+	//detail scale
+	m_preset2.m_detail_noise_scale = 2.74f;
+	//detail speed
+	m_preset2.m_detail_speed = 2.927f;
 	//detail sampling
 	m_preset2.m_detail_sampling_weight = Vector4D(1.0f, 1.0f, 1.0f, 1.0f);
+	//detail weight 
+	m_preset2.m_detail_noise_weight = 28.78f;
 	//darkness threshhold
-	m_preset2.m_darkness_threshold = 2.75f;
+	m_preset2.m_darkness_threshold = 1.2f;
 	//light absorption 1
-	m_preset2.m_light_absorption_through_cloud = 8.89f;
+	m_preset2.m_light_absorption_through_cloud = 0.09f;
 	//light absorption 2
-	m_preset2.m_light_absorption_towards_sun = 0.11f;
-	//
+	m_preset2.m_light_absorption_towards_sun = 0.0f;
 
 
+
+	//preset 3
+	m_preset3 = m_cloud_props;
+	//texture resolution
+	m_preset3.m_sampling_resolution.m_x = 1.6f;
+	//movement direction
+	m_preset3.m_move_dir = Vector3D(0.01f, -0.2f, 0.01f);
+	//movement speed
+	m_preset3.m_speed = 0.87f;
+	// sample weight
+	m_preset3.m_sampling_weight = Vector4D(1, 1, 0, 1);
+	//texture density
+	m_preset3.m_cloud_density = 2.0f;
+	//phase parameters
+	m_preset3.m_phase_parameters = Vector4D(0.375f, 0.75f, 0.083f, 0.063f);
+	//density offset
+	m_preset3.m_density_offset = 27.317;
+	//detail scale
+	m_preset3.m_detail_noise_scale = 1.114f;
+	//detail speed
+	m_preset3.m_detail_speed = 8.232f;
+	//detail sampling
+	m_preset3.m_detail_sampling_weight = Vector4D(1.0f, 0.0f, 0.0f, 1.0f);
+	//detail weight 
+	m_preset3.m_detail_noise_weight = 22.195f;
+	//darkness threshhold
+	m_preset3.m_darkness_threshold = 1.6f;
+	//light absorption 1
+	m_preset3.m_light_absorption_through_cloud = 0.19f;
+	//light absorption 2
+	m_preset3.m_light_absorption_towards_sun = 0.03f;
+
+
+	//preset 4
+	m_preset4 = m_cloud_props;
+	// sample weight
+	m_preset4.m_sampling_weight = Vector4D(1.0f, 1.0f, 0, 0.0f);
+	//texture density
+	m_preset4.m_cloud_density = 3.585f;
+	//phase parameters
+	m_preset4.m_phase_parameters = Vector4D(0.521, 0.75f, 0, 0.104f);
+	//density offset
+	m_preset4.m_density_offset = 22.927f;
+	//detail scale
+	m_preset4.m_detail_noise_scale = 2.658f;
+	//detail speed
+	m_preset4.m_detail_speed = 12.378f;
+	//detail sampling
+	m_preset4.m_detail_sampling_weight = Vector4D(1.0f, 1.0f, 1.0f, 1.0f);
+	//detail weight 
+	m_preset4.m_detail_noise_weight = 20.0f;
+	//darkness threshhold
+	m_preset4.m_darkness_threshold = 1.75f;
+	//light absorption 1
+	m_preset4.m_light_absorption_through_cloud = 0.18f;
+	//light absorption 2
+	m_preset4.m_light_absorption_towards_sun = 0.02f;
 
 	//m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("voronoiPerlin128x.txt"));
 	m_tex3D_main = std::shared_ptr<Texture3D>(new Texture3D("Voronoi32x.txt"));
@@ -136,25 +213,83 @@ void Scene08::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(400, 500));
+
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
 
-	//create the test window
-	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+
+
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
 	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
-	if (ImGui::CollapsingHeader("Cloud Settings"))
+
+	//ImGui::SetNextWindowSize(ImVec2(530, 200));
+	ImGui::SetNextWindowPos(ImVec2(260, 20));
+	ImGui::SetNextWindowBgAlpha(0.2f);
+
+	ImGui::Begin("Presets", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+
+	ImVec2 size = ImVec2(80, 30);
+	if (ImGui::Button("Default", size))
 	{
-		//VectorToArray v(&m_cloud_props.m_cloud_position);
-		//ImGui::DragFloat3("Position", v.setArray(), 0.5f, -300.0f, 300.0f);
-		//
-		//v = VectorToArray(&m_cloud_props.m_cloud_size);
-		//ImGui::DragFloat3("Size", v.setArray(), 1.5f, 1.0f, 1000.0f);
+		float temp = m_cloud_props.m_time;
+		m_cloud_props = m_default;
+		m_cloud_props.m_time = temp;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Preset1", size))
+	{
+		float temp = m_cloud_props.m_time;
+		m_cloud_props = m_preset1;
+		m_cloud_props.m_time = temp;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Preset2", size))
+	{
+		float temp = m_cloud_props.m_time;
+		m_cloud_props = m_preset2;
+		m_cloud_props.m_time = temp;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Preset3", size))
+	{
+		float temp = m_cloud_props.m_time;
+		m_cloud_props = m_preset3;
+		m_cloud_props.m_time = temp;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Preset4", size))
+	{
+		float temp = m_cloud_props.m_time;
+		m_cloud_props = m_preset4;
+		m_cloud_props.m_time = temp;
+	}
+
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(530, 200));
+	ImGui::SetNextWindowPos(ImVec2(460, 520));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+
+	//create the test window
+	ImGui::Begin("Clouds", 0, ImGuiWindowFlags_NoDecoration);
+
+	//if (ImGui::CollapsingHeader("Cloud Settings"))
+	//{
+		VectorToArray v(&m_cloud_props.m_cloud_position);
 
 		v = VectorToArray(&m_cloud_props.m_sampling_resolution);
 		//ImGui::DragFloat("Sample Resolution", v.setArray(), 0.1f, 0.0f, 200.0f);
@@ -171,11 +306,11 @@ void Scene08::imGuiRender()
 		ImGui::DragFloat("Movement Speed", &m_cloud_props.m_speed, 0.01f, 0, 20.0);
 
 		//ImGui::DragFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.01f, 1.0f);
-		ImGui::SliderFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.5f, 30.0f);
+		//ImGui::SliderFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.5f, 30.0f);
 
 		v = VectorToArray(&m_cloud_props.m_phase_parameters);
 		//ImGui::DragFloat4("Phase Parameters", v.setArray(), 0.01f, 0.0f, 1.0f);
-		ImGui::SliderFloat4("Phase Parameters", v.setArray(), 0.0f, 1.0f);
+		//ImGui::SliderFloat4("Phase Parameters", v.setArray(), 0.0f, 1.0f);
 
 		//ImGui::DragFloat("Density Offset", &m_cloud_props.m_density_offset, 0.01f, 0.0f);
 		ImGui::SliderFloat("Density Offset", &m_cloud_props.m_density_offset, 0.0f, 60.0f);
@@ -188,43 +323,51 @@ void Scene08::imGuiRender()
 		ImGui::SliderFloat("Detail Noise Speed", &m_cloud_props.m_detail_speed, 0.0f, 15.0f);
 
 		v = VectorToArray(&m_cloud_props.m_detail_sampling_weight);
-		ImGui::DragFloat4("Detail Sampling Weight", v.setArray(), 0.01f, 0.0f, 1.0f);
+		//ImGui::DragFloat4("Detail Sampling Weight", v.setArray(), 0.01f, 0.0f, 1.0f);
 
 
 		//ImGui::DragFloat("Detail Noise Weight", &m_cloud_props.m_detail_noise_weight, 0.02f, 0.0f);
 		ImGui::SliderFloat("Detail Weight", &m_cloud_props.m_detail_noise_weight, 20.0f, 200.0f);
 
 
-		int light = m_cloud_props.m_light_stepcount;
+		//int light = m_cloud_props.m_light_stepcount;
 		//ImGui::DragInt("Light Step Count", &light, 0.05f, 0.0f);
-		ImGui::SliderInt("Light Steps", &light, 0.0f, 4.0f);
-		m_cloud_props.m_light_stepcount = light;
+		//ImGui::SliderInt("Light Steps", &light, 0.0f, 4.0f);
+		//m_cloud_props.m_light_stepcount = light;
 		//m_cloud_props.m_darkness_threshold = 0.3f;
 
-		ImGui::DragFloat("Darkness Threshold", &m_cloud_props.m_darkness_threshold, 0.05f, 0.0f);
+		//ImGui::DragFloat("Darkness Threshold", &m_cloud_props.m_darkness_threshold, 0.05f, 0.0f);
 		//m_cloud_props.m_light_absorption_towards_sun = 0.1f;
-		ImGui::DragFloat("Light Absorption Sowards Source Light", &m_cloud_props.m_light_absorption_towards_sun, 0.01f, 0.0f);
+		//ImGui::DragFloat("Light Absorption Sowards Source Light", &m_cloud_props.m_light_absorption_towards_sun, 0.01f, 0.0f);
 		//m_cloud_props.m_light_absorption_through_cloud = 0.1f;
-		ImGui::DragFloat("Light Absorption Through Cloud", &m_cloud_props.m_light_absorption_through_cloud, 0.01f, 0.0f);
+		//ImGui::DragFloat("Light Absorption Through Cloud", &m_cloud_props.m_light_absorption_through_cloud, 0.01f, 0.0f);
 
 
-	}
+	//}
 
-	if(ImGui::CollapsingHeader("Lighting"))
-	{
-		VectorToArray v(&m_global_light_rotation);
-		ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	ImGui::End();
+
+	ImGui::SetNextWindowSize(ImVec2(460, 200));
+	ImGui::SetNextWindowPos(ImVec2(0, 520));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+
+	//create the test window
+	ImGui::Begin("Lighting", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
+
+	//if(ImGui::CollapsingHeader("Lighting"))
+	//{
+		v = VectorToArray(&m_global_light_rotation);
+		ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
 
 		v = VectorToArray(&m_light_color);
 		ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-		//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	//}
 
-		//v = VectorToArray(&m_ambient_light_color);
-		//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-	}
-	ImGui::Text("Time: %.3f", m_cloud_props.m_time);
-	if(ImGui::Button("Show Vertexes", ImVec2(200, 30))) m_show_tex3D = (!m_show_tex3D);
+	//ImGui::Text("Time: %.3f", m_cloud_props.m_time);
+	if(ImGui::Button("Show Vertexes", ImVec2(200, 30))) m_show_vertices = (!m_show_vertices);
 
+
+	ImGui::End();
 
 	if (m_first_time)
 	{
@@ -244,7 +387,6 @@ void Scene08::imGuiRender()
 		ImGui::EndPopup();
 	}
 
-	ImGui::End();
 }
 
 void Scene08::shadowRenderPass(float delta)
@@ -254,15 +396,18 @@ void Scene08::shadowRenderPass(float delta)
 void Scene08::mainRenderPass(float delta)
 {
 
-	//m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
+	Vector3D lightpos = m_cloud_props.m_cloud_position.xyz() + (m_scene_light_dir * -1) * 1000;
+	//Vector3D lightpos = m_cloud_props.m_cloud_position.xyz();
+	int a = 3;
+	m_light->renderMesh(delta, Vector3D(100, 100, 100), lightpos, Vector3D(0, 0, 0), Shaders::FLAT);
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D_main->getShaderResourceView());
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseNormalGlossTexPS
 	(m_tex3D_main->getShaderResourceView(), m_tex3D_detail->getShaderResourceView(), m_blue_noise->getSRV());
 
-	if (m_show_tex3D)
+	if (m_show_vertices)
 	{
-		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vector3D(0, 0, 0), Shaders::_3DTEX);
+		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vector3D(0, 0, 0), Shaders::LAMBERT_RIMLIGHT);
 	}
 	else
 	{

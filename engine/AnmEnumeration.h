@@ -24,6 +24,8 @@ namespace Animation
 			Walk,
 			WalkBackward,
 			Run,
+			StrafeRight,
+			StrafeLeft,
 			Stop,
 			Jump,
 			LandToIdle,

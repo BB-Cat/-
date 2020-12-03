@@ -22,7 +22,7 @@ Scene09::Scene09(SceneManager* sm) : Scene(sm)
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
 
-	m_global_light_rotation = Vector2D(2.963, 0.773);
+	m_global_light_rotation = Vector2D(0, -3.14f);
 	m_global_light_strength = 0.85f;
 	m_light_color = Vector3D(1.0, 0.58, 0.39);
 	m_ambient_light_color = Vector3D(1.0, 1.0, 0.4);

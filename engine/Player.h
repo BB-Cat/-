@@ -10,6 +10,8 @@ namespace PlayerState
 		Idle,
 		MoveForward,
 		MoveBackward,
+		StrafeRight,
+		StrafeLeft,
 		Stop,
 		Jump,
 		Land,
@@ -52,6 +54,8 @@ public:
 	void idle(float delta);
 	void moveForward(float delta);
 	void moveBackward(float delta);
+	void strafeRight(float delta);
+	void strafeLeft(float delta);
 	void stop(float delta);
 	void jump(float delta);
 	void land(float delta, int landing_type);

@@ -38,7 +38,7 @@ class BlendMode;
 class GraphicsEngine;
 
 //primitive classes
-class Cube;
+class WorldObject;
 
 //game classes
 class Player;
@@ -68,7 +68,7 @@ typedef std::shared_ptr<Sprite> SpritePtr;
 typedef std::shared_ptr<StaticMesh> StaticMeshPtr;
 typedef std::shared_ptr<SkinnedMesh> SkinnedMeshPtr;
 typedef std::shared_ptr<Shader> ShaderPtr;
-typedef std::shared_ptr<Cube> CubePtr;
+typedef std::shared_ptr<WorldObject> WorldObjectPtr;
 
 //game type definitions
 typedef std::shared_ptr<Player> PlayerPtr;

@@ -14,7 +14,7 @@ private:
     SkinnedMeshPtr m_sky;
     SkinnedMeshPtr m_model;
     SkinnedMeshPtr m_floor;
-    std::shared_ptr<Cube> m_cube;
+    std::shared_ptr<WorldObject> m_cube;
     bool m_first_time = true;
 
     float m_speed = 0.35f;

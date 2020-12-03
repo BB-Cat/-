@@ -392,6 +392,12 @@
     <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old">
       <UniqueIdentifier>{aac69f19-3788-4149-96d7-eaabefb18b2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameWorld\WorldObjectManager\WorldObject">
+      <UniqueIdentifier>{7c403410-b8c2-436f-be35-de9f60195c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Collider">
+      <UniqueIdentifier>{af61e369-8682-45c8-a2d7-52078ab8375e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -628,9 +634,6 @@
     <ClCompile Include="PrimitiveGenerator.cpp">
       <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube</Filter>
-    </ClCompile>
     <ClCompile Include="Scene11.cpp">
       <Filter>Sources\Scenes\11</Filter>
     </ClCompile>
@@ -648,6 +651,9 @@
     </ClCompile>
     <ClCompile Include="Scene13.cpp">
       <Filter>Sources\Scenes\13</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject.cpp">
+      <Filter>Sources\GameWorld\WorldObjectManager\WorldObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -969,9 +975,6 @@
     <ClInclude Include="PrimitiveGenerator.h">
       <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube</Filter>
-    </ClInclude>
     <ClInclude Include="Scene11.h">
       <Filter>Sources\Scenes\11</Filter>
     </ClInclude>
@@ -989,6 +992,12 @@
     </ClInclude>
     <ClInclude Include="Scene13.h">
       <Filter>Sources\Scenes\13</Filter>
+    </ClInclude>
+    <ClInclude Include="Colliders.h">
+      <Filter>Sources\GameEngine\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject.h">
+      <Filter>Sources\GameWorld\WorldObjectManager\WorldObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1285,9 +1294,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cloud.fx">
-      <Filter>Shaders\19 VolumetricClouds</Filter>
-    </None>
     <None Include="General.fx">
       <Filter>Shaders\Includes</Filter>
     </None>
@@ -1301,6 +1307,9 @@
       <Filter>Shaders\Includes</Filter>
     </None>
     <None Include="ZeroToOne.fx">
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="cloud.fx">
       <Filter>Shaders\Includes</Filter>
     </None>
   </ItemGroup>

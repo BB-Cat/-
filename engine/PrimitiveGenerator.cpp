@@ -3,7 +3,7 @@
 #include "GraphicsEngine.h"
 #include "RenderSystem.h"
 #include "DeviceContext.h"
-#include "Cube.h"
+#include "WorldObject.h"
 
 PrimitiveGenerator* PrimitiveGenerator::instance = nullptr;
 
@@ -15,10 +15,10 @@ PrimitiveGenerator::PrimitiveGenerator()
 	if (!result) assert(0 && "Error occured when initializing the primitive cube buffers.");
 }
 
-CubePtr PrimitiveGenerator::createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, Vector3D scale, Vector3D position, Vector3D rotation, Material_Obj* mat)
+WorldObjectPtr PrimitiveGenerator::createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, Vector3D scale, Vector3D position, Vector3D rotation, Material_Obj* mat)
 {
 	//continue here
-	CubePtr output = std::shared_ptr<Cube>(new Cube(m_cube_vb, m_cube_ib));
+	WorldObjectPtr output = std::shared_ptr<WorldObject>(new WorldObject(m_cube_vb, m_cube_ib));
 	if (diffuse_tex != nullptr) output->loadDiffuseTex(diffuse_tex);
 	if (normal_tex != nullptr) output->loadNormalTex(normal_tex);
 	if (roughness_tex != nullptr) output->loadRoughnessTex(roughness_tex);

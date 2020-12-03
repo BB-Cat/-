@@ -160,7 +160,7 @@
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="BubbleEmitter.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
-    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="WorldObject.cpp" />
     <ClCompile Include="FbxAnm.cpp" />
     <ClCompile Include="Foliage.cpp" />
     <ClCompile Include="Scene13.cpp" />
@@ -276,8 +276,9 @@
     <ClInclude Include="AnmEnumeration.h" />
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="BubbleEmitter.h" />
+    <ClInclude Include="Colliders.h" />
     <ClInclude Include="ComputeShader.h" />
-    <ClInclude Include="Cube.h" />
+    <ClInclude Include="WorldObject.h" />
     <ClInclude Include="FbxAnm.h" />
     <ClInclude Include="Foliage.h" />
     <ClInclude Include="Frustum.h" />

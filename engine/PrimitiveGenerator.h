@@ -16,7 +16,7 @@ public:
 		return instance;
 	}
 
-	CubePtr createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, 
+	WorldObjectPtr createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, 
 		Vector3D scale, Vector3D position, Vector3D rotation, Material_Obj* mat);
 
 	bool loadTexture(std::wstring file, std::string name);

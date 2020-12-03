@@ -28,6 +28,7 @@ public:
 		bool interruptable = true, float interruptable_percent = 0, bool idles = false, float idle_percent = 0);
 
 	void setAnimation(int type);
+	void resetAnimation();
 	bool getIfAnimInterruptable();
 	bool getIfAnimFinished();
 	int getAnimation() { return m_active_animation; }

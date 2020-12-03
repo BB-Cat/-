@@ -23,12 +23,16 @@ Player::Player(bool has_shadow) : Actor(has_shadow)
 	m_model->loadAnimation(nullptr, Animation::Player::Walk,		L"..\\Assets\\CharacterRough\\lp_walk.fbx");
 	m_model->loadAnimation(nullptr, Animation::Player::WalkBackward,L"..\\Assets\\CharacterRough\\lp_walkback.fbx");
 	m_model->loadAnimation(nullptr, Animation::Player::Run,			L"..\\Assets\\CharacterRough\\lp_run.fbx");
+	
+	m_model->loadAnimation(nullptr, Animation::Player::StrafeRight, L"..\\Assets\\CharacterRough\\lp_strafe_right.fbx");
+	m_model->loadAnimation(nullptr, Animation::Player::StrafeLeft, L"..\\Assets\\CharacterRough\\lp_strafe_left.fbx");
+
 	m_model->loadAnimation(nullptr, Animation::Player::Stop,		L"..\\Assets\\CharacterRough\\lp_stop.fbx");
 	m_model->loadAnimation(nullptr, Animation::Player::Jump,		L"..\\Assets\\CharacterRough\\lp_jump.fbx", false, true, 0, true, 0.99f);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToIdle,	L"..\\Assets\\CharacterRough\\lp_land.fbx", false, false);
 	//m_model->loadAnimation(nullptr, Animation::Player::LandHard,	L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToRun,	L"..\\Assets\\CharacterRough\\lp_land_to_run.fbx", false, false);
-	m_model->loadAnimation(nullptr, Animation::Player::Roll,		L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, false);
+	m_model->loadAnimation(nullptr, Animation::Player::Roll,		L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, true, 0.8f);
 	m_model->loadAnimation(nullptr, Animation::Player::DodgeBack,   L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, true, 0.8f);
 //	m_model->loadAnimation(nullptr, Animation::Player::Attack1,		L"..\\Assets\\CharacterRough\\lp_slash.fbx", false, true, 0.5f);
 //	m_model->loadAnimation(nullptr, Animation::Player::Attack2,		L"..\\Assets\\CharacterRough\\lp_kick.fbx", false, false);
@@ -78,6 +82,12 @@ void Player::update(float delta)
 		break;
 	case PlayerState::MoveBackward:
 		moveBackward(delta);
+		break;
+	case PlayerState::StrafeRight:
+		strafeRight(delta);
+		break;
+	case PlayerState::StrafeLeft:
+		strafeLeft(delta);
 		break;
 	case PlayerState::Stop:
 		stop(delta);
@@ -148,16 +158,19 @@ void Player::idle(float delta)
 		moveBackward(delta);
 		return;
 	}
-
-
-
 	if (m_input.a)
 	{
-		m_angle -= 360.0f * P_ROT_SPEED * delta;
+		//m_angle -= 360.0f * P_ROT_SPEED * delta;
+		m_state = PlayerState::StrafeLeft;
+		strafeLeft(delta);
+		return;
 	}
 	if (m_input.d)
 	{
-		m_angle += 360.0f * P_ROT_SPEED * delta;
+		//m_angle += 360.0f * P_ROT_SPEED * delta;
+		m_state = PlayerState::StrafeRight;
+		strafeRight(delta);
+		return;
 	}
 
 	if (m_blend != 0)
@@ -337,6 +350,126 @@ void Player::moveBackward(float delta)
 	m_pos += move;
 }
 
+void Player::strafeRight(float delta)
+{
+	if (m_state != m_previous_state)
+	{
+		m_model->setAnimation(Animation::Player::StrafeRight);
+		m_previous_state = m_state;
+	}
+
+	//roll transition
+	if (m_input.m2)
+	{
+		m_state = PlayerState::Roll;
+		m_momentum = 0;
+		roll(delta);
+		return;
+	}
+
+	//jump state transition
+	if (m_input.space)
+	{
+		m_state = PlayerState::Jump;
+		jump(delta);
+		return;
+	}
+
+	if (m_input.w)
+	{
+		m_state = PlayerState::MoveForward;
+		moveForward(delta);
+		return;
+	}
+
+	//idle transition
+	if (!m_input.d)
+	{
+		m_state = PlayerState::Idle;
+		m_momentum = 0;
+	}
+
+
+
+
+	float speed_limit = P_WSPEED;
+	float accel = P_WACCEL;
+
+	if (m_momentum != speed_limit)
+	{
+		m_momentum = m_momentum * (1.0f - (accel * delta)) + speed_limit * (accel * delta);
+	}
+
+	//lerp to the same direction as the camera
+	float target_angle = m_input.cam_angle;
+	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+
+
+	Vector3D move = (getRightVector() * m_momentum) * delta;
+	CameraManager::get()->moveCamera(move);
+	m_pos += move;
+}
+
+void Player::strafeLeft(float delta)
+{
+	if (m_state != m_previous_state)
+	{
+		m_model->setAnimation(Animation::Player::StrafeLeft);
+		m_previous_state = m_state;
+	}
+
+	//roll transition
+	if (m_input.m2)
+	{
+		m_state = PlayerState::Roll;
+		m_momentum = 0;
+		roll(delta);
+		return;
+	}
+
+	//jump state transition
+	if (m_input.space)
+	{
+		m_state = PlayerState::Jump;
+		jump(delta);
+		return;
+	}
+
+	if (m_input.w)
+	{
+		m_state = PlayerState::MoveForward;
+		moveForward(delta);
+		return;
+	}
+
+	//idle transition
+	if (!m_input.a)
+	{
+		m_state = PlayerState::Idle;
+		m_momentum = 0;
+	}
+
+
+
+
+	float speed_limit = P_WSPEED;
+	float accel = P_WACCEL;
+
+	if (m_momentum != speed_limit)
+	{
+		m_momentum = m_momentum * (1.0f - (accel * delta)) + speed_limit * (accel * delta);
+	}
+
+	//lerp to the same direction as the camera
+	float target_angle = m_input.cam_angle;
+	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+
+
+	Vector3D move = (getRightVector() * m_momentum * -1) * delta;
+	CameraManager::get()->moveCamera(move);
+	m_pos += move;
+}
+
 void Player::stop(float delta)
 {
 }
@@ -480,6 +613,17 @@ void Player::roll(float delta)
 	CameraManager::get()->moveCamera(m_pos - temp);
 
 
+	if (m_model->getIfAnimInterruptable())
+	{
+		
+		if(m_input.m2) m_model->resetAnimation();
+		else if (m_input.w)
+		{
+			m_state = PlayerState::MoveForward;
+			moveForward(delta);
+			return;
+		}
+	}
 
 	if (m_model->getIfAnimFinished())
 	{

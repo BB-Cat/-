@@ -1,6 +1,6 @@
 #include "WorldObjectManager.h"
 #include "Texture.h"
-#include "Cube.h"
+#include "WorldObject.h"
 #include "VectorToArray.h"
 #include "Blend.h"
 
@@ -484,9 +484,6 @@ void WorldObjectManager::renderSelectedHighlight()
 Vector3D WorldObjectManager::CubeAABBCollision(Vector3D old_pos, Vector3D new_pos, Vector3D size)
 {
 	Vector3D move = new_pos - old_pos;
-	//bool zmove = 1 * (move.m_z > 0) + -1 * (move.m_z < 0);
-	//bool ymove = 1 * (move.m_y > 0) + -1 * (move.m_y < 0);
-	//bool xmove = 1 * (move.m_x > 0) + -1 * (move.m_x < 0);
 
 	Vector3D halfsize = size / 2.0f;
 	Vector3D pos2;
@@ -564,139 +561,6 @@ Vector3D WorldObjectManager::CubeAABBCollision(Vector3D old_pos, Vector3D new_po
 			if (dif.m_z < 0) result.m_z = pos2.m_z - (halfsize.m_z + halfsize2.m_z + 0.01f);
 			else result.m_z = pos2.m_z + (halfsize.m_z + halfsize2.m_z + 0.01f);
 		}
-
-
-
-
-
-
-
-
-
-		//X collision resolution
-		//if ((dif.m_x < -(halfsize.m_x + halfsize2.m_x)) || (dif.m_x > (halfsize.m_x + halfsize2.m_x)))
-
-		//“–‚½‚è‚Ì‰ðŒˆ
-		//Vector3D result = new_pos;
-		//float dot = -1.0f;
-		//float newdot = -10.0f;
-		//int choice = -1;
-		//dif.normalize();
-
-		//if (xmove)
-		//{
-		//	//right edge
-		//	if (result.m_x + halfsize.m_x > pos2.m_x - halfsize2.m_x && xmove == 1)
-		//	{
-		//		result.m_x = pos2.m_x - (halfsize.m_x + halfsize2.m_x);
-		//	}
-		//	//left edge
-		//	else if (result.m_x - halfsize.m_x < pos2.m_x + halfsize2.m_x && xmove == -1)
-		//	{
-		//		result.m_x = pos2.m_x + (halfsize.m_x + halfsize2.m_x);
-		//	}
-		//}
-
-		//if (ymove)
-		//{
-		//	//top edge
-		//	if (result.m_y + halfsize.m_y > pos2.m_y - halfsize2.m_y && xmove == 1)
-		//	{
-		//		result.m_y = pos2.m_y - (halfsize.m_y + halfsize2.m_y);
-		//	}
-		//	//bottom edge
-		//	else if (result.m_y - halfsize.m_y < pos2.m_y + halfsize2.m_y && xmove == -1)
-		//	{
-		//		result.m_y = pos2.m_y + (halfsize.m_y + halfsize2.m_y);
-		//	}
-		//}
-
-		//if (zmove)
-		//{
-		//	//right edge
-		//	if (result.m_z + halfsize.m_z > pos2.m_z - halfsize2.m_z && xmove == 1)
-		//	{
-		//		result.m_z = pos2.m_z - (halfsize.m_z + halfsize2.m_z);
-		//	}
-		//	//left edge
-		//	else if (result.m_z - halfsize.m_z < pos2.m_z + halfsize2.m_z && xmove == -1)
-		//	{
-		//		result.m_z = pos2.m_z + (halfsize.m_z + halfsize2.m_z);
-		//	}
-		//}
-
-
-		////ã‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(0, -1, 0));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 0;
-		//}
-
-		////‰º‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(0, 1, 0));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 1;
-		//}
-
-		////‰E‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(-1, 0, 0));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 2;
-		//}
-
-		////¶‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(1, 0, 0));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 3;
-		//}
-
-		////Œã‚ë‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(0, 0, -1));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 4;
-		//}
-
-		////‘O‚Ì–Ê
-		//newdot = Vector3D::dot(dif, Vector3D(0, 0, 1));
-		//if (newdot > dot)
-		//{
-		//	dot = newdot;
-		//	choice = 5;
-		//}
-
-		//assert(choice >= 0, "A collision was detected but unresolved");
-
-		//switch (choice)
-		//{
-		//case 0: //top face adjustment
-		//	result.m_y = pos2.m_y + (halfsize.m_y + halfsize2.m_y);
-		//	break;
-		//case 1: //bottom face adjustment
-		//	result.m_y = pos2.m_y - (halfsize.m_y + halfsize2.m_y);
-		//	break;
-		//case 2: //right face adjustment
-		//	result.m_x = pos2.m_x + (halfsize.m_x + halfsize2.m_x);
-		//	break;
-		//case 3: //left face adjustment
-		//	result.m_x = pos2.m_x - (halfsize.m_x + halfsize2.m_x);
-		//	break;
-		//case 4: //back face adjustment
-		//	result.m_z = pos2.m_z + (halfsize.m_z + halfsize2.m_z);
-		//	break;
-		//case 5: //forward face adjustment
-		//	result.m_z = pos2.m_z - (halfsize.m_z + halfsize2.m_z);
-		//	break;
-		//}
 
 		return result;
 	}

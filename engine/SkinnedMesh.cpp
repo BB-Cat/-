@@ -124,6 +124,12 @@ void SkinnedMesh::setAnimation(int type)
 	else m_queued_animation = type;
 }
 
+void SkinnedMesh::resetAnimation()
+{
+	if (m_active_animation < 0) return;
+	else m_animation[m_active_animation].reset();
+}
+
 void SkinnedMesh::setBlendAnimation(int type)
 {
 	if (type >= 0 && type < m_animation.size())
@@ -356,30 +362,4 @@ void SkinnedMesh::ImGui_LightProperties()
 	//ImGui::End();
 }
 
-//void SkinnedMesh::setTextureResources(int shadertype, const Subset_FBX& sub)
-//{
-//
-//	int shader_used_textures[][6] =
-//	{
-//		//diffuse, normal, gloss, environment, displacement, displacement2
-//		{0, 0, 0, 0, 0, 0},//FLAT,
-//		{1, 0, 0, 0, 0, 0},//FLAT_TEX,
-//		{0, 0, 0, 0, 0, 0},//LAMBERT,
-//		{0, 0, 0, 0, 0, 0},//LAMBERT_SPECULAR,
-//		{0, 0, 0, 0, 0, 0},//LAMBERT_RIMLIGHT,
-//		{1, 0, 0, 0, 0, 0},//TEXTURE,
-//		{1, 1, 0, 0, 0, 0},//TEXTURE_NORMAL,
-//		{1, 1, 1, 0, 0, 0},//TEXTURE_NORMAL_GLOSS,
-//		{1, 1, 1, 1, 0, 0},//TEXTURE_ENVIRONMENT,
-//		{1, 1, 1, 0, 0, 0},//GEO_TEST,
-//		{1, 1, 1, 0, 1, 0},//TEXTURE_TESS_MODEL,
-//		{1, 1, 0, 0, 1, 0},//TEXTURE_TESS_TERRAIN,
-//		{1, 1, 0, 0, 1, 1},//TEXTURE_TESS_FLUID_TERRAIN,
-//		{1, 1, 0, 0, 1, 0},//GRASS,
-//	};
-//
-//	if (shader_used_textures[shadertype][0] && sub.diffuse.m_map != nullptr)
-//
-//
-//
-//}
+

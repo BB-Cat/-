@@ -10,7 +10,7 @@
 #include "Texture3D.h"
 #include "DeviceContext.h"
 #include "Texture.h"
-#include "Cube.h"
+#include "WorldObject.h"
 #include "WorldObjectManager.h"
 #include "ActorManager.h"
 
