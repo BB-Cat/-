@@ -350,12 +350,6 @@
     <Filter Include="Shaders\0 Error">
       <UniqueIdentifier>{f7c51883-34fd-4000-91ab-1ca4ea473ca6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives">
-      <UniqueIdentifier>{6dd0e471-e4c9-48fe-b9ae-d9763d0cd8f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives\Cube">
-      <UniqueIdentifier>{b74e56a7-945d-4e81-a7b8-4180ae74558f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scenes\11">
       <UniqueIdentifier>{a4ed439a-64e7-46a5-b4c0-8db22c406cbb}</UniqueIdentifier>
     </Filter>
@@ -397,6 +391,12 @@
     </Filter>
     <Filter Include="Sources\GameEngine\Collider">
       <UniqueIdentifier>{af61e369-8682-45c8-a2d7-52078ab8375e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\WorldObjectManager\PrefabManager">
+      <UniqueIdentifier>{371dc251-e7ed-42a9-b92f-9731bc94a54b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameWorld\WorldObjectManager\Primitives">
+      <UniqueIdentifier>{6dd0e471-e4c9-48fe-b9ae-d9763d0cd8f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -632,7 +632,7 @@
       <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
     </ClCompile>
     <ClCompile Include="PrimitiveGenerator.cpp">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
+      <Filter>Sources\GameWorld\WorldObjectManager\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Scene11.cpp">
       <Filter>Sources\Scenes\11</Filter>
@@ -654,6 +654,12 @@
     </ClCompile>
     <ClCompile Include="WorldObject.cpp">
       <Filter>Sources\GameWorld\WorldObjectManager\WorldObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\GameWorld\WorldObjectManager\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="PrefabManager.cpp">
+      <Filter>Sources\GameWorld\WorldObjectManager\PrefabManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -973,7 +979,7 @@
       <Filter>Sources\GameEngine\GraphicsEngine\ShaderManager</Filter>
     </ClInclude>
     <ClInclude Include="PrimitiveGenerator.h">
-      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Primitives</Filter>
+      <Filter>Sources\GameWorld\WorldObjectManager\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Scene11.h">
       <Filter>Sources\Scenes\11</Filter>
@@ -998,6 +1004,15 @@
     </ClInclude>
     <ClInclude Include="WorldObject.h">
       <Filter>Sources\GameWorld\WorldObjectManager\WorldObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Sources\GameWorld\WorldObjectManager\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="PrefabManager.h">
+      <Filter>Sources\GameWorld\WorldObjectManager\PrefabManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugErrors.h">
+      <Filter>Sources\App</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

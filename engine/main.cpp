@@ -20,6 +20,7 @@ INT WINAPI wWinMain(HINSTANCE instance, HINSTANCE prev_instance, LPWSTR cmd_line
 		{ 
 			InputSystem::release();
 			GraphicsEngine::release();
+			OutputDebugString(L"FATAL ERROR!");
 			return -1;
 		}
 	}

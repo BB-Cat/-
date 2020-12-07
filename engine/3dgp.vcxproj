@@ -160,6 +160,8 @@
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="BubbleEmitter.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
+    <ClCompile Include="PrefabManager.cpp" />
+    <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="WorldObject.cpp" />
     <ClCompile Include="FbxAnm.cpp" />
     <ClCompile Include="Foliage.cpp" />
@@ -278,6 +280,9 @@
     <ClInclude Include="BubbleEmitter.h" />
     <ClInclude Include="Colliders.h" />
     <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="DebugErrors.h" />
+    <ClInclude Include="PrefabManager.h" />
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="WorldObject.h" />
     <ClInclude Include="FbxAnm.h" />
     <ClInclude Include="Foliage.h" />

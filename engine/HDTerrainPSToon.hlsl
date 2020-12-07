@@ -98,6 +98,8 @@ static const float atmos_fog_range = 2000;
 
 float4 psmain(PS_INPUT input) : SV_TARGET
 {
+
+	float dist = length(input.world_pos - m_camera_position.xyz);
 	//--------------------------------------------------------------------------------------//
 	//diffuse texture sampling-																//
 	//--------------------------------------------------------------------------------------//
@@ -109,9 +111,9 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//since cliffs are applied to skewed (tall) polygons, they need to use triplanar sampling in order to looknormal.
 	float3 triplanar_balance = abs(input.normal);
 	triplanar_balance = pow(max(triplanar_balance, 0), 2);
-	float2 cliff_coord1 = input.world_pos.zx / 10;  //triplanar_balance.y;
-	float2 cliff_coord2 = input.world_pos.xy / 10;  //triplanar_balance.z;
-	float2 cliff_coord3 = input.world_pos.zy / 10;  //triplanar_balance.x;
+	float2 cliff_coord1 = input.world_pos.zx / 30;  //triplanar_balance.y;
+	float2 cliff_coord2 = input.world_pos.xy / 30;  //triplanar_balance.z;
+	float2 cliff_coord3 = input.world_pos.zy / 30;  //triplanar_balance.x;
 	float3 c_sample1 = T4.Sample(TextureSampler, cliff_coord1);
 	float3 c_sample2 = T4.Sample(TextureSampler, cliff_coord2);
 	float3 c_sample3 = T4.Sample(TextureSampler, cliff_coord3);
@@ -141,18 +143,23 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 normal = getTextureSplat(sample_normal, sample_normal2, sample_normal3, input.texbias.rgb);
 
 	//if the texbias for this face is over the cliff threshhold, mix the cliff normal
-	normal = normal * (input.cliff_face < 0.7) + sample_normal4 * (input.cliff_face >= 0.7);
+	normal = normalize(normal * (input.cliff_face < 0.7) + sample_normal4 * (input.cliff_face >= 0.7));
 
 	//build the domain, then adjust the normal map sample to the normal of the domain
+	//TEMPORARY//
+	//normal = float3(0, 1, 0);
+	normal.b *= 1.5f;
+	normal = normalize(normal);
 	float3x3 inverseMatrix = buildInverseMatrix(input.normal, input.binormal, input.tangent);
-	float3 inverseToCamera = normalize(mul(inverseMatrix, input.direction_to_camera));
-	normal = normalize(mul(normal, inverseMatrix));
-	normal = normal * 2 - 1;
-	float temp = normal.z;
-	normal.z = normal.y;
-	normal.y = temp;
+	normal = mul(normal, inverseMatrix);
 
-	float dist = length(input.world_pos - m_camera_position.xyz);
+	// END TEMPORARY //
+
+	float normalmap_range = 300.0;
+	normal = normal * (1.0 - min(dist / normalmap_range, 1)) + input.normal * min(dist / normalmap_range, 1);
+	//normal = normal * 2 - 1;
+
+
 
 	//--------------------------------------------------------------------------------------//
 	//AO texture sampling	-																//
@@ -194,23 +201,24 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
 	//	* (faceDot > diffuse_thresh);
 	//float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
-	
-	float3 diffuseReflection = gradientOneCellDiffuse(input.normal, light_direction, m_global_light_color, 0.4f);
+	float3 diffuseReflection = gradientOneCellDiffuse(normal, light_direction, m_global_light_color, 0.6f);
 	
 	//specular
-	float specDot = pow(max(0.0, dot(reflect(-light_direction, input.normal), -direction_to_camera)), 10);
-	float specAmount = min(max((specular_thresh - specDot) / (specular_thresh - max_specular), 0), 1) * (specDot > specular_thresh);
-	float3 specularReflection = m_specularColor.rgb * specAmount;// *roughness;
+	//float specDot = pow(max(0.0, dot(reflect(-light_direction, input.normal), -direction_to_camera)), 10);
+	//float specAmount = min(max((specular_thresh - specDot) / (specular_thresh - max_specular), 0), 1) * (specDot > specular_thresh);
+	//float3 specularReflection = m_specularColor.rgb * specAmount;// *roughness;
+	float3 specularReflection = spec(normal, light_direction, m_specularColor.rgb, direction_to_camera, m_shininess) * roughness;
 
 	//rim lighting
-	float rim = pow(1 - dot(-direction_to_camera, input.normal), m_rimPower) * max(dot(light_direction, input.normal), 0);
-	float rimlight_amount = min(max((rim_thresh - rim) / (rim_thresh - max_rim), 0), 1) * (rim > rim_thresh);
-	float3 rimLighting = m_rimColor.w * m_global_light_strength * m_global_light_color.rgb * m_rimColor.xyz * rimlight_amount;
+	//float rim = pow(1 - dot(-direction_to_camera, input.normal), m_rimPower) * max(dot(light_direction, input.normal), 0);
+	//float rimlight_amount = min(max((rim_thresh - rim) / (rim_thresh - max_rim), 0), 1) * (rim > rim_thresh);
+	//float3 rimLighting = m_rimColor.w * m_global_light_strength * m_global_light_color.rgb * m_rimColor.xyz * rimlight_amount;
+	float3 rimLighting = rim(normal, light_direction, m_rimColor.rgb, direction_to_camera, m_rimPower);
 
 	//ambient amount
-	float3 ambient = m_ambient_light_color * max(0.0, dot(input.normal, -light_direction)) + m_ambient_light_color;
+	float3 ambient = m_ambient_light_color * max(0.0, dot(normal, -light_direction)) + m_ambient_light_color;
 
-	float3 lightFinal = (rimLighting + diffuseReflection + specularReflection + ambient);// *ao;
+	float3 lightFinal = (rimLighting + diffuseReflection + specularReflection + ambient) * ao;
 
 
 	//atmospheric fog
@@ -227,6 +235,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 final = (lightFinal * final_sample) *(1 - min(dist / atmos_fog_range, 1)) + atmos_fog * min(dist / atmos_fog_range, 1);
 
 
-
+	//return (0, 0, 0, 1);
+	//return float4(normal,1);
 	return float4(final, 1);
 }

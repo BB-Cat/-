@@ -14,13 +14,12 @@ MyFbxManager::~MyFbxManager()
 {
 }
 
-std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* topology)
+std::vector<Mesh_Data> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* topology)
 {
     //create a vector of meshdata which will be stored in the skinnedmesh and a vector for vertices and indexes that will be reused
-    std::vector<MeshData> buffers;
+    std::vector<Mesh_Data> buffers;
     std::vector<VertexMesh> vertices;
     std::vector<unsigned int> indices;
-
     std::map<int, int> controlpoints;
 
     //prepare the shader byte code and size of shader to load vertex and index buffers later
@@ -54,11 +53,21 @@ std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* 
 #endif
 
     // Use the first argument as the filename for the importer.
-    if (!m_importer->Initialize(filename_buffer, -1, m_manager->GetIOSettings()))
+    try
     {
-        printf("Call to FbxImporter::Initialize() failed.\n");
-        printf("Error returned: %s\n\n", m_importer->GetStatus().GetErrorString());
-        exit(-1);
+        if (!m_importer->Initialize(filename_buffer, -1, m_manager->GetIOSettings()))
+        {
+            //printf("Call to FbxImporter::Initialize() failed.\n");
+            //printf("Error returned: %s\n\n", m_importer->GetStatus().GetErrorString());
+            //exit(-1);
+            throw (int)BB_ERROR::FBX_IMPORTER_UNINITIALIZED;
+        }
+    }
+    catch (int error)
+    {
+        OutputDebugString(L"FBX importer was unable to initialize.\n");
+        buffers.resize(0);
+        return buffers;
     }
     delete filename_buffer;
 
@@ -107,7 +116,7 @@ std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* 
     for (size_t i = 0; i < fetched_meshes.size(); i++)
     {
         FbxMesh* fbx_mesh = fetched_meshes.at(i)->GetMesh();
-        MeshData& mesh = buffers.at(i);
+        Mesh_Data& mesh = buffers.at(i);
 
         // Fetch mesh data
         unsigned int vertex_count = 0;
@@ -119,7 +128,7 @@ std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* 
         buffers[i].m_subs.resize(number_of_materials); // UNIT.18 
         for (int index_of_material = 0; index_of_material < number_of_materials; ++index_of_material)
         {
-            Subset_FBX& subset = buffers[i].m_subs.at(index_of_material); // UNIT.18 
+            Mesh_Subset& subset = buffers[i].m_subs.at(index_of_material); // UNIT.18 
 
             const FbxSurfaceMaterial* surface_material = fbx_mesh->GetNode()->GetMaterial(index_of_material);
 
@@ -265,7 +274,7 @@ std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* 
 
             // Record the offset (how many vertex)   
             int offset = 0;
-            for (Subset_FBX& subset : buffers[i].m_subs)
+            for (Mesh_Subset& subset : buffers[i].m_subs)
             {
                 subset.index_start = offset;
                 offset += subset.index_count;
@@ -298,7 +307,7 @@ std::vector<MeshData> MyFbxManager::loadFbxMesh(const wchar_t* filename, float* 
             }
 
             // Where should I save the vertex attribute index, according to the material   
-            Subset_FBX& subset = buffers[i].m_subs.at(index_of_material);
+            Mesh_Subset& subset = buffers[i].m_subs.at(index_of_material);
             const int index_offset = subset.index_start + subset.index_count;
 
             for (int index_of_vertex = 0; index_of_vertex < 3; index_of_vertex++) 
@@ -402,7 +411,7 @@ void MyFbxManager::fetchBoneInfluences(const FbxMesh* fbx_mesh, std::vector<bone
             for (int i = 0; i < number_of_control_point_indices; ++i) 
             { 
                 bone_influences_per_control_point& influences_per_control_point = influences.at(array_of_control_point_indices[i]);     
-                bone_influence influence;      
+                Bone_Influence influence;      
                 influence.index = index_of_cluster;      
                 influence.weight = static_cast<float>(array_of_control_point_weights[i]);      
                 influences_per_control_point.push_back(influence); 
@@ -423,7 +432,7 @@ void MyFbxManager::fetchBoneMatrices(FbxMesh* fbx_mesh, Skeleton& skeleton, FbxT
         skeleton.m_bones.resize(number_of_clusters);
         for (int index_of_cluster = 0; index_of_cluster < number_of_clusters; ++index_of_cluster) 
         {
-            bone& bone = skeleton.m_bones.at(index_of_cluster);
+            Bone& bone = skeleton.m_bones.at(index_of_cluster);
 
             FbxCluster* cluster = skin->GetCluster(index_of_cluster);
 
@@ -460,7 +469,7 @@ void MyFbxManager::fetchBoneMatrices(FbxMesh* fbx_mesh, Skeleton& skeleton, FbxT
    
 }
 
-void MyFbxManager::fetchAnimations(FbxMesh* fbx_mesh, SkeletalAnimation& skeletal_animation, u_int sampling_rate)
+void MyFbxManager::fetchAnimations(FbxMesh* fbx_mesh, Skeletal_Animation& skeletal_animation, u_int sampling_rate)
 {
 
     // Get the list of all the animation stack.   
@@ -505,7 +514,7 @@ void MyFbxManager::fetchAnimations(FbxMesh* fbx_mesh, SkeletalAnimation& skeleta
     }
 }
 
-void MyFbxManager::loadAnimationData(const wchar_t* filename, SkeletalAnimation& skeletal_animation, u_int sampling_rate)
+void MyFbxManager::loadAnimationData(const wchar_t* filename, Skeletal_Animation& skeletal_animation, u_int sampling_rate)
 {
     //create the FBX manager
     FbxManager* m_manager = FbxManager::Create();

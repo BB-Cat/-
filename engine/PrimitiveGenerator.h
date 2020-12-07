@@ -16,8 +16,7 @@ public:
 		return instance;
 	}
 
-	WorldObjectPtr createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, 
-		Vector3D scale, Vector3D position, Vector3D rotation, Material_Obj* mat);
+	PrimitivePtr createCube(const wchar_t* diffuse_tex, const wchar_t* normal_tex, const wchar_t* roughness_tex, Material_Obj* mat);
 
 	bool loadTexture(std::wstring file, std::string name);
 	TexturePtr findTexture(std::string name);
@@ -27,6 +26,11 @@ public:
 	std::vector<std::string> getTextureNames() { return m_tex_names; }
 	std::vector<std::wstring> getTextureFiles() { return m_tex_files; }
 	
+	void getCubeBuffers(VertexBufferPtr vb, IndexBufferPtr ib) 
+	{
+		vb = m_cube_vb;
+		ib = m_cube_ib;
+	}
 
 private:
 	bool initPrimitiveCube();

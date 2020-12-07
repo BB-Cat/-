@@ -1,3 +1,5 @@
+#include "Lighting.fx"
+
 struct VS_INPUT
 {
 	float4 position: POSITION0;
@@ -16,6 +18,8 @@ struct VS_OUTPUT
 	float cliff_amount : NORMAL1;
 	float3 fog_color: TEXCOORD3;
 	float fog_amount : NORMAL2;
+	float ambient_amount : NORMAL3;
+
 };
 
 cbuffer constant: register(b0)
@@ -95,7 +99,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.position = mul(mul(output.position, m_world), m_global);
 	float3 world_pos = output.position;
 	//texture coordinates
-	output.texcoord = float2((output.position.x), (output.position.z)) / 10;
+	output.texcoord = float2((output.position.x), (output.position.z)) / 30;
 	//VIEW SPACE
 	output.position = mul(output.position, m_view);
 	//SCREEN SPACE
@@ -110,22 +114,25 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	float3 light_direction = normalize(m_global_light_dir.xyz);
 
 	//diffuse lighting
-	float faceDot = max(0.0, dot(input.normal, light_direction));
-	float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
-		* (faceDot > diffuse_thresh);
+	//float faceDot = max(0.0, dot(input.normal, light_direction));
+	//float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
+	//	* (faceDot > diffuse_thresh);
+	//float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
+	float3 diffuseReflection = gradientOneCellDiffuse(input.normal, light_direction, m_global_light_color, 0.6f);
 
-	float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
 
 
 	//rim lighting
-	float rim = pow(1 - dot(-direction_to_camera, input.normal), 2) * max(dot(light_direction, input.normal), 0);
-	float rimlight_amount = min(max((rim_thresh - rim) / (rim_thresh - max_rim), 0), 1) * (rim > rim_thresh);
-	float3 rimLighting = 1 * m_global_light_strength * m_global_light_color.rgb * float3(0.7, 0.4, 0.4)  * rimlight_amount;
+	//float rim = pow(1 - dot(-direction_to_camera, input.normal), 2) * max(dot(light_direction, input.normal), 0);
+	//float rimlight_amount = min(max((rim_thresh - rim) / (rim_thresh - max_rim), 0), 1) * (rim > rim_thresh);
+	//float3 rimLighting = 1 * m_global_light_strength * m_global_light_color.rgb * float3(0.7, 0.4, 0.4)  * rimlight_amount;
+	float3 rimLighting = rim(input.normal, light_direction, float3(1,1,1), direction_to_camera, 2);
 
 	//ambient amount
-	float3 ambient = m_ambient_light_color * max(0.0, dot(input.normal, -light_direction)) + m_ambient_light_color;
+	//float3 ambient = m_ambient_light_color * max(0.0, dot(input.normal, -light_direction)) + m_ambient_light_color;
+	output.ambient_amount = max(0.0, dot(input.normal, -light_direction));
 
-	output.light = rimLighting + diffuseReflection + ambient;
+	output.light = diffuseReflection;
 
 	//read the texture type from the input's boneweights
 	float total_tex = input.boneweights.r + input.boneweights.g + input.boneweights.b;

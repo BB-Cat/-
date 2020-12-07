@@ -6,7 +6,17 @@
 #include "Blend.h"
 #include "Texture.h"
 #include "Matrix4X4.h"
+#include "AppWindow.h"
 
+ComputeShader* TerrainManager::m_compute_terrain = nullptr;
+std::vector<VertexMesh> TerrainManager::m_compute_vertexes_x;
+std::vector<VertexMesh> TerrainManager::m_compute_vertexes_z;
+Vector2D TerrainManager::m_compute_origin;
+Vector2D TerrainManager::m_compute_numchunks;
+bool TerrainManager::m_multithread_compute_is_busy = false;
+
+void runComputeShaderTerrainForward();
+void runComputeShaderTerrainRight();
 
 TerrainManager::TerrainManager(Vector2D visible_chunk_count)
 {
@@ -31,10 +41,15 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count)
     //this might change later on depending on how the system works.
     int max_output = 34 * 34 * 61 * 61;
 
-    GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeHeightmap.hlsl", "CS_main", &shader_byte_code, &size_shader);
-    m_compute_terrain =new ComputeShader(shader_byte_code, size_shader, GraphicsEngine::get()->getRenderSystem(), sizeof(Vector4D),
-        sizeof(VertexMesh), nullptr, max_output);
-    GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+    if (m_compute_terrain == nullptr)
+    {
+        GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeHeightmap.hlsl", "CS_main", &shader_byte_code, &size_shader);
+
+        m_compute_terrain = new ComputeShader(shader_byte_code, size_shader, GraphicsEngine::get()->getRenderSystem(), sizeof(Vector4D),
+            sizeof(VertexMesh), nullptr, max_output);
+        GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+    }
+
 
     //generate the initial chunks from the origin point
     std::vector<VertexMesh> vertexlist;
@@ -50,8 +65,8 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count)
         for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
         {
             memcpy(&temp[0], &vertexlist[34 * 34 * i + (34 * 34 * (m_visible_chunks.m_x + 2) * j)], 34 * 34 * sizeof(VertexMesh));
-            TerrainPtr t(new Terrain(temp));
-            row.push_back(TerrainChunk(t, Vector2D(0, 0) + Vector2D(j, i)));
+            TerrainPtr t(new Terrain(Vector2D(i, j), temp));
+            row.push_back(TerrainChunk(t, Vector2D(0, 0) + Vector2D(i, j)));
             temp.clear();
             temp.resize(34 * 34);
             //m_num_unloaded_chunks++;
@@ -157,7 +172,7 @@ TerrainManager::~TerrainManager()
     }
 
     //m_compute_terrain.reset();
-    if (m_compute_terrain != nullptr) delete m_compute_terrain;
+    //if (m_compute_terrain != nullptr) delete m_compute_terrain;
 }
 
 void TerrainManager::update()
@@ -267,7 +282,21 @@ void TerrainManager::onNewChunkCompute(Vector2D pos_change)
         Vector2D generate_origin = new_origin + Vector2D(((int)m_visible_chunks.m_x / 2 + 1) * dir, -((int)m_visible_chunks.m_y / 2));
         //get new x axis chunk vertices
         
-        runComputeShader(generate_origin, Vector2D(1, m_visible_chunks.m_x + 2), m_compute_vertexes_x);
+        //if we are able to leave the computing to the AppWindow multithread, 
+        //send the appropriate compute function to AppWindow
+        if (AppWindow::queryComputeThread())
+        {
+            m_compute_origin = generate_origin;
+            m_compute_numchunks = Vector2D(1, m_visible_chunks.m_x + 2);
+            AppWindow::loadComputeThreadFunction(runComputeShaderTerrainRight);
+            m_multithread_compute_is_busy = true;
+        }
+        else
+        {
+            runComputeShader(generate_origin, Vector2D(1, m_visible_chunks.m_x + 2), m_compute_vertexes_x);
+        }
+
+
         //keep track of the number of chunks we loaded so the threads know which vector to pull from
         m_remaining_compute_chunks_x = m_visible_chunks.m_x + 2;
     }
@@ -278,8 +307,19 @@ void TerrainManager::onNewChunkCompute(Vector2D pos_change)
         int dir = 1 * (pos_change.m_y > 0) + -1 * (pos_change.m_y < 0);
         Vector2D generate_origin = new_origin + Vector2D(-((int)m_visible_chunks.m_x / 2 + 1), ((int)m_visible_chunks.m_y / 2 + 1) * dir);
 
-
-        runComputeShader(generate_origin, Vector2D(m_visible_chunks.m_y + 2, 1), m_compute_vertexes_z);
+        //if we are able to leave the computing to the AppWindow multithread, 
+        //send the appropriate compute function to AppWindow
+        if (AppWindow::queryComputeThread())
+        {
+            m_compute_origin = generate_origin;
+            m_compute_numchunks = Vector2D(m_visible_chunks.m_y + 2, 1);
+            AppWindow::loadComputeThreadFunction(runComputeShaderTerrainForward);
+            m_multithread_compute_is_busy = true;
+        }
+        else
+        {
+            runComputeShader(generate_origin, Vector2D(m_visible_chunks.m_y + 2, 1), m_compute_vertexes_z);
+        }
         //keep track of the number of chunks we loaded so the threads know which vector to pull from
         m_remaining_compute_chunks_z = m_visible_chunks.m_y + 2;
     }
@@ -298,7 +338,7 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
         m_player_chunk = Vector2D((int)(cam_pos.m_x) / 33, (int)(cam_pos.m_z) / 33);
     }
 
-    if(m_mode == TerrainManagerMode::USE_TXT) cullChunksByFrustum();
+    if(m_mode != TerrainManagerMode::LOAD_BITMAP) cullChunksByFrustum();
 
     prepareLODArrays(&high, &mid, &low, &forward, &right);
 
@@ -313,7 +353,7 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
     Material_Obj mat;
     mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
     mat.m_transparency = 1.0f;
-    mat.m_metallicAmount = 0.445f;
+    mat.m_metallic = 0.445f;
     mat.m_shininess = 30;
     mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
     mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
@@ -458,6 +498,16 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
 
 void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe, int is_HD)
 {
+
+    if (m_mode == TerrainManagerMode::USE_TXT || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) update();
+    else
+    {
+        Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
+        m_player_chunk = Vector2D((int)(cam_pos.m_x) / 33, (int)(cam_pos.m_z) / 33);
+    }
+
+    if (m_mode == TerrainManagerMode::USE_TXT) cullChunksByFrustum();
+
     //set blend mode to alpha
     BlendMode::get()->SetBlend(BlendType::ALPHA);
 
@@ -465,7 +515,7 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
     Material_Obj mat;
     mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
     mat.m_transparency = 1.0f;
-    mat.m_metallicAmount = 0.445f;
+    mat.m_metallic = 0.445f;
     mat.m_shininess = 30;
     mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
     mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
@@ -493,18 +543,18 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
     temp.setIdentity();
     Matrix4x4	bone_transforms[MAXBONES];
     GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetTransformationBuffer(temp, bone_transforms);
+    int lod = 0;
 
-    GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TESSDEMO);
+    if(shader < 0) GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TERRAIN_HD_TOON);
+    else GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TESSDEMO);
     GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_high);
 
     if (!is_HD)
     {
         GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::TERRAIN_LD_TOON);
         GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_low);
+        lod = 2;
     }
-
-    int lod = 0;
-    if (!is_HD) lod = 2;
 
     for (int i = 0; i < m_visible_chunks.m_x; i++)
     {
@@ -1541,6 +1591,8 @@ void TerrainManager::checkThreadsForText()
 
 void TerrainManager::checkThreadsForComputeShader()
 {
+    if (m_multithread_compute_is_busy) return;
+
     //if there are any chunks that need to be loaded, create / load threads
     if (m_num_unloaded_chunks)
     {
@@ -1676,7 +1728,7 @@ void TerrainManager::threadLoadChunkCompute(Vector2D location, Vector2D relative
         m_remaining_compute_chunks_x--;
     }
 
-    TerrainPtr t(new Terrain(temp));
+    TerrainPtr t(new Terrain(location, temp));
 
     m_temp_terrain[thread_num] = t;
 
@@ -1706,4 +1758,54 @@ void TerrainManager::updateTerrainTypes()
                 m_map[i][j].m_chunk->updateTextureSplat("..\\Assets\\texturesplat.bmp", m_mapsize);
         }
     }
+}
+
+// out of class function for loading GPU terrain from the AppWindow multithread
+
+void runComputeShaderTerrainForward(/*Vector2D origin, Vector2D numchunks, std::vector<VertexMesh>& verts*/)
+{
+    Vector2D origin = TerrainManager::getComputeOrigin();
+    Vector2D numchunks = TerrainManager::getComputeNumChunks();
+    std::vector<VertexMesh>& verts = TerrainManager::getComputeVertexesZ();
+    ComputeShader* compute = TerrainManager::getComputeShader();
+
+    compute->setXDispatchCount(34 * numchunks.m_x * numchunks.m_y);//33792);
+    compute->setYDispatchCount(1);
+
+    //provide settings to the input for the compute shader
+    Vector2D input[2] = { origin, numchunks };
+    compute->updateInputData(&input[0], sizeof(Vector4D));
+
+    //get the new data
+    compute->runComputeShader();
+    int num_verts_per_chunk = 34 * 34;
+    verts.resize(num_verts_per_chunk * numchunks.m_x * numchunks.m_y);
+    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.m_x * numchunks.m_y);
+
+    //signal to the terrain manager that it is okay to start filling in empty chunks with the new data
+    TerrainManager::setMultithreadIsBusy(false);
+}
+
+void runComputeShaderTerrainRight()
+{
+    Vector2D origin = TerrainManager::getComputeOrigin();
+    Vector2D numchunks = TerrainManager::getComputeNumChunks();
+    std::vector<VertexMesh>& verts = TerrainManager::getComputeVertexesX();
+    ComputeShader* compute = TerrainManager::getComputeShader();
+
+    compute->setXDispatchCount(34 * numchunks.m_x * numchunks.m_y);
+    compute->setYDispatchCount(1);
+
+    //provide settings to the input for the compute shader
+    Vector2D input[2] = { origin, numchunks };
+    compute->updateInputData(&input[0], sizeof(Vector4D));
+
+    //get the new data
+    compute->runComputeShader();
+    int num_verts_per_chunk = 34 * 34;
+    verts.resize(num_verts_per_chunk * numchunks.m_x * numchunks.m_y);
+    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.m_x * numchunks.m_y);
+
+    //signal to the terrain manager that it is okay to start filling in empty chunks with the new data
+    TerrainManager::setMultithreadIsBusy(false);
 }

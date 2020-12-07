@@ -23,8 +23,8 @@ struct SeamRenderVectors
 	std::vector<TerrainPtr>	low;
 };
 
-#define LOD_THRESHHOLD_HIGH (3)
-#define LOD_THRESHHOLD_MID (6)
+#define LOD_THRESHHOLD_HIGH (1)
+#define LOD_THRESHHOLD_MID (3)
 //#define LOD_THRESHHOLD_LOW (4)
 
 //class for easier management of terrain loading threads
@@ -126,17 +126,7 @@ private:
 
 	//load chunk data on a seperate thread to be added to m_map when it is finished
 	void threadLoadChunkTxt(Vector2D location, int thread_num);
-
 	//load chunk data using a std::vector of data that was constructed on the GPU
-
-
-	/*
-	we need the location of the chunk in world space, 
-	the location relative to the camera's new position (to determine where to take data from),
-	which thread to load on,
-
-
-	*/
 	void threadLoadChunkCompute(Vector2D location, Vector2D relative_location, int thread_num);
 
 	enum TerrainManagerMode
@@ -149,8 +139,15 @@ private:
 	int m_mode;
 	Vector2D m_file_output_offset;
 
-private:
+public:
+	static ComputeShader* getComputeShader() { return m_compute_terrain; }
+	static Vector2D getComputeOrigin() { return m_compute_origin; }
+	static Vector2D getComputeNumChunks() { return m_compute_numchunks; }
+	static std::vector<VertexMesh>& getComputeVertexesX() { return m_compute_vertexes_x; }
+	static std::vector<VertexMesh>& getComputeVertexesZ() { return m_compute_vertexes_z; }
 
+	static void setMultithreadIsBusy(bool b) { m_multithread_compute_is_busy = b; }
+private:
 //================================
 //  Chunk Thread Management Members
 //--------------------------------
@@ -169,10 +166,14 @@ private:
 
 
 	//compute shader for creating terrain on the GPU
-	ComputeShader* m_compute_terrain;
+	static ComputeShader* m_compute_terrain;
+	static Vector2D m_compute_origin;
+	static Vector2D m_compute_numchunks;
+	static bool m_multithread_compute_is_busy;
+
 	//vector of vertexes to save outputs seperately for when the compute shader outputs chunks along the x axis or z axis
-	std::vector<VertexMesh> m_compute_vertexes_x;
-	std::vector<VertexMesh> m_compute_vertexes_z;
+	static std::vector<VertexMesh> m_compute_vertexes_x;
+	static std::vector<VertexMesh> m_compute_vertexes_z;
 	int m_remaining_compute_chunks_x = 0;
 	int m_remaining_compute_chunks_z = 0;
 

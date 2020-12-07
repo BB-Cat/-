@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "Texture.h"
+#include <iostream>
 
 
 TextureManager::TextureManager(): ResourceManager()
@@ -23,7 +24,11 @@ Resource * TextureManager::createResourceFromFileConcrete(const wchar_t * file_p
 	{
 		tex = new Texture(file_path);
 	}
-	catch (...) {}
+	catch (int error) 
+	{
+		tex = nullptr;
+		OutputDebugString(L"Texture could not be loaded.  Incorrect filename?\n");
+	}
 
 	return tex;
 }

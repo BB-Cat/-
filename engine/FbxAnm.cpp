@@ -1,6 +1,6 @@
 #include "FbxAnm.h"
 
-FbxAnm::FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping, 
+Fbx_Anm::Fbx_Anm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping, 
 	bool interruptable, int interruptable_frame, bool idles, int idle_frame) :
 	m_loops(looping), m_interruptable(interruptable), m_interruptable_frame(interruptable_frame), 
 	m_idles(idles), m_idle_frame(idle_frame)
@@ -8,7 +8,7 @@ FbxAnm::FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping
 	fbx_manager->loadAnimationData(full_path, m_skeletons, 60);
 }
 
-FbxAnm::FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping, 
+Fbx_Anm::Fbx_Anm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping, 
 	bool interruptable, float interruptable_percent, bool idles, float idle_percent) :
 	m_loops(looping), m_interruptable(interruptable), m_idles(idles)
 {
@@ -18,7 +18,7 @@ FbxAnm::FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, bool looping
 	m_idle_frame = (int)(idle_percent * m_skeletons.size());
 }
 
-bool FbxAnm::update(float delta)
+bool Fbx_Anm::update(float delta)
 {
 	//待機状態を持つアニメーションであれば、更新出来るかを判定する。待機を持たない場合はいつも更新する
 	if (m_idles == true)
@@ -42,7 +42,7 @@ bool FbxAnm::update(float delta)
 	else return false;
 }
 
-bool FbxAnm::updatedByPercentage(float percent)
+bool Fbx_Anm::updatedByPercentage(float percent)
 {
 	float tick_increase = percent * (m_skeletons.sampling_time * m_skeletons.size());
 
@@ -68,7 +68,7 @@ bool FbxAnm::updatedByPercentage(float percent)
 	else return false;
 }
 
-bool FbxAnm::updateLooping()
+bool Fbx_Anm::updateLooping()
 {
 	//reset the animation if we passed the last frame
 	if (m_frame > m_skeletons.size() - 1)
@@ -80,7 +80,7 @@ bool FbxAnm::updateLooping()
 	return true;
 }
 
-bool FbxAnm::updateNonLooping()
+bool Fbx_Anm::updateNonLooping()
 {
 	//if the animation is finished return false
 	if (m_frame > m_skeletons.size() - 1)
@@ -93,7 +93,7 @@ bool FbxAnm::updateNonLooping()
 	return true;
 }
 
-bool FbxAnm::updateIdling()
+bool Fbx_Anm::updateIdling()
 {
 	//if the animation is finished return false
 	if (m_frame > m_skeletons.size() - 1)
@@ -107,55 +107,55 @@ bool FbxAnm::updateIdling()
 	return true;
 }
 
-bool FbxAnm::getIfInterruptable()
+bool Fbx_Anm::getIfInterruptable()
 {
 	//if the animation is interruptable and at the frame where it can be interrupted, return true
 	return ((m_interruptable && m_frame >= m_interruptable_frame));
 }
 
-bool FbxAnm::getIfFinished()
+bool Fbx_Anm::getIfFinished()
 {
 	return (m_frame == m_skeletons.size() - 1);
 }
 
-float FbxAnm::getTotalTime()
+float Fbx_Anm::getTotalTime()
 {
 	return (m_skeletons.sampling_time * m_skeletons.size());
 }
 
-float FbxAnm::getPercentCompletion()
+float Fbx_Anm::getPercentCompletion()
 {
 	return  m_skeletons.animation_tick / (m_skeletons.sampling_time * m_skeletons.size());
 }
 
-void FbxAnm::reset()
+void Fbx_Anm::reset()
 {
 	m_frame = 0;
 	m_trigger_finish = false;
 	m_skeletons.animation_tick = 0;
 }
 
-void FbxAnm::setFrame(int frame)
+void Fbx_Anm::setFrame(int frame)
 {
 	m_frame = frame;
 }
 
-void FbxAnm::setFrame(float percent)
+void Fbx_Anm::setFrame(float percent)
 {
 	m_frame = (int)(percent * m_skeletons.size());
 }
 
-void FbxAnm::setFinishTrigger(bool trigger)
+void Fbx_Anm::setFinishTrigger(bool trigger)
 {
 	m_trigger_finish = trigger;
 }
 
-Skeleton FbxAnm::getPose()
+Skeleton Fbx_Anm::getPose()
 {
 	return m_skeletons.at(m_frame);
 }
 
-Skeleton FbxAnm::getPoseAtPercent(float percent)
+Skeleton Fbx_Anm::getPoseAtPercent(float percent)
 {
 	return m_skeletons.at((int)(percent * m_skeletons.size()));
 }

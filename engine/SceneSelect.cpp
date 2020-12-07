@@ -59,7 +59,7 @@ void SceneSelect::imGuiRender()
 	ImGui::Begin("Scene Selection", 0, ImGuiWindowFlags_NoDecoration);
 
 	ImVec2 size = ImVec2(280.0f, 30.0f);
-	ImGui::Text("Press 1 key to display the mouse");
+	ImGui::Text("ESC: Show/Hide Mouse");
 	if (ImGui::Button("Shaders",			size)) p_manager->changeScene(SceneManager::SCENE01, true);
 	if (ImGui::Button("ShadowMapping",		size)) p_manager->changeScene(SceneManager::SCENE02, true);
 	if (ImGui::Button("Terrain Generator",	size)) p_manager->changeScene(SceneManager::SCENE03, true);

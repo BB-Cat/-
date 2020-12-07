@@ -85,7 +85,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.normal = input.normal;
 
 	//texture coordinates
-	output.texcoord = float2((output.world_pos.x), (output.world_pos.z)) / 10;
+	output.texcoord = float2((output.world_pos.x), (output.world_pos.z)) / 30;
 
 	//if the texbias for this face is over the cliff threshhold, mix the cliff height
 	output.cliff_amount = min(max((cliff_threshhold - input.boneweights.w) / (cliff_threshhold - max_cliff), 0), 1);

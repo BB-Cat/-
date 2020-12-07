@@ -259,11 +259,11 @@ void ConstantBufferSystem::updateAndSetObjectLightPropertyBuffer(const Material_
 	lp.m_shininess = mat.m_shininess;
 	lp.m_rimPower = mat.m_rim_power;
 	lp.m_transparency =  mat.m_transparency;
-	lp.m_metallicAmount = mat.m_metallicAmount;
+	lp.m_metallicAmount = mat.m_metallic;
 	lp.m_ambientColor = mat.m_ambient_color;
 	lp.m_diffuseColor = mat.m_diffuse_color;
 	lp.m_specularColor = mat.m_specular_color;
-	lp.m_emitColor = mat.m_emitColor;
+	lp.m_emitColor = mat.m_emit_color;
 	lp.m_rimColor = mat.m_rim_color;
 
 	//update the constant light properties buffer

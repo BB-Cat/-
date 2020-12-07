@@ -107,29 +107,19 @@ void Scene10::imGuiRender()
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	ImGui::End();
 
-	//ImGui::SetNextWindowSize(ImVec2(400, 200));
-	//ImGui::SetNextWindowPos(ImVec2(0, 20));
-
-	////create the test window
-	//ImGui::Begin("Test Window");
-	//ImGui::Text("Press 1 key to");
-	//ImGui::Text("display the mouse");
-
-	//if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	////ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
-	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
-
-	//VectorToArray v(&m_global_light_rotation);
-	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
-
-	//v = VectorToArray(&m_light_color);
-	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
-
-	//v = VectorToArray(&m_ambient_light_color);
-	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
-
 	ActorManager::get()->activePlayerImGui();
+
+	//display the controls
+	ImGui::SetNextWindowPos(ImVec2(0, 67));
+	//ImGui::SetNextWindowSize(ImVec2(370, 220));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Controls", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Text("Mouse : Camera");
+	ImGui::Text("WASD : Move");
+	ImGui::Text("Shift : Run");
+	ImGui::Text("Space : Jump");
+	ImGui::Text("Right Click : Roll");
+	ImGui::End();
 
 	if (m_first_time)
 	{

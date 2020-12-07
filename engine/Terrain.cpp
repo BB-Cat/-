@@ -264,8 +264,9 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
 }
 
 
-Terrain::Terrain(const std::vector<VertexMesh>& verts)
+Terrain::Terrain(Vector2D map_pos, const std::vector<VertexMesh>& verts)
 {
+    m_pos = map_pos;
 
     //seperate the loaded vertex data into seperate pieces for the chunk and seams
     int chunk_columns = CHUNK_AND_SEAM_SIZE;

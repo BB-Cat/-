@@ -1,17 +1,17 @@
 #pragma once
 #include "MyFbxManager.h"
 
-class FbxAnm
+class Fbx_Anm
 {
 public:
-	FbxAnm() {}
-	FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager, 
+	Fbx_Anm() {}
+	Fbx_Anm(const wchar_t* full_path, MyFbxManager* fbx_manager, 
 		bool looping = true, bool interruptable = true, int interruptable_frame = 0,
 		bool idles = false, int idle_frame = 0);
-	FbxAnm(const wchar_t* full_path, MyFbxManager* fbx_manager,
+	Fbx_Anm(const wchar_t* full_path, MyFbxManager* fbx_manager,
 		bool looping = true, bool interruptable = true, float interruptable_percent = 0,
 		bool idles = false, float idle_percent = 0);
-	~FbxAnm() {}
+	~Fbx_Anm() {}
 
 	//update the current frame and return FALSE if the animation is finished and does not loop
 	bool update(float delta);
@@ -74,6 +74,6 @@ protected:
 	//途中で更新を待機するアニメーションであれば、この変数がTRUEになった時のみ終了する
 	bool m_trigger_finish = false;
 
-	SkeletalAnimation	m_skeletons;
+	Skeletal_Animation	m_skeletons;
 };
 

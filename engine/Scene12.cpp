@@ -65,7 +65,7 @@ Scene12::Scene12(SceneManager* sm) : Scene(sm)
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 
-	WorldObjectManager::get()->loadSceneData("trialscene.txt");
+	WorldObjectManager::get()->loadSceneData("prefabtest.txt");
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
@@ -97,21 +97,21 @@ void Scene12::update(float delta, const float& width, const float& height)
 	ActorManager::get()->updateFaction(L"Player", delta);
 	Vector3D new_ppos = ActorManager::get()->getActivePlayerPosition() + Vector3D(0, 1.5f, 0);
 
-	Vector3D adjusted_pos = WorldObjectManager::get()->CubeAABBCollision(old_ppos, new_ppos, Vector3D(2, 3, 2));
+	Vector3D adjusted_pos = WorldObjectManager::get()->BoundingBoxCollision(old_ppos, new_ppos, Vector3D(2, 3, 2));
 	Vector3D copy = adjusted_pos;
 
 	if (!(adjusted_pos == new_ppos))
 	{
 		for (int i = 0; i < 5; i++)
 		{
-			adjusted_pos = WorldObjectManager::get()->CubeAABBCollision(old_ppos, adjusted_pos, Vector3D(2, 3, 2));
+			adjusted_pos = WorldObjectManager::get()->BoundingBoxCollision(old_ppos, adjusted_pos, Vector3D(2, 3, 2));
 		}
 		hit = true;
 		if (adjusted_pos.m_y <= new_ppos.m_y) ActorManager::get()->stopActivePlayerAscent();
 		if (adjusted_pos.m_y > new_ppos.m_y) ActorManager::get()->stopActivePlayerJump();
 	}
 	if (ActorManager::get()->getActivePlayerState() != PlayerState::Jump &&
-		adjusted_pos - Vector3D(0, 0.5f, 0) == WorldObjectManager::get()->CubeAABBCollision
+		adjusted_pos - Vector3D(0, 0.5f, 0) == WorldObjectManager::get()->BoundingBoxCollision
 		(old_ppos, adjusted_pos - Vector3D(0, 0.5f, 0), Vector3D(2, 3, 2)))
 		ActorManager::get()->startActivePlayerFall();
 	ActorManager::get()->setActivePlayerPosition(adjusted_pos - Vector3D(0, 1.5f, 0));
@@ -175,7 +175,8 @@ void Scene12::mainRenderPass(float delta)
 {
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
 
-	WorldObjectManager::get()->render();
+	WorldObjectManager::get()->render(delta);
+	WorldObjectManager::get()->renderBoundingBoxes();
 	ActorManager::get()->renderFaction(L"Player", delta);
 
 	//if (hit)

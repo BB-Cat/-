@@ -30,6 +30,7 @@ private:
 		ENEMY,
 		AMBIENT,
 	};
+
 public:
 	static ActorManager* get();
 	~ActorManager();

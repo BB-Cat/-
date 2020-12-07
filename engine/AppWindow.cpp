@@ -29,6 +29,7 @@ struct vertex
 	Vector2D texcoord;
 };
 
+bool AppWindow::m_mouse = false;
 bool AppWindow::m_keys_state[256] = {};
 bool AppWindow::m_old_keys_state[256] = {};
 Vector2D AppWindow::m_delta_rot = Vector2D();
@@ -40,6 +41,22 @@ bool AppWindow::m_is_deferred_pipeline = true;
 Vector2D AppWindow::m_screen_size = Vector2D(0, 0);
 
 
+std::shared_ptr<std::thread> AppWindow::m_compute_thread = nullptr;
+bool AppWindow::m_compute_is_busy = false;
+bool AppWindow::m_compute_is_queued = false;
+
+std::function<void()>* AppWindow::m_func = nullptr;
+
+
+AppWindow::~AppWindow()
+{
+	if (m_compute_thread != nullptr)
+	{
+		m_compute_thread->join();
+		m_compute_thread.reset();
+	}
+}
+
 void AppWindow::resetInput()
 {
 	std::memcpy(m_old_keys_state, m_keys_state, sizeof(bool) * 256);
@@ -50,6 +67,14 @@ void AppWindow::resetInput()
 
 	m_old_mouse_state[0] = m_mouse_state[0];
 	m_old_mouse_state[1] = m_mouse_state[1];
+}
+
+void AppWindow::mouseToggleCheck()
+{
+	if (AppWindow::getKeyTrigger(VK_ESCAPE))
+	{
+		toggleMouse();
+	}
 }
 
 void AppWindow::mainMenu()
@@ -68,12 +93,9 @@ void AppWindow::mainMenu()
 
 		ImGui::OpenPopup("Welcome");
 		ImGui::BeginPopupModal("Welcome");
-		ImGui::Text("1: Toggle Mouse Display");
-		ImGui::Text("WASD: Camera Movement / Player Movement");
-		ImGui::Text("Shift: Player Sprint");
-		ImGui::Text("Space: Player Jump");
+		ImGui::Text("ESC: Toggle Mouse Display");
 
-		ImGui::TextWrapped("This program uses many text files. Please do not move or replace them or the program will crash.");
+		ImGui::TextWrapped("This program uses many text files for terrain. Please do not move or replace them or the program will crash.");
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_show_popup = false;
 		ImGui::EndPopup();
@@ -86,6 +108,62 @@ void AppWindow::mainMenu()
 	}
 
 	ImGui::EndMainMenuBar();
+}
+
+void AppWindow::fpsTimer()
+{
+	m_fps_update_timer += m_delta_time.time_interval();
+	m_loop_count++;
+	if (m_fps_update_timer > 0.5f)
+	{
+		//calculate the average fps every 0.5 seconds
+		float fps = (1.0f / (m_fps_update_timer / m_loop_count));
+		if (fps - (int)(fps) >= 0.5f) m_fps = fps + 1.0f;
+		else m_fps = fps;
+
+		m_fps_update_timer = 0;
+		m_loop_count = 0;
+	}
+}
+
+bool AppWindow::queryComputeThread()
+{
+	if (m_compute_is_busy || m_compute_is_queued) return false;
+
+	return true;
+}
+
+bool AppWindow::loadComputeThreadFunction(void (*func)())
+{
+	//std::function<void()> temp = func;
+	//m_func = &temp;
+	m_func = new std::function<void()>;
+	*m_func = func;
+	m_compute_is_queued = true;
+
+	//std::shared_ptr<std::thread> t(new std::thread(temp));
+	//t->join();
+	
+	return true;
+}
+
+void AppWindow::handleActiveComputeThreads()
+{
+	if (m_compute_thread != nullptr)
+	{
+		m_compute_thread->join();
+		m_compute_thread.reset();
+		m_compute_is_queued = false;
+	}
+}
+
+void AppWindow::initiateComputeThreads()
+{
+	if (m_compute_is_queued)
+	{
+		std::shared_ptr<std::thread> t(new std::thread(*m_func));
+		m_compute_thread = t;
+	}
 }
 
 void AppWindow::onCreate()
@@ -132,18 +210,7 @@ void AppWindow::onCreate()
 
 void AppWindow::onUpdate()
 {
-	m_fps_update_timer += m_delta_time.time_interval();
-	m_loop_count++;
-	if (m_fps_update_timer > 0.5f)
-	{
-		//calculate the average fps every 0.5 seconds
-		m_fps = (1.0f / (m_fps_update_timer / m_loop_count));
-		m_fps_update_timer = 0;
-		m_loop_count = 0;
-	}
-	//m_delta_time.reset();
-
-
+	fpsTimer();
 	Window::onUpdate();
 	InputSystem::get()->update();
 
@@ -157,13 +224,7 @@ void AppWindow::onUpdate()
 	//set the scene lighting buffer
 	GraphicsEngine::get()->getConstantBufferSystem()->setGlobalLightPropertyBuffer();
 
-	/* OLD */
-	////set the lights buffer
-	//Lighting::get()->setLights();
-	//GraphicsEngine::get()->getConstantBufferSystem()->setLocalLightPropertyBuffer();
-
-
-	//set the sampler
+	//set the default sampler
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_sampler);
 
 	//update and render the current scene
@@ -176,41 +237,28 @@ void AppWindow::onUpdate()
 
 	//render imGui from the current scene
 	m_scene_manager->imGui();
+
 	//render the menu bar
 	mainMenu();
 	
+	//finish rendering imgui
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-
-
-	////render final pass if the current pipeline is deferred
-	//if (m_is_deferred_pipeline)
-	//{
-	//	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargetDirect();
-	//	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(0, TEST, Vector2D(0.0f, 1.0f), Vector2D(0.5f, 0.5f), Vector2D(0, 0));
-	//	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(1, TEST, Vector2D(1.0f, 1.0f), Vector2D(0.5f, 0.5f), Vector2D(0, 0));
-	//	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(2, TEST, Vector2D(0.0f, 0.0f), Vector2D(0.5f, 0.5f), Vector2D(0, 0));
-	//	GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(3, TEST, Vector2D(1.0f, 0.0f), Vector2D(0.5f, 0.5f), Vector2D(0, 0));
-	//}
-
-	//static int showShadowMap = 2;
-	//if (AppWindow::getKeyTrigger('V')) showShadowMap = (showShadowMap + 1) * (showShadowMap + 1 < 6) + 2 * (showShadowMap + 1 > 6);
-
-	//if(showShadowMap > 2) GraphicsEngine::get()->getRenderSystem()->getGBuffer()->renderToSwapChain(showShadowMap, TEST, Vector2D(0.0f, 0.0f), Vector2D(1.0f, 1.0f), Vector2D(0, 0));
-
-	if (AppWindow::getKeyTrigger('1'))
-	{
-		m_mouse = !m_mouse;
-		if (m_mouse) InputSystem::get()->showCursor(true);
-		else InputSystem::get()->showCursor(false);
-	}
+	//if there is a compute shader that ran since the last frame, we need to join it now
+	handleActiveComputeThreads();
 
 	//present the rendered chain
 	m_swap_chain->present(true);
 
+	//if there is a compute shader waiting to be queued, begin it now
+	initiateComputeThreads();
+
 	//increase the high resolution timer tick
 	m_delta_time.tick();
+
+	//check if the mouse should be visible or not
+	mouseToggleCheck();
 
 	//reset input data structures for the next frame
 	resetInput();
@@ -314,4 +362,11 @@ bool AppWindow::getMouseRelease(bool rightbutton)
 Vector2D AppWindow::getScreenSize()
 {
 	return m_screen_size;
+}
+
+void AppWindow::toggleMouse()
+{
+	m_mouse = !m_mouse;
+	if (m_mouse) InputSystem::get()->showCursor(true);
+	else InputSystem::get()->showCursor(false);
 }

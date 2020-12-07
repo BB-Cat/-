@@ -23,6 +23,7 @@ struct PS_INPUT
 	float cliff_amount : NORMAL1;
 	float3 fog_color: TEXCOORD3;
 	float fog_amount : NORMAL2;
+	float ambient_amount : NORMAL3;
 };
 
 //scene global light settings
@@ -47,6 +48,9 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 final_sample = getTextureSplat(sample_color, sample_color2, sample_color3, input.texbias.rgb);
 	//if necessary, mix the cliff texture
 	final_sample = final_sample * (1.0 - input.cliff_amount) + sample_color4 * input.cliff_amount;
+	
+	float3 ambient = m_ambient_light_color * input.ambient_amount + m_ambient_light_color;
+	input.light += ambient;
 
 	float3 final = (final_sample * input.light) * (1 - input.fog_amount) + input.fog_color * input.fog_amount;
 	//float3 final = input.light;

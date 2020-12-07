@@ -46,17 +46,18 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 {
 
 	m_meshdata = fbx_manager->loadFbxMesh(full_path, topology);
+	if (m_meshdata.size() == 0) throw (int)BB_ERROR::NO_MESH_DATA;
 
 	m_metal = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\Env.png");
 	m_displace = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\EarthSlime\\earthbump.jpg");
 
 	m_raster = true;
 
-	m_mat.m_diffuse_color = Vector3D(0.5f, 0.85f, 0.6f);	
+	m_mat.m_diffuse_color = Vector3D(0.6f, 0.6f, 0.6f);	
 	m_mat.m_transparency = 1.0f;
-	m_mat.m_metallicAmount = 0.4f;
+	m_mat.m_metallic = 0.4f;
 	m_mat.m_shininess = 12;
-	m_mat.m_specular_color = Vector3D(0.95, 0.65, 0.7);
+	m_mat.m_specular_color = Vector3D(0.9f, 0.9f, 0.9f);
 	m_mat.m_rim_color = Vector3D(1.0f, 1.0f, 1.0f);
 	m_mat.m_rim_color.m_w = 1.0f;
 	m_mat.m_rim_power = 2.0f;
@@ -97,14 +98,14 @@ void SkinnedMesh::setAnimationCategory(int type)
 void SkinnedMesh::loadAnimation(int type, const wchar_t* full_path, bool looping, bool interruptable, int interruptable_frame,
 	bool idles, int idle_frame)
 {
-	m_animation[type] = FbxAnm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
+	m_animation[type] = Fbx_Anm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
 		looping, interruptable, interruptable_frame, idles, idle_frame);
 }
 
 void SkinnedMesh::loadAnimation(void* dummy, int type, const wchar_t* full_path, bool looping, 
 	bool interruptable, float interruptable_percent, bool idles, float idle_percent)
 {
-	m_animation[type] = FbxAnm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
+	m_animation[type] = Fbx_Anm(full_path, GraphicsEngine::get()->getSkinnedMeshManager()->getFbxManager(),
 		looping, interruptable, interruptable_percent, idles, idle_percent);
 }
 
@@ -357,7 +358,7 @@ void SkinnedMesh::ImGui_LightProperties()
 	ImGui::DragFloat("Transparency", &m_mat.m_transparency, 0.01f, 0, 1.0);
 	ImGui::DragFloat("Specular Power", &m_mat.m_shininess, 0.01f, 0, 100.0);
 	ImGui::DragFloat("Rim Power", &m_mat.m_rim_power, 0.01f, 0, 100.0);
-	ImGui::DragFloat("Metallicness", &m_mat.m_metallicAmount, 0.01f, 0, 1.0);
+	ImGui::DragFloat("Metallicness", &m_mat.m_metallic, 0.01f, 0, 1.0);
 
 	//ImGui::End();
 }

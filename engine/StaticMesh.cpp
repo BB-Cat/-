@@ -143,9 +143,9 @@ void StaticMesh::renderMesh(float elapsed_time/*dummy value*/, Vector3D scale, V
 			if (m_mats[mat_id].m_name == m_subs[i].m_mtl) break;
 
 		//set the texture for the current subset
-		if (m_mats[mat_id].m_map_Kd)
+		if (m_mats[mat_id].m_diffuse)
 		{
-			GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_mats[mat_id].m_map_Kd);
+			GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_mats[mat_id].m_diffuse);
 			GraphicsEngine::get()->getShaderManager()->setPixelShader(PS::ONE_TEX);
 		}
 		else GraphicsEngine::get()->getShaderManager()->setPixelShader(PS::NO_TEX);
@@ -240,10 +240,6 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 		//{
 		//	fin >> m_mats[num_mats].m_Tf;
 		//}
-		else if (0 == wcscmp(command, L"illum"))
-		{
-			fin >> m_mats[num_mats].illum;
-		}
 		else if (0 == wcscmp(command, L"map_Ka"))	//diffuse texture
 		{
 			wchar_t ambient_tex[256] = {};
@@ -253,7 +249,7 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 			std::wstring ambient_path = createFilepath(m_full_path, m_full_path.length(), ambient_tex, t_length);
 			const wchar_t* ambient_path_wchar = ambient_path.c_str();
 			
-			m_mats[num_mats].m_map_Ka = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(ambient_path_wchar);
+			m_mats[num_mats].m_ambient = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(ambient_path_wchar);
 		}
 		else if (0 == wcscmp(command, L"map_Kd"))	//diffuse texture
 		{
@@ -264,7 +260,7 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 			std::wstring diffuse_path = createFilepath(m_full_path, m_full_path.length(), diffuse_tex, t_length);
 			const wchar_t* diffuse_path_wchar = diffuse_path.c_str();
 
-			m_mats[num_mats].m_map_Kd = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(diffuse_path_wchar);
+			m_mats[num_mats].m_diffuse = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(diffuse_path_wchar);
 		}
 		else if (0 == wcscmp(command, L"map_Ks"))	//diffuse texture
 		{
@@ -275,7 +271,7 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 			std::wstring specular_path = createFilepath(m_full_path, m_full_path.length(), specular_tex, t_length);
 			const wchar_t* specular_path_wchar = specular_path.c_str();
 
-			m_mats[num_mats].m_map_Ks = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(specular_path_wchar);
+			m_mats[num_mats].m_specular = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(specular_path_wchar);
 		}
 		else if (0 == wcscmp(command, L"map_bump") || 0 == wcscmp(command, L"bump"))	//diffuse texture
 		{
@@ -286,7 +282,7 @@ void StaticMesh::loadMtlFile(std::wstring full_path)
 			std::wstring bump_path = createFilepath(m_full_path, m_full_path.length(), bump_tex, t_length);
 			const wchar_t* bump_path_wchar = bump_path.c_str();
 
-			m_mats[num_mats].m_map_Ks = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(bump_path_wchar);
+			m_mats[num_mats].m_specular = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(bump_path_wchar);
 		}
 		else
 		{

@@ -12,6 +12,7 @@
 #include "Texture.h"
 #include "WorldObject.h"
 #include "WorldObjectManager.h"
+#include "PrefabManager.h"
 
 #include <iostream>
 #include <fstream>  
@@ -29,34 +30,6 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
-
-	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
-	m_noise.m_show_rgba = Vector4D(1, 0, 0, 0);
-
-	m_noise.m_vor_amplitude = 1.0f;
-	m_noise.m_vor_frequency = 4.0f;
-	m_noise.m_vor_gain = 0.3f;
-	m_noise.m_vor_lacunarity = 2.0f;
-	m_noise.m_vor_octaves = 1;
-	m_noise.m_vor_cell_size = 30.0f;
-
-	m_noise.m_per_amplitude = 0.75f;
-	m_noise.m_per_frequency = 4.0f;
-	m_noise.m_per_gain = 0.5f;
-	m_noise.m_per_lacunarity = 2.0f;
-	m_noise.m_per_octaves = 10;
-	m_noise.m_per_cell_size = 25.0f;
-
-	//initial cloud property settings
-	m_cloud_props.m_cloud_density = 0.15f;
-	m_cloud_props.m_per_pixel_fade_threshhold = 0.0f;
-	m_cloud_props.m_per_sample_fade_threshhold = 0.15f;
-	m_cloud_props.m_sampling_resolution = Vector4D(8, 7, 7, 7);
-	m_cloud_props.m_sampling_weight = Vector4D(0.3, 0.3, 0.2, 0.2);
-	m_cloud_props.m_speed = 0.7f;
-	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
-
-	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("voronoiPerlin128x.txt"));
 
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
@@ -147,10 +120,18 @@ void Scene11::shadowRenderPass(float delta)
 void Scene11::mainRenderPass(float delta)
 {
 	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
-	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
 
-	WorldObjectManager::get()->render();
-	WorldObjectManager::get()->renderSelectedHighlight();
 
+	if (WorldObjectManager::get()->getShowPrefabEditor() == true)
+	{
+		PrefabManager::get()->renderEditingPrefab();
+	}
+	else
+	{
+		m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
+		WorldObjectManager::get()->render(delta, true);
+		WorldObjectManager::get()->renderSelectedHighlight();
+		WorldObjectManager::get()->renderBoundingBoxes();
+	}
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
 }

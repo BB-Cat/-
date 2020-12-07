@@ -14,21 +14,19 @@ public:
 	float		m_shininess; //specular power
 	float		m_rim_power; //rimlight power
 	float		m_transparency;	//transparency 
-	float		m_metallicAmount; //transmission filter
+	float		m_metallic; //transmission filter
 	Vector4D	m_ambient_color; //ambient color
 	Vector4D	m_diffuse_color; //diffuse color
 	Vector4D	m_specular_color; //specular color
-	Vector4D	m_emitColor; //emissive color
+	Vector4D	m_emit_color; //emissive color
 	Vector4D    m_rim_color; //rimlight color
 
-	float illum; //illumination model
-
-	TexturePtr m_map_Ka; //ambient color map
-	TexturePtr m_map_Kd; //diffuse color map
-	TexturePtr m_map_Ks; //specular color map
-	TexturePtr m_map_bump; //bump map
-	TexturePtr m_map_emit; //emission map
-	TexturePtr m_map_height; //pixel heightmap
+	TexturePtr m_ambient; //ambient color map
+	TexturePtr m_diffuse; //diffuse color map
+	TexturePtr m_specular; //specular color map
+	TexturePtr m_bump; //bump map
+	TexturePtr m_emission; //emission map
+	TexturePtr m_height; //pixel heightmap
 };
 
 
@@ -40,7 +38,9 @@ public:
 };
 
 
-struct Material_FBX 
+//TODO : search for possible memory leak here
+//is this causing a memory leak?
+struct Mesh_Material 
 { 
 	Vector4D m_color = Vector4D(0.8f, 0.8f, 0.8f, 1.0f);   
 	ID3D11ShaderResourceView* shader_resource_view; 
@@ -48,13 +48,13 @@ struct Material_FBX
 	float m_extra_params = 0;
 };  
 
-struct Subset_FBX  
+struct Mesh_Subset  
 {   
 	unsigned int index_start = 0; // start number of index buffer   
 	unsigned int index_count = 0; // number of vertices (indices)   
-	Material_FBX diffuse;
-	Material_FBX specular;
-	Material_FBX emit;
+	Mesh_Material diffuse;
+	Mesh_Material specular;
+	Mesh_Material emit;
 
 	TexturePtr m_map_normal;		//bump map
 	float m_bumpiness;				//amount of normal map change
@@ -62,34 +62,35 @@ struct Subset_FBX
 }; 
 
 
-struct bone_influence
+struct Bone_Influence
 {
 	int index; // index of bone   
 	float weight; // weight of bone  
 };
 
-typedef std::vector<bone_influence> bone_influences_per_control_point;
+typedef std::vector<Bone_Influence> bone_influences_per_control_point;
 
-struct bone
+struct Bone
 {
 	Matrix4x4 transform;
 };
 
-struct Skeleton {
-	std::vector<bone> m_bones;
+struct Skeleton 
+{
+	std::vector<Bone> m_bones;
 };
 
-struct SkeletalAnimation : public std::vector<Skeleton>
+struct Skeletal_Animation : public std::vector<Skeleton>
 { 
 	float sampling_time = 1 / 24.0f;    
 	float animation_tick = 0.0f; 
 };
 
-struct MeshData
+struct Mesh_Data
 {
 	VertexBufferPtr						m_vertex_buffer;
 	IndexBufferPtr						m_index_buffer;
-	std::vector<Subset_FBX>				m_subs;
+	std::vector<Mesh_Subset>			m_subs;
 	Matrix4x4							m_mesh_world;
 	//SkeletalAnimation					m_skeletons;
 };

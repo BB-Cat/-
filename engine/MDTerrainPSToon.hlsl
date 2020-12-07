@@ -1,3 +1,5 @@
+#include "Lighting.fx"
+#include "Sampling.fx"
 SamplerState TextureSampler: register(s0);
 
 Texture2D T1: register(t0);
@@ -83,9 +85,10 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	//cliff face sample
 	float3 sample_color4 = T4.Sample(TextureSampler, input.texcoord * 2);
 
-	float3 final_sample = sample_color * input.texbias.r + sample_color2 * input.texbias.g + sample_color3 * input.texbias.b;
+	//float3 final_sample = sample_color * input.texbias.r + sample_color2 * input.texbias.g + sample_color3 * input.texbias.b;
+	float3 final_sample = getTextureSplat(sample_color, sample_color2, sample_color3, input.texbias.rgb);
 	//if necessary, mix the cliff texture
-	final_sample = final_sample * (1.0 - input.cliff_amount) + sample_color4 * input.cliff_amount;
+	final_sample = final_sample * (1.0 - input.cliff_amount > 0.5) + sample_color4 * (input.cliff_amount > 0.5);
 
 
 
@@ -96,31 +99,25 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 direction_to_camera = normalize(input.world_pos.xyz - m_camera_position.xyz);
 	float3 light_direction = normalize(m_global_light_dir.xyz);
 
-	//diffuse lighting
-	float faceDot = max(0.0, dot(input.normal, light_direction));
-	float diffuseAmount = min(max((diffuse_thresh - faceDot) / (diffuse_thresh - max_diffuse), 0), 1)
-		* (faceDot > diffuse_thresh);
-	//diffuseAmount = diffuseAmount * 0.5 + 0.5;
-	float3 diffuseReflection = m_global_light_strength * m_global_light_color.xyz * diffuseAmount;
+	////diffuse lighting
+	float3 diffuseReflection = gradientOneCellDiffuse(input.normal, light_direction, m_global_light_color, 0.6f);
 
-	//specular
-	float specDot = pow(max(0.0, dot(reflect(-light_direction, input.normal), -direction_to_camera)), m_shininess);
-	float specAmount = min(max((specular_thresh - specDot) / (specular_thresh - max_specular), 0), 1) * (specDot > specular_thresh);
-	float3 specularReflection = m_specularColor.rgb * specAmount;
+	////specular
+	float3 specularReflection = spec(input.normal, light_direction, m_specularColor.rgb, direction_to_camera, m_shininess);
 
-	//rim lighting
-	float rim = pow(1 - dot(-direction_to_camera, input.normal), m_rimPower) * max(dot(light_direction, input.normal), 0);
-	float rimlight_amount = min(max((rim_thresh - rim) / (rim_thresh - max_rim), 0), 1) * (rim > rim_thresh);
-	float3 rimLighting = m_rimColor.w * m_global_light_strength * m_global_light_color.rgb * m_rimColor.xyz * rimlight_amount;
+	////rim lighting
+	float3 rimLighting = rim(input.normal, light_direction, m_rimColor.rgb, direction_to_camera, m_rimPower);
 
 	//ambient amount
 	float3 ambient = m_ambient_light_color * max(0.0, dot(input.normal, -light_direction)) + m_ambient_light_color;
 
 	float3 lightFinal = rimLighting + diffuseReflection + specularReflection + ambient;
 
+
 	//atmospheric fog
 	float3 sun_ref_pos = light_direction * float3(atmosphere_max_dist / 2, atmosphere_height, atmosphere_max_dist / 2);
 	//float3 sky_ref_pos = n * float3(atmosphere_height, atmosphere_height, atmosphere_height);
+
 
 	float sun_dist = length(input.world_pos - sun_ref_pos);
 	float3 atmos_fog;
@@ -134,6 +131,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 
 
 	return float4(final, 1);
-
+	//return float4(input.normal, 1);
 	//return float4(final_sample * lightFinal, 1);
 }

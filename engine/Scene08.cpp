@@ -306,7 +306,7 @@ void Scene08::imGuiRender()
 		ImGui::DragFloat("Movement Speed", &m_cloud_props.m_speed, 0.01f, 0, 20.0);
 
 		//ImGui::DragFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.01f, 1.0f);
-		//ImGui::SliderFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.5f, 30.0f);
+		ImGui::SliderFloat("Ray Offset", &m_cloud_props.m_ray_offset_strength, 0.5f, 30.0f);
 
 		v = VectorToArray(&m_cloud_props.m_phase_parameters);
 		//ImGui::DragFloat4("Phase Parameters", v.setArray(), 0.01f, 0.0f, 1.0f);

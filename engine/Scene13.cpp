@@ -87,6 +87,7 @@ Scene13::~Scene13()
 	m_rs2->Release();
 	if (m_srv != nullptr) m_srv->Release();
 	if (m_tman) delete m_tman;
+	m_tman = nullptr;
 	
 }
 
@@ -104,8 +105,8 @@ void Scene13::update(float delta, const float& width, const float& height)
 	else if (m_create_terrain_timer) m_create_terrain_timer--;
 	else if (m_create_terrain_timer == 0)
 	{
-		CameraManager::get()->setCamPos(Vector3D(11.5, 0, 11.5) * 99 + Vector3D(0, 300, 0));
-		m_tman = new TerrainManager(Vector2D(21, 21));
+		CameraManager::get()->setCamPos(Vector3D(9.5, 0, 9.5) * 99 + Vector3D(0, 300, 0));
+		m_tman = new TerrainManager(Vector2D(17, 17));
 		m_create_terrain_timer--;
 	}
 
@@ -181,8 +182,8 @@ void Scene13::imGuiRender()
 
 	if(ImGui::Button("Show Wireframe")) m_show_wire = !m_show_wire;
 	if (ImGui::Button("Show Normals")) m_active_shader = Shaders::TERRAIN_TEST;
-	if (ImGui::Button("HD Shader")) m_active_shader = Shaders::TERRAIN_HD_TOON;
-	if (ImGui::Button("LD Shader")) m_active_shader = Shaders::TERRAIN_LD_TOON;
+	if (ImGui::Button("LOD Shader")) m_active_shader = -1;
+	//if (ImGui::Button("LD Shader")) m_active_shader = Shaders::TERRAIN_LD_TOON;
 
 	if (m_first_time)
 	{
@@ -241,7 +242,8 @@ void Scene13::mainRenderPass(float delta)
 
 	if (m_tman != nullptr)
 	{
-		m_tman->render(-1, 0.5, m_show_wire, 0);
+		//m_tman->update();
+		m_tman->render(m_active_shader, 1.0, m_show_wire, 0);
 	}
 
 	//GraphicsEngine::get()->getShaderManager()->setPipeline(m_active_shader);

@@ -5,6 +5,8 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 
+#include "DebugErrors.h"
+
 class SwapChain;
 class DeviceContext;
 class GBuffer;
@@ -38,7 +40,8 @@ class BlendMode;
 class GraphicsEngine;
 
 //primitive classes
-class WorldObject;
+class Primitive;
+
 
 //game classes
 class Player;
@@ -46,6 +49,7 @@ class Enemy;
 class PowerUp;
 class Terrain;
 class TerrainManager;
+class WorldObject;
 //
 
 typedef std::shared_ptr<SwapChain> SwapChainPtr;
@@ -68,6 +72,7 @@ typedef std::shared_ptr<Sprite> SpritePtr;
 typedef std::shared_ptr<StaticMesh> StaticMeshPtr;
 typedef std::shared_ptr<SkinnedMesh> SkinnedMeshPtr;
 typedef std::shared_ptr<Shader> ShaderPtr;
+typedef std::shared_ptr<Primitive> PrimitivePtr;
 typedef std::shared_ptr<WorldObject> WorldObjectPtr;
 
 //game type definitions

@@ -54,7 +54,7 @@ cbuffer constant: register(b2)
 
 
 static const float MinTess = 1;
-static const float MaxTess = 8;
+static const float MaxTess = 4;
 static const float MinTessRange = 200.0f;
 static const float MaxTessRange = 120.0f;
 
@@ -73,7 +73,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.direction_to_camera = normalize(output.position.xyz - m_camera_position.xyz);
 
 	//texture coordinates
-	output.texcoord = float2((output.position.x), (output.position.z)) / 10;
+	output.texcoord = float2((output.position.x), (output.position.z)) / 30;
 	//float val = ((output.position.x) + (output.position.z)) % 2 * 10;
 	//float val = output.position.x - output.position.z;
 	//float val2 = (output.position.y);

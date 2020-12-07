@@ -65,11 +65,8 @@ void Player::update(float delta)
 	//convert radian result to degrees like the actor class stores
 	m_input.cam_angle = atan2(cam_dir.m_x, cam_dir.m_z) / 0.01745f;
 	//prevent spinning by adjusting the angle when cam angle jumps between positive and negative
-	if (abs(m_input.cam_angle - m_angle) > 180)
-	{
-		if (m_input.cam_angle > 0) m_angle += 360.0f;
-		else if (m_input.cam_angle < 0) m_angle -= 360.0f;
-	}
+	float larger = m_input.cam_angle * (m_input.cam_angle >= m_angle) + m_angle * (m_input.cam_angle < m_angle);
+	float smaller = m_input.cam_angle * (m_input.cam_angle < m_angle) + m_angle * (m_input.cam_angle >= m_angle);
 
 	//XVŠÖ”‚Ì‘I‘ð
 	switch (m_state)
@@ -267,8 +264,10 @@ void Player::moveForward(float delta)
 		target_angle += 60.0f;
 	}
 
-	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
-
+	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 	Vector3D move = (getDirectionVector() * m_momentum) * delta;
 	CameraManager::get()->moveCamera(move);
@@ -342,7 +341,10 @@ void Player::moveBackward(float delta)
 		target_angle -= 60.0f;
 	}
 
-	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 
 	Vector3D move = (getDirectionVector() * m_momentum) * delta;
@@ -401,8 +403,10 @@ void Player::strafeRight(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	float target_angle = m_input.cam_angle;
-	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 
 	Vector3D move = (getRightVector() * m_momentum) * delta;
@@ -462,7 +466,10 @@ void Player::strafeLeft(float delta)
 
 	//lerp to the same direction as the camera
 	float target_angle = m_input.cam_angle;
-	m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 
 	Vector3D move = (getRightVector() * m_momentum * -1) * delta;
@@ -507,7 +514,10 @@ void Player::jump(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	m_angle = m_angle * (1.0f - delta * 6) + m_input.cam_angle * delta * 6;
+	Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 
 	if (m_jump == false)
@@ -565,7 +575,10 @@ void Player::land(float delta, int landing_type)
 		}
 
 		//lerp to the same direction as the camera
-		m_angle = m_angle * (1.0f - delta * 6) + m_input.cam_angle * delta * 6;
+		Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+		//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
+		target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
+		m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
 
 		Vector3D move = (getDirectionVector() * m_momentum) * delta;
 		CameraManager::get()->moveCamera(move);
@@ -712,7 +725,7 @@ void Player::attack2(float delta)
 
 void Player::render(float delta)
 {
-	m_model->renderMesh(delta, Vector3D(1, 1, 1), m_pos, Vector3D(0, m_angle * 0.01745f, 0), Shaders::LAMBERT_SPECULAR);
+	m_model->renderMesh(delta, Vector3D(1, 1, 1), m_pos, Vector3D(0, m_angle * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 }
 
 void Player::renderShadow(float delta)

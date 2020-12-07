@@ -36,11 +36,13 @@ public:
 	float getActiveAnmPercent();
 	//sends the total lengths of the active and blend animations for use in percent tick calculation.  returns false if there is no blend animation.
 	bool getAnimationLengths(float& active_length, float& blend_length);
+	Material_Obj getMaterial() { return m_mat; }
 
 	void setBlendAnimation(int type);
 	void setBlendAnmFrame(float percent);
 	void setAnmPercentTick(float tick);
 	void setColor(Vector3D color);
+	void setMaterial(Material_Obj mat) { m_mat = mat; }
 
 	void triggerAnimationFinish(bool trigger);
 
@@ -57,8 +59,8 @@ public:
 	void setBlend(float f) { m_blend = f; }
 
 private:
-	std::vector<MeshData> m_meshdata;  
-	std::vector<FbxAnm> m_animation;
+	std::vector<Mesh_Data> m_meshdata;  
+	std::vector<Fbx_Anm> m_animation;
 
 	int m_active_animation;
 	int m_queued_animation;

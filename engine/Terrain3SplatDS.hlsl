@@ -70,7 +70,7 @@ static const float cliff_threshhold = 0.6f;
 //value at which the result is fully a cliff
 static const float max_cliff = 0.55f;
 //maximum value at which bump mapping occurs
-static const float max_bump_range = 100;
+static const float max_bump_range = 200;
 
 #define NUM_CONTROL_POINTS 3
 
@@ -109,19 +109,11 @@ DS_OUTPUT dsmain(
 	Output.normal =
 		patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
 
-
 	Output.texcoord = domain.x * patch[0].texcoord + domain.y * patch[1].texcoord + domain.z * patch[2].texcoord;
 	Output.cliff_texcoord = domain.x * patch[0].cliff_texcoord + domain.y * patch[1].cliff_texcoord + domain.z * patch[2].cliff_texcoord;
 
 	// Interpolating normal can unnormalize it, so normalize it.
 	Output.normal = normalize(Output.normal);
-
-
-	// Choose the mipmap level based on distance to the eye; specifically, choose
-	// the next miplevel every MipInterval units, and clamp the miplevel in [0,6].
-	//const float MipInterval = 5.0f;
-	//float mipLevel = clamp((distance(Output.position.xyz, m_camera_position) - MipInterval) / MipInterval, 0.0f, 12.0f);
-	float mipLevel = clamp(distance(Output.position.xyz, m_camera_position) / 10 - 6.0, 0.0, 6.0);
 
 	// Sample height map.
 	float h = HeightMapR.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.r;
@@ -129,18 +121,18 @@ DS_OUTPUT dsmain(
 	float h3 = HeightMapB.SampleLevel(HeightMapSampler, Output.texcoord, 0).x * texbias.b;
 
 	//Sample the cliff face
-	//float h4 = HeightMapW.SampleLevel(HeightMapSampler, Output.texcoord * 2, 0).x * -8;
 	float3 triplanar_balance = abs(Output.normal);
 	triplanar_balance = pow(max(triplanar_balance, 0), 2);
-	float2 cliff_coord1 = Output.position.zx / 10;  // / triplanar_balance.y;
-	float2 cliff_coord2 = Output.position.xy / 10;  // / triplanar_balance.z;
-	float2 cliff_coord3 = Output.position.zy / 10;  // / triplanar_balance.x;
+
+	float2 cliff_coord1 = Output.position.zx / 10;
+	float2 cliff_coord2 = Output.position.xy / 10;
+	float2 cliff_coord3 = Output.position.zy / 10;
+
 	float3 h_sample1 = (HeightMapW.SampleLevel(HeightMapSampler, cliff_coord1, 0).x - 0.5) * 8;
 	float3 h_sample2 = (HeightMapW.SampleLevel(HeightMapSampler, cliff_coord2, 0).x - 0.5) * 8;
 	float3 h_sample3 = (HeightMapW.SampleLevel(HeightMapSampler, cliff_coord3, 0).x - 0.5) * 8;
 
 	float3 h4 = h_sample1 * triplanar_balance.y + h_sample2 * triplanar_balance.z + h_sample3 * triplanar_balance.x;
-	//float h4 = 0;
 
 	Output.texbias = float4(h, h2, h3, texbias.w);
 	//find the biased offset between the 3 main terrain types
@@ -148,16 +140,13 @@ DS_OUTPUT dsmain(
 	//water down the offset before involving cliff calculation
 	offset /= const_erosion;
 
-	//if the texbias for this face is over the cliff threshhold, output a cliff face value to add it to the result
+	//if the texbias for this face is over the cliff threshold, output a cliff face value to add it to the result
 	float cliff_face = min(max((cliff_threshhold - texbias.w) / (cliff_threshhold - max_cliff), 0), 1);
 	Output.cliff_face = cliff_face;
 	//adjust the offset
 	float camera_dist = length(m_camera_position.xyz - Output.position.xyz);
-	//offset = (offset * (1.0 - cliff_face) + h4 * cliff_face) * max(((max_bump_range - camera_dist) / max_bump_range), 0);
+	//calculate if it is over the cliff threshold
 	offset = (offset * (cliff_face < 0.7) + h4 * (cliff_face >= 0.7)) * max(((max_bump_range - camera_dist) / max_bump_range), 0);
-
-
-
 
 	// Offset vertex along normal.
 	Output.position.xyz = Output.position.xyz + (m_height * offset) * Output.normal;
@@ -165,14 +154,9 @@ DS_OUTPUT dsmain(
 	Output.direction_to_camera = normalize(Output.position.xyz - m_camera_position.xyz);
 	Output.world_pos = Output.position;
 
-
-
 	// Project to screen space.
 	Output.position = mul(Output.position, m_view);
 	Output.position = mul(Output.position, m_proj);
-
-
-	//Output.dot_cam = dot(Output.direction_to_camera, Output.normal);
 
 	return Output;
 }
