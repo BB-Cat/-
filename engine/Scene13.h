@@ -12,7 +12,7 @@ class Scene13 : public Scene
 {
 private:
     bool m_first_time = false;
-    bool m_show_wire = false;
+    bool m_show_wire = true;
     int m_active_shader = Shaders::TERRAIN_TEST;
     std::vector<VertexMesh> m_verts;
     TerrainPtr m_terrain[1024];

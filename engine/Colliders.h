@@ -43,6 +43,10 @@ public:
 	{
 		m_bounding_box = scale;
 	}
+	CubeCollider(Collider col) : Collider(ColliderTypes::Cube), m_scale(col.getBoundingBox())
+	{
+		m_bounding_box = m_scale;
+	}
 	~CubeCollider() {}
 
 	Vector3D getScale() { return m_scale; }

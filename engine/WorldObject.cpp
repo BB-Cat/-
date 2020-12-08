@@ -56,7 +56,11 @@ WorldObject::WorldObject(SkinnedMeshPtr mesh, Collider* collider, Vector3D pos, 
 
 WorldObject::~WorldObject()
 {
-	if (m_collider != nullptr) delete m_collider;
+	if (m_collider != nullptr)
+	{
+		delete m_collider;
+		m_collider = nullptr;
+	}
 }
 
 void WorldObject::render(float elapsed_time, int shader, bool is_textured)

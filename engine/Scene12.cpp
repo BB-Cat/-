@@ -60,12 +60,12 @@ Scene12::Scene12(SceneManager* sm) : Scene(sm)
 
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(1.0, 1.0, 0.8);
-	m_ambient_light_color = Vector3D(0.3, 0.3, 0.5);
+	m_light_color = Vector3D(0.4, 0.6, 0.0);
+	m_ambient_light_color = Vector3D(1.0, 1.0, 0.8);
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
 
-	WorldObjectManager::get()->loadSceneData("prefabtest.txt");
+	WorldObjectManager::get()->loadSceneData("backup2.txt");
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
@@ -124,15 +124,14 @@ void Scene12::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(200, 70));
+	//ImGui::SetNextWindowSize(ImVec2(200, 70));
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
-
-	//create the test window
-	ImGui::Begin("Scene Settings");
-	ImGui::Text("Press 1 key to display the mouse");
-
-	if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
+	//ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
 
 	//VectorToArray v(&m_global_light_rotation);
 	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.02f, -6.28f, 6.28f);
@@ -164,7 +163,7 @@ void Scene12::imGuiRender()
 		ImGui::EndPopup();
 	}
 
-	ImGui::End();
+	//ImGui::End();
 }
 
 void Scene12::shadowRenderPass(float delta)
@@ -191,5 +190,5 @@ void Scene12::mainRenderPass(float delta)
 	//Vector3D pos = ActorManager::get()->getActivePlayerPosition() + Vector3D(0, 0.5f, 0);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::WEATHER_ATMOSPHERE, false);
+	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
 }

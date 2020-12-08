@@ -30,7 +30,7 @@ Scene04::Scene04(SceneManager* sm) : Scene(sm)
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
 	m_light_color = Vector3D(1.0, 1.0, 1.0);
-	m_ambient_light_color = Vector3D(1.0, 1.0, 1.0);
+	m_ambient_light_color = Vector3D(0.6f, 0.62f, 0.48f);
 
 
 	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
@@ -82,21 +82,27 @@ void Scene04::update(float delta, const float& width, const float& height)
 
 void Scene04::imGuiRender()
 {
+	ImGui::SetNextWindowSize(ImVec2(215, 45));
+	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::End();
+
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(250, 400));
-	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	//ImGui::SetNextWindowSize(ImVec2(250, 400));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::SetNextWindowPos(ImVec2(0, 70));
 
 	//create the test window
-	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	ImGui::Begin("Scene Interface", 0, ImGuiWindowFlags_AlwaysAutoResize);
 
-	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	//if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
 	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
-	ImGui::DragFloat("Bump Height", &m_bump_height, 0.001f, 0.0f, 0.5f);
+	ImGui::DragFloat("Bump Height", &m_bump_height, 0.001f, 0.0f, 5.0f);
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
 	//if (ImGui::Button("Toggle Normal", ImVec2(200, 30))) m_toggle_norm = !m_toggle_norm;
 
@@ -110,8 +116,8 @@ void Scene04::imGuiRender()
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
 
-	if (ImGui::Button("Update Terrain Types", ImVec2(200, 30))) m_terrain->updateTerrainTypes();
-	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
+	//if (ImGui::Button("Update Terrain Types", ImVec2(200, 30))) m_terrain->updateTerrainTypes();
+	//if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
 
 	if (m_first_time)
 	{

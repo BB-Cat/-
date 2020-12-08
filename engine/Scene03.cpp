@@ -19,8 +19,8 @@ Scene03::Scene03(SceneManager* sm) : Scene(sm)
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 80, -15));
-	CameraManager::get()->setCamRot(Vector2D(0, 0.7));
+	CameraManager::get()->setCamPos(Vector3D(-7.227f, 80, -8.912f));
+	CameraManager::get()->setCamRot(Vector2D(0.234f, 0.774f));
 
 	Lighting::get()->updateSceneLight(Vector3D(0,0.9,0), Vector3D(1,1,1), 0.85f, Vector3D(0.2,0.2,0.4));
 

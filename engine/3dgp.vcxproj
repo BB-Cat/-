@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\Include\DirectXTex\include;C:\Users\2190404\Desktop\GraphicsEngine\GraphicsEngine\DirectXTK-master\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\2190404\Desktop\GraphicsEngine\GraphicsEngine\Libraries\DirectXTex\bin;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\Include\DirectXTex\include;..\DirectXTK-master\Inc;$(IncludePath)</IncludePath>
+    <LibraryPath>..\Libraries\DirectXTex\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -92,13 +92,13 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Include\FBX SDK\include;C:\Users\2190404\Desktop\GraphicsEngine\GraphicsEngine\Libraries\tinyobjloader\include;D2d1.lib;Dwrite.lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Include\FBX SDK\include;..\Include\tinyobjloader\include;D2d1.lib;Dwrite.lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3dcompiler.lib;d3d11.lib;DirectXTK.lib;DirectXTKAudioWin8.lib;DirectXTexD_x86.lib;libfbxsdk-md.lib;wininet.lib;Advapi32.lib;D2d1.lib;Dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Libraries\FBX SDK\2016.1.2\lib\vs2015\x86\debug;C:\Users\2190404\Desktop\GraphicsEngine\GraphicsEngine\Libraries\DirectXTK-Master\Bin\Desktop_2019\Desktop_2019\Win32\Debug;C:\Users\2190404\Desktop\GraphicsEngine\GraphicsEngine\Libraries\DirectXTK-Master\Audio\Bin\Desktop_2019\Win32\Debug;D2d1.lib;Dwrite.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Libraries\FBX SDK\2016.1.2\lib\vs2015\x86\debug;..\Libraries\DirectXTK-Master\Bin\Desktop_2019\Desktop_2019\Win32\Debug;..\Libraries\DirectXTK-Master\Audio\Bin\Desktop_2019\Win32\Debug;D2d1.lib;Dwrite.lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

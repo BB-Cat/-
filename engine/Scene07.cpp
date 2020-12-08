@@ -15,7 +15,7 @@ Scene07::Scene07(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 0.0f, -5));
+	CameraManager::get()->setCamPos(Vector3D(0, 0.0f, -5.0f));
 	CameraManager::get()->setCamRot(Vector2D(0,0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
@@ -94,29 +94,37 @@ void Scene07::imGuiRender()
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
 	//create the test window
-	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
-
+	ImGui::Begin("Noise Window");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 
-	if (ImGui::Button("Move Forward", ImVec2(100, 20)))
+	//if (ImGui::Button("Move Forward", ImVec2(100, 20)))
+	//{
+	//	m_is_move = 1;
+	//}
+	//if (ImGui::Button("Move Backward", ImVec2(100, 20)))
+	//{
+	//	m_is_move = -1;
+	//}
+
+	ImGui::NewLine();
+
+
+	if (ImGui::Button("Move Noise", ImVec2(200, 20)))
 	{
 		m_is_move = 1;
 	}
-	if (ImGui::Button("Move Backward", ImVec2(100, 20)))
-	{
-		m_is_move = -1;
-	}
 
-	if (ImGui::Button("Stop", ImVec2(100, 20)))
+	if (ImGui::Button("Stop", ImVec2(200, 20)))
 	{
 		m_is_move = 0;
 	}
 
 	if (m_is_move)
 	{
+		if (m_move < -0.5f || m_move > 0.5f) m_is_move *= -1;
+
+
 		m_move += 0.01f * m_is_move;
 	}
 
@@ -126,7 +134,7 @@ void Scene07::imGuiRender()
 
 		if (ImGui::CollapsingHeader("Voronoi Noise"))
 		{
-			ImGui::DragInt("Octaves", &m_int_vor_octave, 0.05f, 0.00f, 10.0f);
+			ImGui::DragInt("Octaves", &m_int_vor_octave, 0.05f, 0.00f, 5.0f);
 			m_noise.m_vor_octaves = m_int_vor_octave;
 			ImGui::DragInt("Frequency", &m_int_vor_frequency, 0.05f, 0.00f, 10.0f);
 			m_noise.m_vor_frequency = m_int_vor_frequency;
@@ -141,7 +149,7 @@ void Scene07::imGuiRender()
 
 		if (ImGui::CollapsingHeader("Perlin Noise"))
 		{
-			ImGui::DragInt("Octaves", &m_int_per_octave, 0.05f, 0.00f, 10.0f);
+			ImGui::DragInt("Octaves", &m_int_per_octave, 0.05f, 0.00f, 5.0f);
 			m_noise.m_per_octaves = m_int_per_octave;
 			ImGui::DragInt("Frequency", &m_int_per_frequency, 0.05f, 0.00f, 10.0f);
 			m_noise.m_per_frequency = m_int_per_frequency;
@@ -159,19 +167,19 @@ void Scene07::imGuiRender()
 		if (ImGui::CollapsingHeader("Cell Size"))
 		{
 			ImGui::TextWrapped("!! Cell Size settings only effect the shader, not the output texture result.");
-			if (ImGui::Button("Increase Voronoi Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size *= 2;
+			if (ImGui::Button("Increase Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size *= 2;
 			ImGui::SameLine();
-			if (ImGui::Button("Decrease Voronoi Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size /= 2;
+			if (ImGui::Button("Decrease Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size /= 2;
 
-			if (ImGui::Button("Increase Perlin Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size *= 2;
-			ImGui::SameLine();
-			if (ImGui::Button("Decrease Perlin Cell Size", ImVec2(150, 30))) m_noise.m_vor_cell_size /= 2;
 		}
 
 		ImGui::InputFloat("Set Seed", &m_seed);
 
 		VectorToArray v(&m_noise.m_noise_type);
-		ImGui::SliderFloat4("Noise Types", v.setArray(), 0, 1.0f, "%.3f", ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic);
+		//ImGui::SliderFloat4("Noise Types", v.setArray(), 0, 1.0f, "%.3f", ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic);
+
+		ImGui::SliderFloat("Voronoi Amount", &m_noise.m_noise_type.m_w, 0.0f, 1.0f, nullptr, 1.0f);
+		ImGui::SliderFloat("Perlin Amount", &m_noise.m_noise_type.m_z, 0.0f, 1.0f, nullptr, 1.0f);
 
 		if (ImGui::Button("Generate 3D Texture", ImVec2(200, 30))) load3DTexture();
 		//ImGui::InputInt3("Texture Dimensions", 0);

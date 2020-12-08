@@ -20,7 +20,7 @@ SceneSelect::SceneSelect(SceneManager* sm) : Scene(sm)
 	CameraManager::get()->setCamState(FREE);
 	CameraManager::get()->setCamPos(Vector3D(8, 7, -6));
 
-	//m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Textures\\Env.png");
+	m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\bg.jpg");
 
 }
 
@@ -48,15 +48,23 @@ void SceneSelect::imGuiRender()
 	//	if (ImGui::Button("Okay", ImVec2(100, 30))) m_popup_toggle = false;
 	//	ImGui::EndPopup();
 	//}
+	ImGui::SetNextWindowSize(ImVec2(1024, 720));
+	ImGui::SetNextWindowPos(ImVec2(-20, 0));
+	ImGui::SetNextWindowBgAlpha(0.0f);
+	ImGui::Begin("Background", 0, ImGuiWindowFlags_NoDecoration);
+	ImTextureID t = m_tex1->getSRV();
+	ImGui::Image(t, ImVec2(1024, 720));
+
+	ImGui::End();
 
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(1000, 700));
-	ImGui::SetNextWindowPos(ImVec2(0, 20));
-	ImGui::SetNextWindowBgAlpha(0.5f);
+	//ImGui::SetNextWindowSize(ImVec2(1000, 700));
+	ImGui::SetNextWindowPos(ImVec2(20, 40));
+	ImGui::SetNextWindowBgAlpha(0.55f);
 	////create the test window
-	ImGui::Begin("Scene Selection", 0, ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("Scene Selection", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
 
 	ImVec2 size = ImVec2(280.0f, 30.0f);
 	ImGui::Text("ESC: Show/Hide Mouse");
@@ -74,8 +82,15 @@ void SceneSelect::imGuiRender()
 	if (ImGui::Button("Stage Example",		size)) p_manager->changeScene(SceneManager::SCENE12, true);
 	if (ImGui::Button("Compute Shader",		size)) p_manager->changeScene(SceneManager::SCENE13, true);
 
-	int a = 3;
+	ImGui::End();
 
+	//ImGui::SetNextWindowSize(ImVec2(300, 50));
+	ImGui::SetNextWindowPos(ImVec2(700, 650));
+	ImGui::SetNextWindowBgAlpha(0.5f);
+	////create the test window
+	ImGui::Begin("NoTitle", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.2f, 0.7f), "Email : carson.hage@outlook.com");
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Phone : 070-4292-5277");
 	ImGui::End();
 }
 

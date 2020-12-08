@@ -78,7 +78,7 @@ VS_OUTPUT vsmain(VS_INPUT input)
 	output.direction_to_camera = normalize(output.position.xyz - m_camera_position.xyz);
 
 	//texture coordinates
-	output.texcoord = float2((output.position.x), (output.position.z)) / 10;
+	output.texcoord = float2((output.position.x), (output.position.z)) / 30;
 	output.cliff_texcoord = output.texcoord;
 
 	//calculate tesselation amount

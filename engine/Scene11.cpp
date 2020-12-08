@@ -29,7 +29,7 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 	CameraManager::get()->setCamRot(Vector2D(0, 0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
-	m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
+	//m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
 
 	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;

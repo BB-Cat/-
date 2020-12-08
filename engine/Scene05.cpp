@@ -36,7 +36,7 @@ Scene05::Scene05(SceneManager* sm) : Scene(sm)
 
 	m_toggle_HD = 0;
 	m_max_tess = 3;
-	m_bump_height = 0.5f;
+	m_bump_height = 2.0f;
 	m_max_tess_range = 1.0f;
 
 	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
@@ -70,20 +70,18 @@ void Scene05::imGuiRender()
 
 	//create the test window
 	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
-	if (ImGui::Button("Toggle Tesselation"))
+	if (ImGui::Button("Toggle Tesselation", ImVec2(200, 30)))
 	{
 		if (m_toggle_HD) m_toggle_HD = 0;
 		else m_toggle_HD = 1;
 	}
-
-	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
-	ImGui::DragFloat("Bump Height", &m_bump_height, 0.001f, 0.0f, 0.5f);
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
+
+
+	ImGui::DragFloat("Bump Height", &m_bump_height, 0.001f, 0.0f, 5.0f);
 	//if (ImGui::Button("Toggle Normal", ImVec2(200, 30))) m_toggle_norm = !m_toggle_norm;
 
 	ImGui::DragInt("Max Tesselation", &m_max_tess, 0.05f, 1, 15);

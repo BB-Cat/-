@@ -19,6 +19,11 @@ PrefabManager::~PrefabManager()
 
 bool PrefabManager::createPrefab(std::wstring file, std::string name)
 {
+	for (int i = 0; i < m_prefabs.size(); i++)
+	{
+		if (m_prefab_names[i] == name) return false;
+	}
+
 	std::wstring full_file = L"..\\Assets\\PrefabMeshes\\Meshes\\" + file;
 	const wchar_t* tempwchar = full_file.c_str();
 

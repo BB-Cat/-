@@ -80,12 +80,12 @@ void Scene06::imGuiRender()
 
 	//create the test window
 	ImGui::Begin("Animation Test");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
-	ImGui::DragFloat("Camera Speed", &m_speed, 0.001f, 0.05f, 2.0f);
+
+	ImGui::NewLine();
+	ImGui::NewLine();
 
 	if( ImGui::Button("Walk", ImVec2(200,30))) m_model->setAnimation(Animation::Player::Walk);
 	if (ImGui::Button("Run", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Run);
@@ -95,22 +95,24 @@ void Scene06::imGuiRender()
 	if (ImGui::Button("Attack", ImVec2(200, 30))) m_model->setAnimation(Animation::Player::Attack2);
 	if (ImGui::Button("Stop", ImVec2(200, 30))) m_model->setAnimation(-1);
 
-	if (ImGui::DragFloat("Blend Animation", &m_blend, 0.003f, 0.00f, 1.0f))
+	//if (ImGui::SliderFloat("", &m_blend, 0.003f, 0.00f, 1.0f))
+	ImGui::Text("Animation Blending");
+	if(ImGui::SliderFloat("", &m_blend, 0.0f, 1.0f, nullptr, 1.0f))
 	{
 		m_model->setAnimation(Animation::Player::Walk);
 		m_model->setBlendAnimation(Animation::Player::Run);
 	}
 	m_model->setBlend(m_blend);
 
-	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	//VectorToArray v(&m_global_light_rotation);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
 
-	v = VectorToArray(&m_light_color);
-	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_light_color);
+	//ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
+	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
 
-	v = VectorToArray(&m_ambient_light_color);
-	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
+	//v = VectorToArray(&m_ambient_light_color);
+	//ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
 
 	if (m_first_time)
 	{

@@ -15,8 +15,8 @@ private:
     bool m_first_time = true;
 
     int m_toggle_HD = 2;
-    float m_speed = 0.35f;
-    float m_bump_height = 0.001f;
+    float m_speed = 2.0f;
+    float m_bump_height = 2.0f;
     bool m_rast = false;
 
     bool m_toggle_norm = false;

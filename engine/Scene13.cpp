@@ -122,6 +122,8 @@ void Scene13::imGuiRender()
 	ImGui::SetNextWindowSize(ImVec2(300, 800));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 
+	ImVec2 size = ImVec2(200, 30);
+
 	//create the test window
 	ImGui::Begin("Scene Settings");
 	ImGui::Text("Press 1 key to display the mouse");
@@ -132,7 +134,7 @@ void Scene13::imGuiRender()
 		ImGui::Image(t, ImVec2(300, 300));
 	}
 
-	if (ImGui::Button("Scene Select")) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Scene Select", size)) p_manager->changeScene(SceneManager::SCENESELECT, false);
 
 
 
@@ -173,16 +175,19 @@ void Scene13::imGuiRender()
 	if (ImGui::CollapsingHeader("General Settings"))
 	{
 		ImGui::InputFloat("Set Seed", &m_noise.m_seed);
-		ImGui::DragFloat("X Scale", &m_noise.m_xscale, 0.01f); //float m_yscale;
+		//ImGui::DragFloat("X Scale", &m_noise.m_xscale, 0.01f); //float m_yscale;
 		ImGui::DragFloat("Y Scale", &m_noise.m_yscale, 0.01f); //float m_xscale;
 		ImGui::DragFloat("Cell Size", &m_noise.m_compute_cell_size, 0.01f, 0.001f); //float m_compute_cell_size;
 		VectorToArray v(&m_noise.m_noise_type);
 		ImGui::SliderFloat4("Noise Types", v.setArray(), 0, 1.0f, "%.3f", ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic);
 	}
 
-	if(ImGui::Button("Show Wireframe")) m_show_wire = !m_show_wire;
-	if (ImGui::Button("Show Normals")) m_active_shader = Shaders::TERRAIN_TEST;
-	if (ImGui::Button("LOD Shader")) m_active_shader = -1;
+	ImGui::NewLine();
+	ImGui::NewLine();
+
+
+
+
 	//if (ImGui::Button("LD Shader")) m_active_shader = Shaders::TERRAIN_LD_TOON;
 
 	if (m_first_time)
@@ -201,13 +206,13 @@ void Scene13::imGuiRender()
 
 	if (m_tman == nullptr)
 	{
-		if (ImGui::Button("Test Terrain"))
+		if (ImGui::Button("Test Terrain", size))
 		{
 
 			//for some reason, having the shader resource view active when initializing another computer shader causes DX11 to crash.
 			//I need to research this more.  In order to prevent this crashing we are setting a timer with this button, which will load
 			//new terrain when it hits 0, giving the shader resource view time to stop being used.
-			if(m_create_terrain_timer == -1) m_create_terrain_timer = 2;
+			if(m_create_terrain_timer == -1) m_create_terrain_timer = 4;
 			if (m_srv)
 			{
 				m_srv->Release();
@@ -222,7 +227,11 @@ void Scene13::imGuiRender()
 	}
 	else 
 	{
-		if (ImGui::Button("Reset Terrain"))
+		if (ImGui::Button("Show Wireframe", size)) m_show_wire = !m_show_wire;
+		if (ImGui::Button("Show Normals", size)) m_active_shader = Shaders::TERRAIN_TEST;
+		if (ImGui::Button("LOD Shader", size)) m_active_shader = -1;
+
+		if (ImGui::Button("Reset Terrain", size))
 		{
 			delete m_tman;
 			m_tman = nullptr;
@@ -803,24 +812,24 @@ void Scene13::initNoiseBuffer()
 	m_noise.m_vor_gain = 0.3f;
 	m_noise.m_vor_lacunarity = 2.0f;
 	m_noise.m_vor_octaves = 1;
-	m_noise.m_vor_cell_size = 1.0f;
+	m_noise.m_vor_cell_size = 2.0f;
 
-	m_noise.m_per_amplitude = 0.75f;
+	m_noise.m_per_amplitude = 0.9f;
 	m_noise.m_per_gain = 0.5f;
 	m_noise.m_per_lacunarity = 2.0f;
-	m_noise.m_per_octaves = 1;
+	m_noise.m_per_octaves = 2;
 	m_noise.m_per_cell_size = 1.0f;
 
-	m_noise.m_compute_cell_size = 3000;
+	m_noise.m_compute_cell_size = 1000;
 	m_noise.m_xscale = 10;
-	m_noise.m_yscale = 100;
+	m_noise.m_yscale = 200;
 	m_noise.m_seed = 1;
 
 	m_noise.m_ridged_per_amplitude = 2.5f;
 	m_noise.m_ridged_per_gain = 0.5f;
 	m_noise.m_ridged_per_lacunarity = 2.0f;
 	m_noise.m_ridged_per_octaves = 1;
-	m_noise.m_ridged_per_cell_size = 0.5f;
+	m_noise.m_ridged_per_cell_size = 2.0f;
 
 	m_int_vor_octave = m_noise.m_vor_octaves;
 	m_int_per_octave = m_noise.m_per_octaves;

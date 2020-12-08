@@ -122,7 +122,7 @@ void Scene01::imGuiRender()
 		ImGui::OpenPopup("Shader Popup");
 		ImGui::BeginPopupModal("Shader Popup");
 
-		ImGui::TextWrapped("You can check my custom shaders in this scene.  Some shaders are for heightmaps / sky / volumetric rendering so they will look strange on the model.");
+		ImGui::TextWrapped("You can see my custom shaders in this scene. Use the color pickers at the bottom to change them.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

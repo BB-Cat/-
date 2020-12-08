@@ -55,6 +55,9 @@ void WorldObjectManager::outputSceneData(std::string filename)
 		texfile = tempchar;
 		//output the texture name, then the texture file
 		outfile << temp_texname[i] << " " << texfile << " ";
+
+		memset(&tempchar, 0, sizeof(char) * 1024);
+		texfile.clear();
 	}
 
 
@@ -74,6 +77,9 @@ void WorldObjectManager::outputSceneData(std::string filename)
 		prefabfile = tempchar;
 		//output the texture name, then the texture file
 		outfile << temp_prefabname[i] << " " << prefabfile << " ";
+
+		memset(&tempchar, 0, sizeof(char) * 1024);
+		prefabfile.clear();
 	}
 
 
@@ -290,6 +296,9 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		fin >> tempfile;
 		mbstowcs(tempwchar, tempfile.c_str(), tempfile.length());
 		PrimitiveGenerator::get()->loadTexture(std::wstring(tempwchar), tempname);
+		tempfile.clear();
+		tempname.clear();
+		memset(&tempwchar, 0, sizeof(wchar_t) * 128);
 	}
 
 	//prefab names, files, count
@@ -301,6 +310,9 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		mbstowcs(tempwchar, tempfile.c_str(), tempfile.length());
 		//PrimitiveGenerator::get()->loadTexture(std::wstring(tempwchar), tempname);
 		PrefabManager::get()->createPrefab(std::wstring(tempwchar), tempname);
+		tempfile.clear();
+		tempname.clear();
+		memset(&tempwchar, 0, sizeof(wchar_t) * 128);
 	}
 	//
 
@@ -484,6 +496,7 @@ void WorldObjectManager::clear()
 {
 	m_objects.clear();
 	PrimitiveGenerator::get()->clearTextures();
+	m_show_obj_window = false;
 }
 
 void WorldObjectManager::imGuiRender()
@@ -675,17 +688,17 @@ void WorldObjectManager::imGuiRender()
 		//ImGui::DragFloat4("Ambient Color", v.setArray(), 0.01f, 0.0f, 1.0f);
 
 		v = VectorToArray(&m_focused_material.m_diffuse_color);
-		ImGui::DragFloat4("Diffuse Color", v.setArray(), 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat3("Diffuse Color", v.setArray(), 0.01f, 0.0f, 1.0f);
 
 		v = VectorToArray(&m_focused_material.m_specular_color);
-		ImGui::DragFloat4("Specular Color", v.setArray(), 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat3("Specular Color", v.setArray(), 0.01f, 0.0f, 1.0f);
 		ImGui::DragFloat("Shininess", &m_focused_material.m_shininess, 0.05f, 0, 40);
 
 		v = VectorToArray(&m_focused_material.m_rim_color);
-		ImGui::DragFloat4("RimLight Color", v.setArray(), 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat3("RimLight Color", v.setArray(), 0.01f, 0.0f, 1.0f);
 		ImGui::DragFloat("RimLight Amount", &m_focused_material.m_rim_power, 0.05f, 0, 40);
 
-		m_objects[m_object_id]->getPrimitive()->setMaterial(m_focused_material);
+		m_objects[m_object_id]->setMaterial(m_focused_material);
 
 		if (ImGui::Button("Accept")) m_show_mat_window = false;
 
@@ -761,6 +774,12 @@ void WorldObjectManager::imGuiRender()
 		ImGui::NewLine();
 		ImGui::NewLine();
 		if (ImGui::Button("Accept")) m_show_obj_window = false;
+		ImGui::SameLine(0, 75.0f);
+		if (ImGui::Button("Delete"))
+		{
+			m_objects.erase(m_objects.begin() + m_object_id);
+			m_show_obj_window = false;
+		}
 
 		ImGui::End();
 	}
@@ -825,7 +844,19 @@ void WorldObjectManager::imGuiRender()
 			w->setPrefabName(temp_names[i]);
 			w->setShader(temp[i].default_shader);
 			w->setMaterial(temp[i].mesh->getMaterial());
-			w->setCollider(temp[i].collider);
+
+			Collider* collider = nullptr;
+
+			if (temp[i].collider != nullptr)
+			{
+				switch (temp[i].collider->getType())
+				{
+				case ColliderTypes::Cube:
+					collider = new CubeCollider(*temp[i].collider);
+					break;
+				}
+			}
+			w->setCollider(collider);
 
 			m_objects.push_back(w);
 
