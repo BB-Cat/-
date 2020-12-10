@@ -25,20 +25,20 @@
 
 struct vertex
 {
-	Vector3D position;
-	Vector2D texcoord;
+	Vec3 position;
+	Vec2 texcoord;
 };
 
 bool AppWindow::m_mouse = false;
 bool AppWindow::m_keys_state[256] = {};
 bool AppWindow::m_old_keys_state[256] = {};
-Vector2D AppWindow::m_delta_rot = Vector2D();
+Vec2 AppWindow::m_delta_rot = Vec2();
 bool AppWindow::m_mouse_state[2] = {};
 bool AppWindow::m_old_mouse_state[2] = {};
 
 bool AppWindow::m_is_deferred_pipeline = true;
 
-Vector2D AppWindow::m_screen_size = Vector2D(0, 0);
+Vec2 AppWindow::m_screen_size = Vec2(0, 0);
 
 
 std::shared_ptr<std::thread> AppWindow::m_compute_thread = nullptr;
@@ -62,8 +62,8 @@ void AppWindow::resetInput()
 	std::memcpy(m_old_keys_state, m_keys_state, sizeof(bool) * 256);
 	memset(m_keys_state, false, sizeof(bool) * 256);
 
-	m_delta_rot.m_x = 0;
-	m_delta_rot.m_y = 0;
+	m_delta_rot.x = 0;
+	m_delta_rot.y = 0;
 
 	m_old_mouse_state[0] = m_mouse_state[0];
 	m_old_mouse_state[1] = m_mouse_state[1];
@@ -86,9 +86,9 @@ void AppWindow::mainMenu()
 	if (m_show_popup)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Welcome");
@@ -177,12 +177,12 @@ void AppWindow::onCreate()
 
 	//create the swapchain
 	RECT rc = Window::getClientWindowRect();
-	m_screen_size = Vector2D(rc.right - rc.left, rc.bottom - rc.top);
-	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, m_screen_size.m_x, m_screen_size.m_y);
+	m_screen_size = Vec2(rc.right - rc.left, rc.bottom - rc.top);
+	m_swap_chain = GraphicsEngine::get()->getRenderSystem()->createSwapChain(this->m_hwnd, m_screen_size.x, m_screen_size.y);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->saveSwapChain(this->m_swap_chain);
 
 	//initialize the gbuffer
-	GraphicsEngine::get()->getRenderSystem()->createGBuffer(m_screen_size.m_x, m_screen_size.m_y);
+	GraphicsEngine::get()->getRenderSystem()->createGBuffer(m_screen_size.x, m_screen_size.y);
 
 	//initialize the text rendering system
 	GraphicsEngine::get()->createTextRenderer(&m_hwnd, m_swap_chain);
@@ -219,7 +219,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearGBufferRenderTargetColor(this->m_swap_chain, 0.6f, 0.6f, 0.5f, 1);
 
 	//set the size of the viewport for this frame
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(m_screen_size.m_x, m_screen_size.m_y);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(m_screen_size.x, m_screen_size.y);
 
 	//set the scene lighting buffer
 	GraphicsEngine::get()->getConstantBufferSystem()->setGlobalLightPropertyBuffer();
@@ -228,7 +228,7 @@ void AppWindow::onUpdate()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_sampler);
 
 	//update and render the current scene
-	m_scene_manager->execute(m_delta_time.time_interval(), m_screen_size.m_x, m_screen_size.m_y);
+	m_scene_manager->execute(m_delta_time.time_interval(), m_screen_size.x, m_screen_size.y);
 
 	//begin ImGui UI
 	ImGui_ImplDX11_NewFrame();
@@ -268,11 +268,13 @@ void AppWindow::onFocus()
 {
 	InputSystem::get()->addListener(this);
 	GraphicsEngine::get()->getShaderManager()->recompileErrorShaders();
+	m_delta_time.start();
 }
 
 void AppWindow::onKillFocus()
 {
 	InputSystem::get()->removeListener(this);
+	m_delta_time.stop();
 }
 
 void AppWindow::onDestroy()
@@ -296,8 +298,8 @@ void AppWindow::onMouseMove(const Point& mouse_pos)
 	int width = (this->getClientWindowRect().right - this->getClientWindowRect().left);
 	int height = (this->getClientWindowRect().bottom - this->getClientWindowRect().top);
 
-	m_delta_rot.m_x = (mouse_pos.m_y - (height / 2.0f)) * m_delta_time.time_interval() * 0.05f;
-	m_delta_rot.m_y = (mouse_pos.m_x - (width / 2.0f)) * m_delta_time.time_interval() * 0.05f;
+	m_delta_rot.x = (mouse_pos.m_y - (height / 2.0f)) * m_delta_time.time_interval() * 0.05f;
+	m_delta_rot.y = (mouse_pos.m_x - (width / 2.0f)) * m_delta_time.time_interval() * 0.05f;
 	InputSystem::get()->setCursorPosition(Point((int)(width / 2.0f), (int)(height / 2.0f)));
 }
 
@@ -336,7 +338,7 @@ bool AppWindow::getKeyRelease(int i)
 	return (m_keys_state[i] == false && m_old_keys_state[i] == true);
 }
 
-Vector2D AppWindow::getMouseDelta()
+Vec2 AppWindow::getMouseDelta()
 {
 	return m_delta_rot;
 }
@@ -359,7 +361,7 @@ bool AppWindow::getMouseRelease(bool rightbutton)
 	else return (m_mouse_state[0] == false && m_old_mouse_state[0] == true);
 }
 
-Vector2D AppWindow::getScreenSize()
+Vec2 AppWindow::getScreenSize()
 {
 	return m_screen_size;
 }

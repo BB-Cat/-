@@ -34,11 +34,16 @@ public:
     //function to render the currently selected object with a highlight
     void renderSelectedHighlight();
     //function to render bounding boxes for world objects that are toggled to show bounding boxes
-    void renderBoundingBoxes();
+    void renderBoundingBoxes(bool force_show = false);
     
 
     //this is all just a prototype and will be reworked drastically for improved hit collisions in the future
-    Vector3D BoundingBoxCollision(Vector3D old_pos, Vector3D new_pos, Vector3D size);
+    Vec3 BBoxCollisionResolveDiscrete(Vec3 old_pos, Vec3 new_pos, Vec3 size);
+
+    //continuous bounding box collision resolution function
+    Vec3 BBoxCollisionResolveCont(Vec3 old_pos, Vec3 new_pos, Vec3 size);
+    //continuous bounding box collision check
+    bool BBoxCollisionCheckCont(Vec3 old_pos, Vec3 new_pos, Vec3 size);
 
     bool getShowPrefabEditor() { return m_show_prefab_editor; }
 private:
@@ -56,9 +61,9 @@ private:
     char m_scenename[128] = {};
     char m_loadscene[128] = {};
     int m_object_id = 0;
-    Vector3D m_focused_pos;
-    Vector3D m_focused_scale;
-    Vector3D m_focused_rot;
+    Vec3 m_focused_pos;
+    Vec3 m_focused_scale;
+    Vec3 m_focused_rot;
     Material_Obj m_focused_material;
 };
 

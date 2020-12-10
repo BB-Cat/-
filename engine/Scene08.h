@@ -20,10 +20,10 @@ private:
 
     float m_speed = 3.0f;
 
-    Vector2D m_global_light_rotation;
+    Vec2 m_global_light_rotation;
     float m_global_light_strength;
-    Vector3D m_light_color;
-    Vector3D m_ambient_light_color;
+    Vec3 m_light_color;
+    Vec3 m_ambient_light_color;
 
     cb_cloud m_cloud_props;
     cb_cloud m_default;

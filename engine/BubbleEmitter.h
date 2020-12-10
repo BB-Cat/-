@@ -9,7 +9,7 @@
 class BubbleEmitter : public Emitter
 {
 public:
-	BubbleEmitter(int num_particles, Vector3D pos, float radius);
+	BubbleEmitter(int num_particles, Vec3 pos, float radius);
 	// Emitter ‚ğ‰î‚µ‚ÄŒp³‚³‚ê‚Ü‚µ‚½
 	virtual void update(float delta) override;
 	virtual void spawn() override;

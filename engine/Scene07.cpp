@@ -15,16 +15,16 @@ Scene07::Scene07(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 0.0f, -5.0f));
-	CameraManager::get()->setCamRot(Vector2D(0,0));
+	CameraManager::get()->setCamPos(Vec3(0, 0.0f, -5.0f));
+	CameraManager::get()->setCamRot(Vec2(0,0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
 
-	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
+	m_global_light_rotation = Vec2(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(0.2, 0.2, 1.0);
-	m_ambient_light_color = Vector3D(1.0, 1.0, 0.4);
+	m_light_color = Vec3(0.2, 0.2, 1.0);
+	m_ambient_light_color = Vec3(1.0, 1.0, 0.4);
 
 	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
 	m_noise.m_show_rgba = Vector4D(1, 0, 0, 0);
@@ -47,7 +47,7 @@ Scene07::Scene07(SceneManager* sm) : Scene(sm)
 	m_int_per_octave = 1;
 	m_noise.m_per_cell_size = 0.25f;
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 }
 
 Scene07::~Scene07()
@@ -60,7 +60,7 @@ void Scene07::update(float delta, const float& width, const float& height)
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height);
 
-	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
+	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -204,9 +204,9 @@ void Scene07::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Noise Popup");
@@ -231,14 +231,14 @@ void Scene07::mainRenderPass(float delta)
 
 	if (m_tex == nullptr)
 	{
-		m_sky->renderMesh(delta, Vector3D(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
-		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, m_move), Vector3D(0, 0, 0), Shaders::DYNAMIC_NOISE);
+		m_sky->renderMesh(delta, Vec3(700, 700, 700), CameraManager::get()->getCamera().getTranslation(), Vec3(0, 0, 0), Shaders::ATMOSPHERE);
+		m_model->renderMesh(delta, Vec3(3, 3, 3), Vec3(0, 0, m_move), Vec3(0, 0, 0), Shaders::DYNAMIC_NOISE);
 	}
 	else
 	{
 
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex->getShaderResourceView());
-		m_model->renderMesh(delta, Vector3D(3, 3, 3), Vector3D(0, 0, m_move), Vector3D(0, 0, 0), Shaders::_3DTEX);
+		m_model->renderMesh(delta, Vec3(3, 3, 3), Vec3(0, 0, m_move), Vec3(0, 0, 0), Shaders::_3DTEX);
 	}
 
 }
@@ -249,12 +249,12 @@ void Scene07::load3DTexture()
 
 
 	std::vector<float> noise;
-	Vector3D size_3d(32.0f, 32.0f, 32.0f);
+	Vec3 size_3d(32.0f, 32.0f, 32.0f);
 
 	//int division_count = m_noise.frequency * std::pow(m_noise.lacunarity, m_noise.octaves);
 	//float freq = m_noise.vor_frequency * (m_noise.vor_frequency > m_noise.per_frequency) + 
 	//	m_noise.per_frequency * (m_noise.per_frequency > m_noise.vor_frequency);
-	int division_amount = size_3d.m_x / m_noise.m_vor_frequency;
+	int division_amount = size_3d.x / m_noise.m_vor_frequency;
 
 
 	//int period = 8;
@@ -266,18 +266,18 @@ void Scene07::load3DTexture()
 	float zbal = m_noise.m_noise_type.m_z / noise_balance_total;
 	float wbal = m_noise.m_noise_type.m_w / noise_balance_total;
 
-	Vector3D pos;
+	Vec3 pos;
 	float val = 0;
 
-	for (int i = 0; i < size_3d.m_z; i++)
+	for (int i = 0; i < size_3d.z; i++)
 	{
-		for (int j = 0; j < size_3d.m_y; j++)
+		for (int j = 0; j < size_3d.y; j++)
 		{
 		
-			for (int k = 0; k < size_3d.m_x; k++)
+			for (int k = 0; k < size_3d.x; k++)
 			{
 
-				pos = Vector3D(k, j, i);
+				pos = Vec3(k, j, i);
 				//R Output
 
 				//change the seed for r g b and a
@@ -285,13 +285,13 @@ void Scene07::load3DTexture()
 				if (wbal > 0)
 				{
 					val += (1.0f - noise_gen.brownianTiledVoronoi(pos / division_amount, m_noise.m_vor_octaves,
-						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).m_x) * wbal;
+						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).x) * wbal;
 				}
 
 				if (zbal > 0)
 				{
 					val += (noise_gen.brownianTiledPerlin(pos / division_amount, m_noise.m_per_octaves,
-						m_noise.m_per_frequency, m_noise.m_per_gain, m_noise.m_per_lacunarity, m_noise.m_per_amplitude).m_x + 0.5) * zbal;
+						m_noise.m_per_frequency, m_noise.m_per_gain, m_noise.m_per_lacunarity, m_noise.m_per_amplitude).x + 0.5) * zbal;
 				}
 
 				noise.push_back(val);
@@ -301,7 +301,7 @@ void Scene07::load3DTexture()
 				if (wbal > 0)
 				{
 					val = (1.0f - noise_gen.brownianTiledVoronoi(pos / division_amount, m_noise.m_vor_octaves,
-						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).m_x) * wbal;
+						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).x) * wbal;
 				}
 
 				noise.push_back(val);
@@ -311,7 +311,7 @@ void Scene07::load3DTexture()
 				if (wbal > 0)
 				{
 					val = (1.0f - noise_gen.brownianTiledVoronoi(pos * 2 / division_amount, m_noise.m_vor_octaves,
-						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).m_x) * wbal;
+						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).x) * wbal;
 				}
 
 				noise.push_back(val);
@@ -321,7 +321,7 @@ void Scene07::load3DTexture()
 				if (wbal > 0)
 				{
 					val = (1.0f - noise_gen.brownianTiledVoronoi(pos * 3 / division_amount, m_noise.m_vor_octaves,
-						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).m_x) * wbal;
+						m_noise.m_vor_frequency, m_noise.m_vor_gain, m_noise.m_vor_lacunarity, m_noise.m_vor_amplitude).x) * wbal;
 				}
 
 				noise.push_back(val);

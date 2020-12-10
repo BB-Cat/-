@@ -18,7 +18,7 @@ SceneSelect::SceneSelect(SceneManager* sm) : Scene(sm)
 	AppWindow::toggleDeferredPipeline(false);
 
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(8, 7, -6));
+	CameraManager::get()->setCamPos(Vec3(8, 7, -6));
 
 	m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\bg.jpg");
 
@@ -49,9 +49,9 @@ void SceneSelect::imGuiRender()
 	//	ImGui::EndPopup();
 	//}
 	ImGui::SetNextWindowSize(ImVec2(1024, 720));
-	ImGui::SetNextWindowPos(ImVec2(-20, 0));
+	ImGui::SetNextWindowPos(ImVec2(-20, 10));
 	ImGui::SetNextWindowBgAlpha(0.0f);
-	ImGui::Begin("Background", 0, ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("Background", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMouseInputs);
 	ImTextureID t = m_tex1->getSRV();
 	ImGui::Image(t, ImVec2(1024, 720));
 
@@ -81,6 +81,7 @@ void SceneSelect::imGuiRender()
 	if (ImGui::Button("Stage Creator",		size)) p_manager->changeScene(SceneManager::SCENE11, true);
 	if (ImGui::Button("Stage Example",		size)) p_manager->changeScene(SceneManager::SCENE12, true);
 	if (ImGui::Button("Compute Shader",		size)) p_manager->changeScene(SceneManager::SCENE13, true);
+	if (ImGui::Button("Collision Test",     size)) p_manager->changeScene(SceneManager::SCENE14, true);
 
 	ImGui::End();
 

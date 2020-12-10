@@ -149,15 +149,15 @@ void ComputeShader::unmapCPUReadable()
 	m_system->getImmediateDeviceContext()->unmapResource(m_output_cpu_readable);
 }
 
-ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D size)
+ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vec2 size)
 {
 	//if the output data hasnt been saved yet, return a nullptr 
 	if (m_output_data == nullptr) return nullptr;
 
 	//lets create a shader resource view here to store and try displaying in ImGui.
 	D3D11_TEXTURE2D_DESC desc{};
-	desc.Width = size.m_x;
-	desc.Height = size.m_y;
+	desc.Width = size.x;
+	desc.Height = size.y;
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -172,8 +172,8 @@ ID3D11ShaderResourceView* ComputeShader::createTextureSRVFromOutput(Vector2D siz
 
 	D3D11_SUBRESOURCE_DATA initData = { 0 };
 	initData.pSysMem = m_output_data;
-	initData.SysMemPitch = size.m_x * bytesPerPixel;
-	initData.SysMemSlicePitch = size.m_x * size.m_y * bytesPerPixel;
+	initData.SysMemPitch = size.x * bytesPerPixel;
+	initData.SysMemSlicePitch = size.x * size.y * bytesPerPixel;
 
 
 	ID3D11Texture2D* tex = nullptr;

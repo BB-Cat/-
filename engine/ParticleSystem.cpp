@@ -40,7 +40,7 @@ void ParticleSystem::render()
 	}
 }
 
-void ParticleSystem::createEmitter(int type, int particle_max, Vector3D pos, float radius)
+void ParticleSystem::createEmitter(int type, int particle_max, Vec3 pos, float radius)
 {
 	Emitter* e = nullptr;
 

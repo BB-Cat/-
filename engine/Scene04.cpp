@@ -18,19 +18,19 @@ Scene04::Scene04(SceneManager* sm) : Scene(sm)
 
 	CameraManager::get()->setCamState(FREE);
 
-	Vector2D spawn(14, 14);
-	CameraManager::get()->setCamPos(Vector3D(spawn.m_x * 33 + 16, 120, spawn.m_y * 33 + 16) * PRELOADED_SCALE);
+	Vec2 spawn(14, 14);
+	CameraManager::get()->setCamPos(Vec3(spawn.x * 33 + 16, 120, spawn.y * 33 + 16) * PRELOADED_SCALE);
 
-	std::shared_ptr<TerrainManager> t(new TerrainManager( Vector2D(19, 19), Vector2D(39,39), spawn));
+	std::shared_ptr<TerrainManager> t(new TerrainManager( Vec2(19, 19), Vec2(39,39), spawn));
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 
 
-	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
+	m_global_light_rotation = Vec2(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(1.0, 1.0, 1.0);
-	m_ambient_light_color = Vector3D(0.6f, 0.62f, 0.48f);
+	m_light_color = Vec3(1.0, 1.0, 1.0);
+	m_ambient_light_color = Vec3(0.6f, 0.62f, 0.48f);
 
 
 	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
@@ -52,11 +52,11 @@ Scene04::Scene04(SceneManager* sm) : Scene(sm)
 	m_cloud_props.m_sampling_resolution = Vector4D(8, 7, 7, 7);
 	m_cloud_props.m_sampling_weight = Vector4D(0.3, 0.3, 0.2, 0.2);
 	m_cloud_props.m_speed = 0.7f;
-	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
+	m_cloud_props.m_move_dir = Vec3(0.5f, 0, 0);
 
 	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 }
 
 Scene04::~Scene04()
@@ -70,7 +70,7 @@ void Scene04::update(float delta, const float& width, const float& height)
 	CameraManager::get()->update(delta, width, height);
 
 	//m_global_light_rotation += 0.01f;
-	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
+	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -122,9 +122,9 @@ void Scene04::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Dynamic Terrain Popup");
@@ -147,7 +147,7 @@ void Scene04::shadowRenderPass(float delta)
 void Scene04::mainRenderPass(float delta)
 {
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_sky->renderMesh(delta, Vector3D(1100, 1100, 1100), CameraManager::get()->getCamera().getTranslation(), Vector3D(0, 0, 0), Shaders::ATMOSPHERE);
+	m_sky->renderMesh(delta, Vec3(1100, 1100, 1100), CameraManager::get()->getCamera().getTranslation(), Vec3(0, 0, 0), Shaders::ATMOSPHERE);
 
 	if (m_toggle_norm) m_terrain->render(Shaders::TERRAIN_TEST, m_bump_height, m_rast, m_toggle_HD);
 	else m_terrain->render(-1, m_bump_height, m_rast, m_toggle_HD);

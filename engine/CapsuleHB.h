@@ -7,39 +7,39 @@
 class Capsule
 {
 public:
-	Capsule(Vector3D pos, float scale);
+	Capsule(Vec3 pos, float scale);
 	~Capsule();
 public:
-	void update(high_resolution_timer delta, Terrain* terrain, Vector3D cap1, Vector3D cap2, float radius);
+	void update(high_resolution_timer delta, Terrain* terrain, Vec3 cap1, Vec3 cap2, float radius);
 	void render(high_resolution_timer delta);
 
-	bool checkCollisionCapsule(Vector3D cap1, Vector3D cap2, float radius);
+	bool checkCollisionCapsule(Vec3 cap1, Vec3 cap2, float radius);
 	//get the shortest distance between two lines
-	float calculateLineLineDistance(Vector3D p1, Vector3D e1, Vector3D p2, Vector3D e2, float& dist_from_l1, float& dist_from_l2);
-	float calculateSegmentSegmentDistance(Vector3D p1, Vector3D e1, Vector3D p2, Vector3D e2);
-	float calculatePointPointDistance(Vector3D point1, Vector3D point2);
-	float calculatePointLineDistance(Vector3D point1, Vector3D line_p1, Vector3D line_p2, float &dist_from_l1);
-	float calculatePointSegmentDistance(Vector3D point1, Vector3D line_p1, Vector3D line_p2, float& dist_from_l1);
+	float calculateLineLineDistance(Vec3 p1, Vec3 e1, Vec3 p2, Vec3 e2, float& dist_from_l1, float& dist_from_l2);
+	float calculateSegmentSegmentDistance(Vec3 p1, Vec3 e1, Vec3 p2, Vec3 e2);
+	float calculatePointPointDistance(Vec3 point1, Vec3 point2);
+	float calculatePointLineDistance(Vec3 point1, Vec3 line_p1, Vec3 line_p2, float &dist_from_l1);
+	float calculatePointSegmentDistance(Vec3 point1, Vec3 line_p1, Vec3 line_p2, float& dist_from_l1);
 	//calculate whether the angle between two vectors is acute
-	bool isAcute(const Vector3D& v1, const Vector3D& v2);
+	bool isAcute(const Vec3& v1, const Vec3& v2);
 
 public: //getters
-	Vector3D getPosition() { return m_pos; }
-	Vector3D getDirectionVector() { return Vector3D(sinf(m_angleY * 0.01745f), 0, cosf(m_angleY * 0.01745f)); };
-	Vector3D getCapPos(bool bottom);
+	Vec3 getPosition() { return m_pos; }
+	Vec3 getDirectionVector() { return Vec3(sinf(m_angleY * 0.01745f), 0, cosf(m_angleY * 0.01745f)); };
+	Vec3 getCapPos(bool bottom);
 	float getRadius() { return m_radius; }
 private:
 	//calculate the position of the cap of the capsule
-	Vector3D calculateCapPos(bool bottom);
+	Vec3 calculateCapPos(bool bottom);
 
 private: //rendering members
 	SkinnedMeshPtr m_mesh;
-	Vector3D m_pos;
-	Vector3D m_cap1, m_cap2;
+	Vec3 m_pos;
+	Vec3 m_cap1, m_cap2;
 	//Vector3D m_rot;
-	Vector3D m_scale;
+	Vec3 m_scale;
 	float m_angleY, m_angleX;
-	Vector3D m_color;
+	Vec3 m_color;
 
 	float m_cylinder_len;
 	float m_radius;

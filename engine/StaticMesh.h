@@ -12,7 +12,7 @@ public:
 	StaticMesh(const wchar_t* full_path, bool is_flipped);
 	~StaticMesh();
 
-	virtual void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured, float animation_speed = 1.0f) override;
+	virtual void renderMesh(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, int shader, bool is_textured, float animation_speed = 1.0f) override;
 
 private:
 	//creates a full filepath for a related file such as an MTL file from another file's filepath in the same folder

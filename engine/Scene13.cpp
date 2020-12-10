@@ -29,11 +29,11 @@ Scene13::Scene13(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(CAMERA_STATE::FREE);
-	CameraManager::get()->setCamPos(Vector3D(4, 40, -15));
-	CameraManager::get()->setCamRot(Vector2D(0.4, 0));
+	CameraManager::get()->setCamPos(Vec3(4, 40, -15));
+	CameraManager::get()->setCamRot(Vec2(0.4, 0));
 	CameraManager::get()->setSpeed(2);
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 
 
 	//UINT pixelcount = 512 * 512 * 4;
@@ -105,8 +105,8 @@ void Scene13::update(float delta, const float& width, const float& height)
 	else if (m_create_terrain_timer) m_create_terrain_timer--;
 	else if (m_create_terrain_timer == 0)
 	{
-		CameraManager::get()->setCamPos(Vector3D(9.5, 0, 9.5) * 99 + Vector3D(0, 300, 0));
-		m_tman = new TerrainManager(Vector2D(17, 17));
+		CameraManager::get()->setCamPos(Vec3(9.5, 0, 9.5) * 99 + Vec3(0, 300, 0));
+		m_tman = new TerrainManager(Vec2(17, 17));
 		m_create_terrain_timer--;
 	}
 
@@ -193,9 +193,9 @@ void Scene13::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 
 		ImGui::OpenPopup("Compute Shader Popup");
 		ImGui::BeginPopupModal("Compute Shader Popup");
@@ -247,7 +247,7 @@ void Scene13::shadowRenderPass(float delta)
 
 void Scene13::mainRenderPass(float delta)
 {
-	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
+	Vec3 campos = CameraManager::get()->getCamera().getTranslation();
 
 	if (m_tman != nullptr)
 	{
@@ -293,7 +293,7 @@ void Scene13::makeComputeShaderTexture()
 
 	//make sure we are releasing data properly
 	if (m_srv != nullptr) m_srv->Release();
-	m_srv = m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));
+	m_srv = m_compute_noisetex->createTextureSRVFromOutput(Vec2(512, 512));
 
 
 	//m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));

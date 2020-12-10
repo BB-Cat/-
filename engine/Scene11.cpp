@@ -25,18 +25,18 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(CAMERA_STATE::FREE);
-	CameraManager::get()->setCamPos(Vector3D(0, 1.5f, -5));
-	CameraManager::get()->setCamRot(Vector2D(0, 0));
+	CameraManager::get()->setCamPos(Vec3(0, 1.5f, -5));
+	CameraManager::get()->setCamRot(Vec2(0, 0));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	//m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
 
-	m_global_light_rotation = Vector2D(70 * 0.01745f, 70 * 0.01745f);
+	m_global_light_rotation = Vec2(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(0.4, 0.6, 0.0);
-	m_ambient_light_color = Vector3D(1.0, 1.0, 0.8);
+	m_light_color = Vec3(0.4, 0.6, 0.0);
+	m_ambient_light_color = Vec3(1.0, 1.0, 0.8);
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 }
 
 Scene11::~Scene11()
@@ -49,7 +49,7 @@ void Scene11::update(float delta, const float& width, const float& height)
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height, AppWindow::getMouseState(true));
 
-	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
+	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -96,9 +96,9 @@ void Scene11::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Level Creator Popup");
@@ -119,7 +119,7 @@ void Scene11::shadowRenderPass(float delta)
 
 void Scene11::mainRenderPass(float delta)
 {
-	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
+	Vec3 campos = CameraManager::get()->getCamera().getTranslation();
 
 
 	if (WorldObjectManager::get()->getShowPrefabEditor() == true)
@@ -128,7 +128,7 @@ void Scene11::mainRenderPass(float delta)
 	}
 	else
 	{
-		m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
+		m_sky->renderMesh(delta, Vec3(700, 700, 700), campos, Vec3(0, 0, 0), Shaders::ATMOSPHERE, false);
 		WorldObjectManager::get()->render(delta, true);
 		WorldObjectManager::get()->renderSelectedHighlight();
 		WorldObjectManager::get()->renderBoundingBoxes();

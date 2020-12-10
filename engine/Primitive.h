@@ -15,7 +15,7 @@ public:
 	//void render(int shader = -1, bool is_textured = true);
 	//render with manually set position, rotation and scale values
 	/* (Set the shader to -1 to use the cube's internal shader setting - Lambert by default) */
-	void render(Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured = true);
+	void render(Vec3 scale, Vec3 position, Vec3 rotation, int shader, bool is_textured = true);
 
 	bool loadDiffuseTex(const wchar_t* file);
 	bool loadNormalTex(const wchar_t* file);
@@ -32,6 +32,8 @@ public:
 	//void setPosition(Vector3D pos) { m_pos = pos; }
 	//void setScale(Vector3D scale) { m_scale = scale; }
 	//void setRotation(Vector3D rot) { m_rot = rot; }
+	void setColor(Vec3 col);
+	void setTransparency(float t);
 	void setMaterial(Material_Obj mat) { m_mat = mat; }
 	//void setShader(int shader) { m_shader = shader; }
 
@@ -46,7 +48,7 @@ public:
 	std::string getRoughnessName() { return m_roughness_name; }
 
 private:
-	Matrix4x4 applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate);
+	Matrix4x4 applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate);
 
 private:
 	VertexBufferPtr		m_vertex_buffer;

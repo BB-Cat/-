@@ -23,8 +23,8 @@ struct SeamRenderVectors
 	std::vector<TerrainPtr>	low;
 };
 
-#define LOD_THRESHHOLD_HIGH (1)
-#define LOD_THRESHHOLD_MID (3)
+#define LOD_THRESHHOLD_HIGH (2)
+#define LOD_THRESHHOLD_MID (4)
 //#define LOD_THRESHHOLD_LOW (4)
 
 //class for easier management of terrain loading threads
@@ -34,9 +34,9 @@ public:
 	//when adding new chunks while moving is_init should be false as the chunk data needs to be loaded.
 	//when initializing the terrain manager partially out of map bounds, set is_init to tell the manager there is no need to load it.
 	TerrainChunk(bool is_init) : m_is_loaded(is_init), m_is_queued(false) {}
-	TerrainChunk(Vector2D map_pos) : m_is_loaded(true), m_is_queued(false), m_chunk(TerrainPtr(new Terrain(map_pos))) {}
+	TerrainChunk(Vec2 map_pos) : m_is_loaded(true), m_is_queued(false), m_chunk(TerrainPtr(new Terrain(map_pos))) {}
 
-	TerrainChunk(TerrainPtr chunk, Vector2D map_pos) : m_chunk(chunk), m_is_loaded(true), m_is_queued(false), m_is_culled(false) {}
+	TerrainChunk(TerrainPtr chunk, Vec2 map_pos) : m_chunk(chunk), m_is_loaded(true), m_is_queued(false), m_is_culled(false) {}
 
 	void reset()
 	{
@@ -65,14 +65,14 @@ class TerrainManager
 public:
 	//constructor for terrain manager that creates new terrain on the GPU and can continue infinitely in all directions.
 	/* WAY faster than the other two methods */
-	TerrainManager(Vector2D visible_chunk_count);
+	TerrainManager(Vec2 visible_chunk_count);
 
 	//constructor which reads terrain data directly from text, much faster than from a bitmap
 	//MUST be initialized with an odd number of visible chunks on X and Z axis
-	TerrainManager(Vector2D visible_chunk_count, Vector2D map_size, Vector2D center_chunk);
+	TerrainManager(Vec2 visible_chunk_count, Vec2 map_size, Vec2 center_chunk);
 
 	//load a terrain manager from a bitmap (very slow, used mainly just to output text files to load with the other constructor
-	TerrainManager(const char* filename_heightmap, const char* filename_terraintype, Vector2D chunk_count, Vector2D offset, Vector2D chunkstart = Vector2D(0,0));
+	TerrainManager(const char* filename_heightmap, const char* filename_terraintype, Vec2 chunk_count, Vec2 offset, Vec2 chunkstart = Vec2(0,0));
 	~TerrainManager();
 
 public:
@@ -81,7 +81,7 @@ public:
 	//function which is called to update resources whenever the camera enters a new chunk location
 	void onNewChunk(int xdif, int ydif);
 	//function which retrieves vertex data from the gpu when creating terrain from noise
-	void onNewChunkCompute(Vector2D pos_change);
+	void onNewChunkCompute(Vec2 pos_change);
 
 	//render the terrain chunks stored in m_map after sorting them into temporary vectors
 	void render(int shader = -1, float bumpiness = 0.5f, bool is_wireframe = false, int is_HD = 0);
@@ -114,7 +114,7 @@ private: //functions for preparing the render process
 	void prepareLODArrays(std::vector<TerrainPtr>* high, std::vector<TerrainPtr>* mid, std::vector<TerrainPtr>* low,
 		SeamRenderVectors* forward, SeamRenderVectors* right);
 	//select a seam render vector and input the appropriate terrain
-	void chooseSeamArray(Vector2D pos, int source, int comp, SeamRenderVectors* srv);
+	void chooseSeamArray(Vec2 pos, int source, int comp, SeamRenderVectors* srv);
 
 private:
 	//check the threads to see if anything should begin loading for text based terrain manager
@@ -122,12 +122,12 @@ private:
 	//different version of the check threads function for text manager that is based on the compute shader
 	void checkThreadsForComputeShader();
 	//generate new chunk data on the GPU
-	void runComputeShader(Vector2D origin, Vector2D numchunks, std::vector<VertexMesh>& verts);
+	void runComputeShader(Vec2 origin, Vec2 numchunks, std::vector<VertexMesh>& verts);
 
 	//load chunk data on a seperate thread to be added to m_map when it is finished
-	void threadLoadChunkTxt(Vector2D location, int thread_num);
+	void threadLoadChunkTxt(Vec2 location, int thread_num);
 	//load chunk data using a std::vector of data that was constructed on the GPU
-	void threadLoadChunkCompute(Vector2D location, Vector2D relative_location, int thread_num);
+	void threadLoadChunkCompute(Vec2 location, Vec2 relative_location, int thread_num);
 
 	enum TerrainManagerMode
 	{
@@ -137,12 +137,12 @@ private:
 	};
 
 	int m_mode;
-	Vector2D m_file_output_offset;
+	Vec2 m_file_output_offset;
 
 public:
 	static ComputeShader* getComputeShader() { return m_compute_terrain; }
-	static Vector2D getComputeOrigin() { return m_compute_origin; }
-	static Vector2D getComputeNumChunks() { return m_compute_numchunks; }
+	static Vec2 getComputeOrigin() { return m_compute_origin; }
+	static Vec2 getComputeNumChunks() { return m_compute_numchunks; }
 	static std::vector<VertexMesh>& getComputeVertexesX() { return m_compute_vertexes_x; }
 	static std::vector<VertexMesh>& getComputeVertexesZ() { return m_compute_vertexes_z; }
 
@@ -152,23 +152,23 @@ private:
 //  Chunk Thread Management Members
 //--------------------------------
 	//chunk that the player was in as of last frame
-	Vector2D m_player_chunk;
+	Vec2 m_player_chunk;
 	//viewable terrain chunks
 	std::vector<std::vector<TerrainChunk>> m_map;
 	//size of the entire map
-	Vector2D m_mapsize;
+	Vec2 m_mapsize;
 	//reference point which serves as the "center" chunk
-	Vector2D m_center;
+	Vec2 m_center;
 	//amount of chunks actively renderable when in view
-	Vector2D m_visible_chunks;
+	Vec2 m_visible_chunks;
 	//number of unloaded chunks that are awaiting a thread
 	int m_num_unloaded_chunks;
 
 
 	//compute shader for creating terrain on the GPU
 	static ComputeShader* m_compute_terrain;
-	static Vector2D m_compute_origin;
-	static Vector2D m_compute_numchunks;
+	static Vec2 m_compute_origin;
+	static Vec2 m_compute_numchunks;
 	static bool m_multithread_compute_is_busy;
 
 	//vector of vertexes to save outputs seperately for when the compute shader outputs chunks along the x axis or z axis
@@ -184,7 +184,7 @@ private:
 	//bool used to identify whether the thread is busy
 	bool m_thread_is_busy[THREADCOUNT];
 	//chunk that is currently being threaded
-	Vector2D m_threaded_chunk_pos[THREADCOUNT];
+	Vec2 m_threaded_chunk_pos[THREADCOUNT];
 	//temporary terrain pointer to store the threaded terrain
 	TerrainPtr m_temp_terrain[THREADCOUNT];
 

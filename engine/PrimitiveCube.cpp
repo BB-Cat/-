@@ -23,15 +23,15 @@ PrimitiveCube::PrimitiveCube(float width, float height, float depth)
 
 	//POS1					 //COLOR1			//COLOR2	
 	//FRONT FACE
-	v_list.push_back(vertex(Vector3D(-w2, -h2, -d2), Vector3D(1, 0, 0), Vector3D(0.2f, 0, 0)));
-	v_list.push_back(vertex(Vector3D(-w2, +h2, -d2), Vector3D(1, 1, 0), Vector3D(0.2f, 0.2f, 0)));
-	v_list.push_back(vertex(Vector3D(+w2, +h2, -d2), Vector3D(1, 1, 0), Vector3D(0.2f, 0.2f, 0)));
-	v_list.push_back(vertex(Vector3D(+w2, -h2, -d2), Vector3D(1, 0, 0), Vector3D(0.2f, 0, 0)));
+	v_list.push_back(vertex(Vec3(-w2, -h2, -d2), Vec3(1, 0, 0), Vec3(0.2f, 0, 0)));
+	v_list.push_back(vertex(Vec3(-w2, +h2, -d2), Vec3(1, 1, 0), Vec3(0.2f, 0.2f, 0)));
+	v_list.push_back(vertex(Vec3(+w2, +h2, -d2), Vec3(1, 1, 0), Vec3(0.2f, 0.2f, 0)));
+	v_list.push_back(vertex(Vec3(+w2, -h2, -d2), Vec3(1, 0, 0), Vec3(0.2f, 0, 0)));
 	//BACK FACE
-	v_list.push_back(vertex(Vector3D(+w2, -h2, +d2), Vector3D(0, 1, 0), Vector3D(0, 0.2f, 0)));
-	v_list.push_back(vertex(Vector3D(+w2, +h2, +d2), Vector3D(0, 1, 1), Vector3D(0, 0.2f, 0.2f)));
-	v_list.push_back(vertex(Vector3D(-w2, +h2, +d2), Vector3D(0, 1, 1), Vector3D(0, 0.2f, 0.2f)));
-	v_list.push_back(vertex(Vector3D(-w2, -h2, +d2), Vector3D(0, 1, 0), Vector3D(0, 0.2f, 0)));
+	v_list.push_back(vertex(Vec3(+w2, -h2, +d2), Vec3(0, 1, 0), Vec3(0, 0.2f, 0)));
+	v_list.push_back(vertex(Vec3(+w2, +h2, +d2), Vec3(0, 1, 1), Vec3(0, 0.2f, 0.2f)));
+	v_list.push_back(vertex(Vec3(-w2, +h2, +d2), Vec3(0, 1, 1), Vec3(0, 0.2f, 0.2f)));
+	v_list.push_back(vertex(Vec3(-w2, -h2, +d2), Vec3(0, 1, 0), Vec3(0, 0.2f, 0)));
 
 
 	UINT size_list = sizeof(vertex) * v_list.size();

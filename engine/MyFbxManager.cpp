@@ -318,24 +318,24 @@ std::vector<Mesh_Data> MyFbxManager::loadFbxMesh(const wchar_t* filename, float*
 
                 VertexMesh vertex;
                 const int index_of_control_point = fbx_mesh->GetPolygonVertex(index_of_polygon, index_of_vertex);
-                vertex.m_position.m_x = static_cast<float>(array_of_control_points[index_of_control_point][0]);
-                vertex.m_position.m_y = static_cast<float>(array_of_control_points[index_of_control_point][1]);
-                vertex.m_position.m_z = static_cast<float>(array_of_control_points[index_of_control_point][2]);
+                vertex.m_position.x = static_cast<float>(array_of_control_points[index_of_control_point][0]);
+                vertex.m_position.y = static_cast<float>(array_of_control_points[index_of_control_point][1]);
+                vertex.m_position.z = static_cast<float>(array_of_control_points[index_of_control_point][2]);
                 
                 
                 
                 
                 FbxVector4 normal;
                 fbx_mesh->GetPolygonVertexNormal(index_of_polygon, index_of_vertex, normal);
-                vertex.m_normal.m_x = static_cast<float>(normal[0]);
-                vertex.m_normal.m_y = static_cast<float>(normal[1]); 
-                vertex.m_normal.m_z = static_cast<float>(normal[2]); 
+                vertex.m_normal.x = static_cast<float>(normal[0]);
+                vertex.m_normal.y = static_cast<float>(normal[1]); 
+                vertex.m_normal.z = static_cast<float>(normal[2]); 
 
                 FbxVector2 uv;
                 bool unmapped_uv;
                 fbx_mesh->GetPolygonVertexUV(index_of_polygon, index_of_vertex, uv_names[0], uv, unmapped_uv);
-                vertex.m_texcoord.m_x = static_cast<float>(uv[0]);
-                vertex.m_texcoord.m_y = (1.0f - static_cast<float>(uv[1]));
+                vertex.m_texcoord.x = static_cast<float>(uv[0]);
+                vertex.m_texcoord.y = (1.0f - static_cast<float>(uv[1]));
 
                 controlpoints[control_point_index] = vertices.size();
 

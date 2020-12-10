@@ -11,18 +11,18 @@ Scene03::Scene03(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 
-	Vector2D pos = Vector2D(0, 0);
+	Vec2 pos = Vec2(0, 0);
 
 	std::shared_ptr<TerrainManager> t(new TerrainManager("..\\Assets\\map.bmp", "..\\Assets\\texturesplat.bmp", 
-		Vector2D(1, 1), pos));
+		Vec2(1, 1), pos));
 
 	m_terrain = std::dynamic_pointer_cast<TerrainManager>(t);
 
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(-7.227f, 80, -8.912f));
-	CameraManager::get()->setCamRot(Vector2D(0.234f, 0.774f));
+	CameraManager::get()->setCamPos(Vec3(-7.227f, 80, -8.912f));
+	CameraManager::get()->setCamRot(Vec2(0.234f, 0.774f));
 
-	Lighting::get()->updateSceneLight(Vector3D(0,0.9,0), Vector3D(1,1,1), 0.85f, Vector3D(0.2,0.2,0.4));
+	Lighting::get()->updateSceneLight(Vec3(0,0.9,0), Vec3(1,1,1), 0.85f, Vec3(0.2,0.2,0.4));
 
 }
 
@@ -48,21 +48,20 @@ void Scene03::imGuiRender()
 
 	//create the test window
 	ImGui::Begin("Test Window");
-	ImGui::Text("Press 1 key to");
-	ImGui::Text("display the mouse");
+	//ImGui::Text("Press 1 key to");
+	//ImGui::Text("display the mouse");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-	ImGui::DragInt("LOD", &m_toggle_HD, 0.05f, 0, 2);
+	//ImGui::DragInt("LOD", &m_toggle_HD, 0.05f, 0, 2);
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
-
 	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();
 
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Texture Generator Popup");

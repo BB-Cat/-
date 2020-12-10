@@ -20,7 +20,7 @@ public:
 
 	void update(float delta);
 	void render();
-	void createEmitter(int type, int particle_max, Vector3D pos, float radius);
+	void createEmitter(int type, int particle_max, Vec3 pos, float radius);
 	void deleteEmitter();
 
 private:

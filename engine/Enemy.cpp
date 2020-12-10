@@ -5,7 +5,7 @@
 //#include "Bullet.h"
 #include "MyAudio.h"
 
-Enemy::Enemy(Vector3D pos, float scale, Vector3D rot)
+Enemy::Enemy(Vec3 pos, float scale, Vec3 rot)
 {
 }
 
@@ -21,7 +21,7 @@ void Enemy::render(float delta)
 {
 }
 
-Enemy1::Enemy1(Vector3D pos, float scale, Vector3D rot, bool is_giant): Enemy(pos, scale, rot)
+Enemy1::Enemy1(Vec3 pos, float scale, Vec3 rot, bool is_giant): Enemy(pos, scale, rot)
 {
 }
 
@@ -29,7 +29,7 @@ void Enemy1::update(float delta, Terrain* terrain)
 {
 }
 
-Enemy2::Enemy2(Vector3D pos, float scale, Vector3D rot, bool is_giant) : Enemy(pos, scale, rot)
+Enemy2::Enemy2(Vec3 pos, float scale, Vec3 rot, bool is_giant) : Enemy(pos, scale, rot)
 {
 }
 
@@ -37,7 +37,7 @@ void Enemy2::update(float delta, Terrain* terrain)
 {
 }
 
-Enemy3::Enemy3(Vector3D pos, float scale, Vector3D rot, bool is_giant) : Enemy(pos, scale, rot)
+Enemy3::Enemy3(Vec3 pos, float scale, Vec3 rot, bool is_giant) : Enemy(pos, scale, rot)
 {
 }
 

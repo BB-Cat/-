@@ -8,10 +8,10 @@ int Lighting::m_next_light_id = 0;
 
 Lighting::Lighting()
 {
-	m_sl.m_global_light_color = Vector3D(1.0f, 0.9f, 0.3f);
-	m_sl.m_global_light_dir = Vector3D(0.05f, 1.0f, 0.05f);
+	m_sl.m_global_light_color = Vec3(1.0f, 0.9f, 0.3f);
+	m_sl.m_global_light_dir = Vec3(0.05f, 1.0f, 0.05f);
 	m_sl.m_global_light_strength = 1.0f;
-	m_sl.m_ambient_light_color = Vector3D(0, 0, 0);
+	m_sl.m_ambient_light_color = Vec3(0, 0, 0);
 }
 
 Lighting::~Lighting()
@@ -40,7 +40,7 @@ void Lighting::setLights()
 	}
 }
 
-int Lighting::spawnLight(int type, int lifespan, Vector3D pos, Vector3D color, float strength)
+int Lighting::spawnLight(int type, int lifespan, Vec3 pos, Vec3 color, float strength)
 {
 	if (m_lights.size() >= NUM_LIGHTS) return 0;
 
@@ -72,8 +72,8 @@ void Lighting::clearLight(int id)
 		if (m_lights[i].m_id == id)
 		{
 			//set the values for this light to zero so that the constant buffer is updated before deleting the light in the next setLights() call.
-			m_lights[i].m_pos = Vector3D(0,0,0);
-			m_lights[i].m_color = Vector3D(0, 0, 0);
+			m_lights[i].m_pos = Vec3(0,0,0);
+			m_lights[i].m_color = Vec3(0, 0, 0);
 			m_lights[i].m_strength = 0;
 			m_lights[i].m_is_erase = true;
 		}
@@ -82,7 +82,7 @@ void Lighting::clearLight(int id)
 
 
 
-bool Lighting::updateLocalLight(const int& id, const Vector3D& pos, const Vector3D& color, const float& strength)
+bool Lighting::updateLocalLight(const int& id, const Vec3& pos, const Vec3& color, const float& strength)
 {
 	for (int i = 0; i < m_lights.size(); i++)
 	{
@@ -99,7 +99,7 @@ bool Lighting::updateLocalLight(const int& id, const Vector3D& pos, const Vector
 	return false;
 }
 
-void Lighting::updateSceneLight(const Vector3D& dir, const Vector3D& color, const float& strength, const Vector3D& ambient_color)
+void Lighting::updateSceneLight(const Vec3& dir, const Vec3& color, const float& strength, const Vec3& ambient_color)
 {
 	m_sl.m_global_light_dir = dir;
 	m_sl.m_global_light_color = color;

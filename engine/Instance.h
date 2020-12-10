@@ -8,7 +8,7 @@ public:
 	{
 	}
 
-	Instance(Vector3D v) :m_position(v)
+	Instance(Vec3 v) :m_position(v)
 	{
 	}
 
@@ -18,5 +18,5 @@ public:
 	}
 
 public:
-	Vector3D m_position;
+	Vec3 m_position;
 };

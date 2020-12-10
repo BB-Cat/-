@@ -21,10 +21,10 @@ private:
 
     bool m_toggle_norm = false;
 
-    Vector2D m_global_light_rotation;
+    Vec2 m_global_light_rotation;
     float m_global_light_strength;
-    Vector3D m_light_color;
-    Vector3D m_ambient_light_color;
+    Vec3 m_light_color;
+    Vec3 m_ambient_light_color;
 
     int m_max_tess = 8;
     int m_min_tess = 1;

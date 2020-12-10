@@ -37,7 +37,8 @@ public:
         SCENE10,  //character movement
         SCENE11,  //stage creation
         SCENE12,  //game style scene select
-        SCENE13,  //compute shader practice - ray tracing
+        SCENE13,  //compute shader practice
+        SCENE14,  //collision testing
     };
 
     void changeScene(const SCENE, bool clear_current_scene = false);

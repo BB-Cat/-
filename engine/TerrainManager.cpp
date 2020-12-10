@@ -11,14 +11,14 @@
 ComputeShader* TerrainManager::m_compute_terrain = nullptr;
 std::vector<VertexMesh> TerrainManager::m_compute_vertexes_x;
 std::vector<VertexMesh> TerrainManager::m_compute_vertexes_z;
-Vector2D TerrainManager::m_compute_origin;
-Vector2D TerrainManager::m_compute_numchunks;
+Vec2 TerrainManager::m_compute_origin;
+Vec2 TerrainManager::m_compute_numchunks;
 bool TerrainManager::m_multithread_compute_is_busy = false;
 
 void runComputeShaderTerrainForward();
 void runComputeShaderTerrainRight();
 
-TerrainManager::TerrainManager(Vector2D visible_chunk_count)
+TerrainManager::TerrainManager(Vec2 visible_chunk_count)
 {
     //set the mode to compute shader
     m_mode = TerrainManagerMode::USE_COMPUTE_SHADER;
@@ -29,9 +29,9 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count)
     initRasterizersAndStencil();
 
     m_visible_chunks = visible_chunk_count;
-    m_center = Vector2D((int)(m_visible_chunks.m_x + 2) / 2, (int)(m_visible_chunks.m_y + 2) / 2);
-    Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-    m_player_chunk = Vector2D((int)(cam_pos.m_x) / (33 * COMPUTED_SCALE), (int)(cam_pos.m_z) / (33 * COMPUTED_SCALE));
+    m_center = Vec2((int)(m_visible_chunks.x + 2) / 2, (int)(m_visible_chunks.y + 2) / 2);
+    Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+    m_player_chunk = Vec2((int)(cam_pos.x) / (33 * COMPUTED_SCALE), (int)(cam_pos.z) / (33 * COMPUTED_SCALE));
 
     //compile the terrain creator compute shader
     void* shader_byte_code = nullptr;
@@ -53,20 +53,20 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count)
 
     //generate the initial chunks from the origin point
     std::vector<VertexMesh> vertexlist;
-    runComputeShader(Vector2D(0, 0), m_visible_chunks + Vector2D(2, 2), vertexlist);
+    runComputeShader(Vec2(0, 0), m_visible_chunks + Vec2(2, 2), vertexlist);
 
     std::vector<VertexMesh> temp;
     temp.resize(34 * 34);
 
     //we load an extra 2 rows and columns as a buffer to load new chunks as the player moves. 
-    for (int i = 0; i < m_visible_chunks.m_y + 2; i++)
+    for (int i = 0; i < m_visible_chunks.y + 2; i++)
     {
         std::vector<TerrainChunk> row;
-        for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+        for (int j = 0; j < m_visible_chunks.x + 2; j++)
         {
-            memcpy(&temp[0], &vertexlist[34 * 34 * i + (34 * 34 * (m_visible_chunks.m_x + 2) * j)], 34 * 34 * sizeof(VertexMesh));
-            TerrainPtr t(new Terrain(Vector2D(i, j), temp));
-            row.push_back(TerrainChunk(t, Vector2D(0, 0) + Vector2D(i, j)));
+            memcpy(&temp[0], &vertexlist[34 * 34 * i + (34 * 34 * (m_visible_chunks.x + 2) * j)], 34 * 34 * sizeof(VertexMesh));
+            TerrainPtr t(new Terrain(Vec2(i, j), temp));
+            row.push_back(TerrainChunk(t, Vec2(0, 0) + Vec2(i, j)));
             temp.clear();
             temp.resize(34 * 34);
             //m_num_unloaded_chunks++;
@@ -75,7 +75,7 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count)
     }
 }
 
-TerrainManager::TerrainManager(Vector2D visible_chunk_count, Vector2D map_size, Vector2D center_chunk)
+TerrainManager::TerrainManager(Vec2 visible_chunk_count, Vec2 map_size, Vec2 center_chunk)
 {
     //set mode to use texts - this is important for choosing whether or not to load terrain dynamically, and whether to change LOD based 
     //on the camera's position
@@ -91,21 +91,21 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count, Vector2D map_size, 
     //load all map chunks
     m_mapsize = map_size;
     m_visible_chunks = visible_chunk_count;
-    m_center = Vector2D((int)(m_visible_chunks.m_x + 2) / 2, (int)(m_visible_chunks.m_y + 2) / 2);
+    m_center = Vec2((int)(m_visible_chunks.x + 2) / 2, (int)(m_visible_chunks.y + 2) / 2);
 
-    Vector2D offset = center_chunk - m_center;
+    Vec2 offset = center_chunk - m_center;
 
-    Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-    m_player_chunk = Vector2D((int)(cam_pos.m_x) / (33 * PRELOADED_SCALE), (int)(cam_pos.m_z) / (33 * PRELOADED_SCALE));
+    Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+    m_player_chunk = Vec2((int)(cam_pos.x) / (33 * PRELOADED_SCALE), (int)(cam_pos.z) / (33 * PRELOADED_SCALE));
 
     //we load an extra 2 rows and columns as a buffer to load new chunks as the player moves. 
-    for (int i = 0; i < m_visible_chunks.m_y + 2; i++)
+    for (int i = 0; i < m_visible_chunks.y + 2; i++)
     {
         std::vector<TerrainChunk> row;
-        for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+        for (int j = 0; j < m_visible_chunks.x + 2; j++)
         {
-            if ((Vector2D(i, j) + offset).m_x < 0 || (Vector2D(i, j) + offset).m_x > m_mapsize.m_x ||
-                (Vector2D(i, j) + offset).m_y < 0 || (Vector2D(i, j) + offset).m_y > m_mapsize.m_y)
+            if ((Vec2(i, j) + offset).x < 0 || (Vec2(i, j) + offset).x > m_mapsize.x ||
+                (Vec2(i, j) + offset).y < 0 || (Vec2(i, j) + offset).y > m_mapsize.y)
             {
                 //if the chunk is out of bounds, initialize it as an empty chunk that does NOT need to be loaded.
                 row.push_back(TerrainChunk(true));
@@ -121,7 +121,7 @@ TerrainManager::TerrainManager(Vector2D visible_chunk_count, Vector2D map_size, 
 
 }
 
-TerrainManager::TerrainManager(const char* filename_heightmap, const char* filename_terraintype, Vector2D chunk_count, Vector2D offset, Vector2D chunkstart)
+TerrainManager::TerrainManager(const char* filename_heightmap, const char* filename_terraintype, Vec2 chunk_count, Vec2 offset, Vec2 chunkstart)
 {
     //set mode to use texts
     m_mode = TerrainManagerMode::LOAD_BITMAP;
@@ -131,17 +131,17 @@ TerrainManager::TerrainManager(const char* filename_heightmap, const char* filen
     //load all map chunks
 	m_mapsize = chunk_count;
     m_visible_chunks = chunk_count;
-    m_center = Vector2D((int)(m_visible_chunks.m_x + 2) / 2, (int)(m_visible_chunks.m_y + 2) / 2);
+    m_center = Vec2((int)(m_visible_chunks.x + 2) / 2, (int)(m_visible_chunks.y + 2) / 2);
 
-    Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-    m_player_chunk = Vector2D((int)(cam_pos.m_x) / (33 * PRELOADED_SCALE), (int)(cam_pos.m_z) / (33 * PRELOADED_SCALE));
+    Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+    m_player_chunk = Vec2((int)(cam_pos.x) / (33 * PRELOADED_SCALE), (int)(cam_pos.z) / (33 * PRELOADED_SCALE));
 
-	for (int i = 0; i < m_mapsize.m_x; i++)
+	for (int i = 0; i < m_mapsize.x; i++)
 	{
 		std::vector<TerrainChunk> row;
-		for (int j = 0; j < m_mapsize.m_y; j++)
+		for (int j = 0; j < m_mapsize.y; j++)
 		{
-			TerrainPtr t(new Terrain(filename_heightmap, filename_terraintype, Vector2D(i, j) + offset));
+			TerrainPtr t(new Terrain(filename_heightmap, filename_terraintype, Vec2(i, j) + offset));
             TerrainChunk c(true); //signify that c is already loaded and does NOT need to be threaded.
             c.m_chunk = t;
 
@@ -178,21 +178,21 @@ TerrainManager::~TerrainManager()
 void TerrainManager::update()
 {
     //update the current player chunk and if it has changed, begin a thread to load new data / unload old data
-    Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-    Vector2D new_pchunk;
+    Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+    Vec2 new_pchunk;
     
-    if(m_mode == TerrainManagerMode::USE_TXT) new_pchunk = Vector2D((int)(cam_pos.m_x) / 
-        (33 * PRELOADED_SCALE), (int)(cam_pos.m_z) / (33 * PRELOADED_SCALE));
-    if(m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) new_pchunk = Vector2D((int)(cam_pos.m_x) /
-        (33 * COMPUTED_SCALE), (int)(cam_pos.m_z) / (33 * COMPUTED_SCALE));
+    if(m_mode == TerrainManagerMode::USE_TXT) new_pchunk = Vec2((int)(cam_pos.x) / 
+        (33 * PRELOADED_SCALE), (int)(cam_pos.z) / (33 * PRELOADED_SCALE));
+    if(m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) new_pchunk = Vec2((int)(cam_pos.x) /
+        (33 * COMPUTED_SCALE), (int)(cam_pos.z) / (33 * COMPUTED_SCALE));
 
     if (new_pchunk != m_player_chunk)
     {
-        int xdif = (int)(new_pchunk.m_x) - (int)(m_player_chunk.m_x);
-        int ydif = (int)(new_pchunk.m_y) - (int)(m_player_chunk.m_y);
+        int xdif = (int)(new_pchunk.x) - (int)(m_player_chunk.x);
+        int ydif = (int)(new_pchunk.y) - (int)(m_player_chunk.y);
 
         onNewChunk(xdif, ydif);
-        if(m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) onNewChunkCompute(Vector2D(xdif, ydif));
+        if(m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) onNewChunkCompute(Vec2(xdif, ydif));
         m_player_chunk = new_pchunk;
     }
 
@@ -211,7 +211,7 @@ void TerrainManager::onNewChunk(int xdif, int ydif)
 
             //insert a row at the beginning of m_map
             std::vector<TerrainChunk> row;
-            for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+            for (int j = 0; j < m_visible_chunks.x + 2; j++)
             {
                 row.push_back(TerrainChunk(false));
                 //increment the number of chunks waiting loading
@@ -228,7 +228,7 @@ void TerrainManager::onNewChunk(int xdif, int ydif)
             m_map.erase(m_map.begin(), m_map.begin() + 1);
             //add a row to the back of m_map
             std::vector<TerrainChunk> row;
-            for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+            for (int j = 0; j < m_visible_chunks.x + 2; j++)
             {
                 row.push_back(TerrainChunk(false));
                 //increment the number of chunks waiting loading
@@ -243,7 +243,7 @@ void TerrainManager::onNewChunk(int xdif, int ydif)
         if (ydif == -1) //the player moved back one chunk
         {
 
-            for (int i = 0; i < m_visible_chunks.m_y + 2; i++)
+            for (int i = 0; i < m_visible_chunks.y + 2; i++)
             {
                 //remove the first chunk from each row
                 m_map[i].pop_back();
@@ -257,7 +257,7 @@ void TerrainManager::onNewChunk(int xdif, int ydif)
         {
             //currently moving deleting left row of compute shader mode 
 
-            for (int i = 0; i < m_visible_chunks.m_y + 2; i++)
+            for (int i = 0; i < m_visible_chunks.y + 2; i++)
             {
                 //remove the leftmost chunk from each row
                 m_map[i].erase(m_map[i].begin(), m_map[i].begin() + 1);
@@ -271,15 +271,15 @@ void TerrainManager::onNewChunk(int xdif, int ydif)
 
 }
 
-void TerrainManager::onNewChunkCompute(Vector2D pos_change)
+void TerrainManager::onNewChunkCompute(Vec2 pos_change)
 {
-    Vector2D new_origin = m_player_chunk + pos_change;
+    Vec2 new_origin = m_player_chunk + pos_change;
 
-    if (pos_change.m_x)
+    if (pos_change.x)
     {
         //calculate the origin point to generate vertexes from
-        int dir = 1 * (pos_change.m_x > 0) + -1 * (pos_change.m_x < 0);
-        Vector2D generate_origin = new_origin + Vector2D(((int)m_visible_chunks.m_x / 2 + 1) * dir, -((int)m_visible_chunks.m_y / 2));
+        int dir = 1 * (pos_change.x > 0) + -1 * (pos_change.x < 0);
+        Vec2 generate_origin = new_origin + Vec2(((int)m_visible_chunks.x / 2 + 1) * dir, -((int)m_visible_chunks.y / 2));
         //get new x axis chunk vertices
         
         //if we are able to leave the computing to the AppWindow multithread, 
@@ -287,41 +287,41 @@ void TerrainManager::onNewChunkCompute(Vector2D pos_change)
         if (AppWindow::queryComputeThread())
         {
             m_compute_origin = generate_origin;
-            m_compute_numchunks = Vector2D(1, m_visible_chunks.m_x + 2);
+            m_compute_numchunks = Vec2(1, m_visible_chunks.x + 2);
             AppWindow::loadComputeThreadFunction(runComputeShaderTerrainRight);
             m_multithread_compute_is_busy = true;
         }
         else
         {
-            runComputeShader(generate_origin, Vector2D(1, m_visible_chunks.m_x + 2), m_compute_vertexes_x);
+            runComputeShader(generate_origin, Vec2(1, m_visible_chunks.x + 2), m_compute_vertexes_x);
         }
 
 
         //keep track of the number of chunks we loaded so the threads know which vector to pull from
-        m_remaining_compute_chunks_x = m_visible_chunks.m_x + 2;
+        m_remaining_compute_chunks_x = m_visible_chunks.x + 2;
     }
 
-    if (pos_change.m_y)
+    if (pos_change.y)
     {
         //get new z axis chunk vertices
-        int dir = 1 * (pos_change.m_y > 0) + -1 * (pos_change.m_y < 0);
-        Vector2D generate_origin = new_origin + Vector2D(-((int)m_visible_chunks.m_x / 2 + 1), ((int)m_visible_chunks.m_y / 2 + 1) * dir);
+        int dir = 1 * (pos_change.y > 0) + -1 * (pos_change.y < 0);
+        Vec2 generate_origin = new_origin + Vec2(-((int)m_visible_chunks.x / 2 + 1), ((int)m_visible_chunks.y / 2 + 1) * dir);
 
         //if we are able to leave the computing to the AppWindow multithread, 
         //send the appropriate compute function to AppWindow
         if (AppWindow::queryComputeThread())
         {
             m_compute_origin = generate_origin;
-            m_compute_numchunks = Vector2D(m_visible_chunks.m_y + 2, 1);
+            m_compute_numchunks = Vec2(m_visible_chunks.y + 2, 1);
             AppWindow::loadComputeThreadFunction(runComputeShaderTerrainForward);
             m_multithread_compute_is_busy = true;
         }
         else
         {
-            runComputeShader(generate_origin, Vector2D(m_visible_chunks.m_y + 2, 1), m_compute_vertexes_z);
+            runComputeShader(generate_origin, Vec2(m_visible_chunks.y + 2, 1), m_compute_vertexes_z);
         }
         //keep track of the number of chunks we loaded so the threads know which vector to pull from
-        m_remaining_compute_chunks_z = m_visible_chunks.m_y + 2;
+        m_remaining_compute_chunks_z = m_visible_chunks.y + 2;
     }
 }
 
@@ -334,8 +334,8 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
     if (m_mode == TerrainManagerMode::USE_TXT || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) update();
     else
     {
-        Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-        m_player_chunk = Vector2D((int)(cam_pos.m_x) / 33, (int)(cam_pos.m_z) / 33);
+        Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+        m_player_chunk = Vec2((int)(cam_pos.x) / 33, (int)(cam_pos.z) / 33);
     }
 
     if(m_mode != TerrainManagerMode::LOAD_BITMAP) cullChunksByFrustum();
@@ -351,12 +351,12 @@ void TerrainManager::render(int shader, float bumpiness, bool is_wireframe, int 
 
     //set the material characteristics
     Material_Obj mat;
-    mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
+    mat.m_diffuse_color = Vec3(0.55f, 0.75f, 0.15f);
     mat.m_transparency = 1.0f;
     mat.m_metallic = 0.445f;
     mat.m_shininess = 30;
-    mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
-    mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
+    mat.m_specular_color = Vec3(0.2f, 0.4f, 0.4f);
+    mat.m_rim_color = Vec3(0.7f, 0.4f, 0.4f);
     mat.m_rim_color.m_w = 1.0f;
     mat.m_rim_power = 2.0;
     GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(mat);
@@ -502,8 +502,8 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
     if (m_mode == TerrainManagerMode::USE_TXT || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER) update();
     else
     {
-        Vector3D cam_pos = CameraManager::get()->getCamera().getTranslation();
-        m_player_chunk = Vector2D((int)(cam_pos.m_x) / 33, (int)(cam_pos.m_z) / 33);
+        Vec3 cam_pos = CameraManager::get()->getCamera().getTranslation();
+        m_player_chunk = Vec2((int)(cam_pos.x) / 33, (int)(cam_pos.z) / 33);
     }
 
     if (m_mode == TerrainManagerMode::USE_TXT) cullChunksByFrustum();
@@ -513,12 +513,12 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
 
     //set the material characteristics
     Material_Obj mat;
-    mat.m_diffuse_color = Vector3D(0.55f, 0.75f, 0.15f);
+    mat.m_diffuse_color = Vec3(0.55f, 0.75f, 0.15f);
     mat.m_transparency = 1.0f;
     mat.m_metallic = 0.445f;
     mat.m_shininess = 30;
-    mat.m_specular_color = Vector3D(0.2f, 0.4f, 0.4f);
-    mat.m_rim_color = Vector3D(0.7f, 0.4f, 0.4f);
+    mat.m_specular_color = Vec3(0.2f, 0.4f, 0.4f);
+    mat.m_rim_color = Vec3(0.7f, 0.4f, 0.4f);
     mat.m_rim_color.m_w = 1.0f;
     mat.m_rim_power = 2.0;
     GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(mat);
@@ -556,9 +556,9 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
         lod = 2;
     }
 
-    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    for (int i = 0; i < m_visible_chunks.x; i++)
     {
-        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        for (int j = 0; j < m_visible_chunks.y; j++)
         {
             m_map[i][j].m_chunk->render(lod, 0);
         }
@@ -572,9 +572,9 @@ void TerrainManager::renderInLOD(int shader, float bumpiness, bool is_wireframe,
         seamlod = SeamLOD::LOW;
     }
 
-    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    for (int i = 0; i < m_visible_chunks.x; i++)
     {
-        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        for (int j = 0; j < m_visible_chunks.y; j++)
         {
             m_map[i][j].m_chunk->render(0, 1, seamlod);
             m_map[i][j].m_chunk->render(0, 2, seamlod);
@@ -1411,21 +1411,21 @@ void TerrainManager::cullChunksByFrustum()
     int drawcount = 0;
 
     //determine whether each renderable chunk is inside the frustum
-    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    for (int i = 0; i < m_visible_chunks.x; i++)
     {
-        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        for (int j = 0; j < m_visible_chunks.y; j++)
         {
             if (m_map[i + offset][j + offset].m_chunk == nullptr)  continue;
 
             bool cull = true;
 
-            Vector2D temp;
+            Vec2 temp;
             if (m_mode == TerrainManagerMode::USE_TXT || m_mode == TerrainManagerMode::LOAD_BITMAP)
                 temp = m_map[i + offset][j + offset].m_chunk->getCenterPreloaded();
             else if (m_mode == TerrainManagerMode::USE_COMPUTE_SHADER)
                 temp = m_map[i + offset][j + offset].m_chunk->getCenterComputed();
 
-            if (CameraManager::get()->isInFrustum_Cube(Vector3D(temp.m_x, max_height / 2, temp.m_y), max_height / 2))
+            if (CameraManager::get()->isInFrustum_Cube(Vec3(temp.x, max_height / 2, temp.y), max_height / 2))
             {
                 cull = false;
                 drawcount++;
@@ -1440,7 +1440,7 @@ void TerrainManager::prepareLODArrays(std::vector<TerrainPtr>* high, std::vector
     SeamRenderVectors* forward, SeamRenderVectors* right)
 {
     //Vector2D reference_point = m_player_chunk;
-    Vector2D reference_point = Vector2D((int)(m_visible_chunks.m_x) / 2, (int)(m_visible_chunks.m_y) / 2);
+    Vec2 reference_point = Vec2((int)(m_visible_chunks.x) / 2, (int)(m_visible_chunks.y) / 2);
 
     int lodmap[TERRAIN_MAP_SIZE_MAX][TERRAIN_MAP_SIZE_MAX] = {};
 
@@ -1453,14 +1453,14 @@ void TerrainManager::prepareLODArrays(std::vector<TerrainPtr>* high, std::vector
     int offset = 1 * (m_mode != TerrainManagerMode::LOAD_BITMAP);
 
     //determine the LOD for each visible chunk before we can decide how to render the seams.
-    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    for (int i = 0; i < m_visible_chunks.x; i++)
     {
-        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        for (int j = 0; j < m_visible_chunks.y; j++)
         {
             int xdif, zdif;
 
-            xdif = reference_point.m_x - i;
-            zdif = reference_point.m_y - j;
+            xdif = reference_point.x - i;
+            zdif = reference_point.y - j;
 
             if (xdif < 0) xdif *= -1;
             if (zdif < 0) zdif *= -1;
@@ -1471,9 +1471,9 @@ void TerrainManager::prepareLODArrays(std::vector<TerrainPtr>* high, std::vector
         }
     }
 
-    for (int i = 0; i < m_visible_chunks.m_x; i++)
+    for (int i = 0; i < m_visible_chunks.x; i++)
     {
-        for (int j = 0; j < m_visible_chunks.m_y; j++)
+        for (int j = 0; j < m_visible_chunks.y; j++)
         {
             //if there is no chunk currently in this member of the map, don't try to render it
             if (m_map[i + offset][j + offset].m_chunk == nullptr) continue;
@@ -1486,42 +1486,42 @@ void TerrainManager::prepareLODArrays(std::vector<TerrainPtr>* high, std::vector
             else if (lod == md) mid->push_back(m_map[i+ offset][j+ offset].m_chunk);
             else low->push_back(m_map[i+ offset][j+ offset].m_chunk);
 
-            if (i < m_mapsize.m_x - 1 || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER)
+            if (i < m_mapsize.x - 1 || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER)
             {
                 //determine the seam type and put it into the seam render vector
-                chooseSeamArray(Vector2D(i+ offset, j+ offset), lod, lodmap[i + 1][j], right);
+                chooseSeamArray(Vec2(i+ offset, j+ offset), lod, lodmap[i + 1][j], right);
             }
 
-            if (j < m_mapsize.m_y - 1 || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER)
+            if (j < m_mapsize.y - 1 || m_mode == TerrainManagerMode::USE_COMPUTE_SHADER)
             {
                 //determine the seam type and put it into the seam render vector
-                chooseSeamArray(Vector2D(i+ offset, j+ offset), lod, lodmap[i][j + 1], forward);
+                chooseSeamArray(Vec2(i+ offset, j+ offset), lod, lodmap[i][j + 1], forward);
             }
         }
     }
 
 }
 
-void TerrainManager::chooseSeamArray(Vector2D pos, int source, int comp, SeamRenderVectors* srv)
+void TerrainManager::chooseSeamArray(Vec2 pos, int source, int comp, SeamRenderVectors* srv)
 {
 
     if (source < comp)
     {
-        if (source == 0) srv->highmid.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
-        else if (source == 1) srv->midlow.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
+        if (source == 0) srv->highmid.push_back(m_map[pos.x][pos.y].m_chunk);
+        else if (source == 1) srv->midlow.push_back(m_map[pos.x][pos.y].m_chunk);
     }
 
     if (source > comp)
     {
-        if (source == 1) srv->midhigh.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
-        else if (source == 2) srv->lowmid.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
+        if (source == 1) srv->midhigh.push_back(m_map[pos.x][pos.y].m_chunk);
+        else if (source == 2) srv->lowmid.push_back(m_map[pos.x][pos.y].m_chunk);
     }
 
     if (source == comp)
     {
-        if (source == 0) srv->high.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
-        else if (source == 1) srv->mid.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
-        else srv->low.push_back(m_map[pos.m_x][pos.m_y].m_chunk);
+        if (source == 0) srv->high.push_back(m_map[pos.x][pos.y].m_chunk);
+        else if (source == 1) srv->mid.push_back(m_map[pos.x][pos.y].m_chunk);
+        else srv->low.push_back(m_map[pos.x][pos.y].m_chunk);
     }
 }
 
@@ -1542,15 +1542,15 @@ void TerrainManager::checkThreadsForText()
                 {
                     m_chunk_thread[i]->join();
 
-                    Vector2D target = m_threaded_chunk_pos[i] + m_center - m_player_chunk;
+                    Vec2 target = m_threaded_chunk_pos[i] + m_center - m_player_chunk;
 
                     //confirm that the chunk is still within a useful range
-                    if (target.m_x >= 0 && target.m_x < m_map.size() &&
-                        target.m_y >= 0 && target.m_y < m_map[target.m_x].size())
+                    if (target.x >= 0 && target.x < m_map.size() &&
+                        target.y >= 0 && target.y < m_map[target.x].size())
                     {
-                        m_map[target.m_x][target.m_y].m_chunk = m_temp_terrain[i];
-                        m_map[target.m_x][target.m_y].m_is_loaded = true;
-                        m_map[target.m_x][target.m_y].m_is_queued = false;
+                        m_map[target.x][target.y].m_chunk = m_temp_terrain[i];
+                        m_map[target.x][target.y].m_is_loaded = true;
+                        m_map[target.x][target.y].m_is_queued = false;
                         m_num_unloaded_chunks--;
                     }
 
@@ -1566,13 +1566,13 @@ void TerrainManager::checkThreadsForText()
             {
                 bool found = false;
 
-                for (int k = 0; k < m_visible_chunks.m_y + 2; k++)
+                for (int k = 0; k < m_visible_chunks.y + 2; k++)
                 {
-                    for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+                    for (int j = 0; j < m_visible_chunks.x + 2; j++)
                     {
                         if (m_map[k][j].m_is_queued == false && m_map[k][j].m_is_loaded == false)
                         {
-                            Vector2D pos = Vector2D(k, j) - m_center + m_player_chunk;
+                            Vec2 pos = Vec2(k, j) - m_center + m_player_chunk;
                             m_thread_is_busy[i] = true;
                             std::shared_ptr<std::thread> t(new std::thread(&TerrainManager::threadLoadChunkTxt, this, pos, i));
                             m_chunk_thread[i] = t;
@@ -1606,15 +1606,15 @@ void TerrainManager::checkThreadsForComputeShader()
                 if (m_thread_is_busy[i] == false)
                 {
                     m_chunk_thread[i]->join();
-                    Vector2D target = m_threaded_chunk_pos[i] + m_center - m_player_chunk;
+                    Vec2 target = m_threaded_chunk_pos[i] + m_center - m_player_chunk;
 
                     //confirm that the chunk is still within a useful range
-                    if (target.m_x >= 0 && target.m_x < m_map.size() &&
-                        target.m_y >= 0 && target.m_y < m_map[target.m_x].size())
+                    if (target.x >= 0 && target.x < m_map.size() &&
+                        target.y >= 0 && target.y < m_map[target.x].size())
                     {
-                    m_map[target.m_x][target.m_y].m_chunk = m_temp_terrain[i];
-                    m_map[target.m_x][target.m_y].m_is_loaded = true;
-                    m_map[target.m_x][target.m_y].m_is_queued = false;
+                    m_map[target.x][target.y].m_chunk = m_temp_terrain[i];
+                    m_map[target.x][target.y].m_is_loaded = true;
+                    m_map[target.x][target.y].m_is_queued = false;
                     m_num_unloaded_chunks--;
                     }
                     m_temp_terrain[i].reset();
@@ -1632,14 +1632,14 @@ void TerrainManager::checkThreadsForComputeShader()
                 //find an unloaded terrain chunk and construct it
                 bool found = false;
 
-                for (int k = 0; k < m_visible_chunks.m_y + 2; k++)
+                for (int k = 0; k < m_visible_chunks.y + 2; k++)
                 {
-                    for (int j = 0; j < m_visible_chunks.m_x + 2; j++)
+                    for (int j = 0; j < m_visible_chunks.x + 2; j++)
                     {
                         if (m_map[k][j].m_is_queued == false && m_map[k][j].m_is_loaded == false)
                         {
-                            Vector2D pos = Vector2D(k, j) - m_center + m_player_chunk;
-                            Vector2D relative_pos = Vector2D(k, j) - m_center;
+                            Vec2 pos = Vec2(k, j) - m_center + m_player_chunk;
+                            Vec2 relative_pos = Vec2(k, j) - m_center;
                             m_thread_is_busy[i] = true;
 
                             //determine if this thread needs to load from the z vector or the x vector of vertices
@@ -1660,39 +1660,39 @@ void TerrainManager::checkThreadsForComputeShader()
     }
 }
 
-void TerrainManager::runComputeShader(Vector2D origin, Vector2D numchunks, std::vector<VertexMesh>& verts)
+void TerrainManager::runComputeShader(Vec2 origin, Vec2 numchunks, std::vector<VertexMesh>& verts)
 {
-    m_compute_terrain->setXDispatchCount(34 * numchunks.m_x * numchunks.m_y);//33792);
+    m_compute_terrain->setXDispatchCount(34 * numchunks.x * numchunks.y);//33792);
     m_compute_terrain->setYDispatchCount(1);
 
     //provide settings to the input for the compute shader
 
-    Vector2D input[2] = { origin, numchunks };
+    Vec2 input[2] = { origin, numchunks };
     m_compute_terrain->updateInputData(&input[0], sizeof(Vector4D));
 
     //get the new data
     m_compute_terrain->runComputeShader();
 
     int num_verts_per_chunk = 34 * 34;
-    verts.resize(num_verts_per_chunk * numchunks.m_x * numchunks.m_y);
+    verts.resize(num_verts_per_chunk * numchunks.x * numchunks.y);
     //VertexMesh* temp;
     //temp = reinterpret_cast<VertexMesh*>(m_compute_terrain->getOutputData());
 
-    memcpy(&verts[0], m_compute_terrain->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.m_x * numchunks.m_y);
+    memcpy(&verts[0], m_compute_terrain->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.x * numchunks.y);
 
     //m_compute_terrain->unmapCPUReadable();
 }
 
-void TerrainManager::threadLoadChunkTxt(Vector2D location, int thread_num)
+void TerrainManager::threadLoadChunkTxt(Vec2 location, int thread_num)
 {
     //save the chunk location that we are loading so we can decide which element of m_map to put it into once thread is finished
     m_threaded_chunk_pos[thread_num] = location;
 
     //if the chunk is within map bounds, load it
-    if (location.m_x < m_mapsize.m_x &&
-        location.m_x > 0 &&
-        location.m_y < m_mapsize.m_y &&
-        location.m_y > 0)  
+    if (location.x < m_mapsize.x &&
+        location.x > 0 &&
+        location.y < m_mapsize.y &&
+        location.y > 0)
         m_temp_terrain[thread_num] = TerrainPtr(new Terrain(location, true));
     //otherwise return a nullptr to signal the edge of the map
     else m_temp_terrain[thread_num].reset();
@@ -1701,7 +1701,7 @@ void TerrainManager::threadLoadChunkTxt(Vector2D location, int thread_num)
     m_thread_is_busy[thread_num] = false;
 }
 
-void TerrainManager::threadLoadChunkCompute(Vector2D location, Vector2D relative_location, int thread_num)
+void TerrainManager::threadLoadChunkCompute(Vec2 location, Vec2 relative_location, int thread_num)
 {
     //save the chunk location that we are loading so we can decide which element of m_map to put it into once thread is finished
     m_threaded_chunk_pos[thread_num] = location;
@@ -1711,10 +1711,10 @@ void TerrainManager::threadLoadChunkCompute(Vector2D location, Vector2D relative
 
     //find if the chunk we are loading is in the x_axis vector or the z_axis vector
     if (m_remaining_compute_chunks_z && 
-        (relative_location.m_y == (int)(m_visible_chunks.m_y) / 2 + 1 || relative_location.m_y == (int)(-m_visible_chunks.m_y) / 2 - 1))
+        (relative_location.y == (int)(m_visible_chunks.y) / 2 + 1 || relative_location.y == (int)(-m_visible_chunks.y) / 2 - 1))
     {
         //copy from the z axis vector
-        int position = (int)relative_location.m_x + (int)(m_visible_chunks.m_x / 2) + 1; //1 for hidden chunk row
+        int position = (int)relative_location.x + (int)(m_visible_chunks.x / 2) + 1; //1 for hidden chunk row
         memcpy(&temp[0], &m_compute_vertexes_z[34 * 34 * position], 34 * 34 * sizeof(VertexMesh));
 
         m_remaining_compute_chunks_z--;
@@ -1722,7 +1722,7 @@ void TerrainManager::threadLoadChunkCompute(Vector2D location, Vector2D relative
     else if (m_remaining_compute_chunks_x)
     {
         //copy from the x axis vector
-        int position = (int)relative_location.m_y + (int)(m_visible_chunks.m_y / 2) + 1; //1 for hidden chunk row
+        int position = (int)relative_location.y + (int)(m_visible_chunks.y / 2) + 1; //1 for hidden chunk row
         memcpy(&temp[0], &m_compute_vertexes_x[34 * 34 * position], 34 * 34 * sizeof(VertexMesh));
 
         m_remaining_compute_chunks_x--;
@@ -1764,23 +1764,23 @@ void TerrainManager::updateTerrainTypes()
 
 void runComputeShaderTerrainForward(/*Vector2D origin, Vector2D numchunks, std::vector<VertexMesh>& verts*/)
 {
-    Vector2D origin = TerrainManager::getComputeOrigin();
-    Vector2D numchunks = TerrainManager::getComputeNumChunks();
+    Vec2 origin = TerrainManager::getComputeOrigin();
+    Vec2 numchunks = TerrainManager::getComputeNumChunks();
     std::vector<VertexMesh>& verts = TerrainManager::getComputeVertexesZ();
     ComputeShader* compute = TerrainManager::getComputeShader();
 
-    compute->setXDispatchCount(34 * numchunks.m_x * numchunks.m_y);//33792);
+    compute->setXDispatchCount(34 * numchunks.x * numchunks.y);//33792);
     compute->setYDispatchCount(1);
 
     //provide settings to the input for the compute shader
-    Vector2D input[2] = { origin, numchunks };
+    Vec2 input[2] = { origin, numchunks };
     compute->updateInputData(&input[0], sizeof(Vector4D));
 
     //get the new data
     compute->runComputeShader();
     int num_verts_per_chunk = 34 * 34;
-    verts.resize(num_verts_per_chunk * numchunks.m_x * numchunks.m_y);
-    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.m_x * numchunks.m_y);
+    verts.resize(num_verts_per_chunk * numchunks.x * numchunks.y);
+    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.x * numchunks.y);
 
     //signal to the terrain manager that it is okay to start filling in empty chunks with the new data
     TerrainManager::setMultithreadIsBusy(false);
@@ -1788,23 +1788,23 @@ void runComputeShaderTerrainForward(/*Vector2D origin, Vector2D numchunks, std::
 
 void runComputeShaderTerrainRight()
 {
-    Vector2D origin = TerrainManager::getComputeOrigin();
-    Vector2D numchunks = TerrainManager::getComputeNumChunks();
+    Vec2 origin = TerrainManager::getComputeOrigin();
+    Vec2 numchunks = TerrainManager::getComputeNumChunks();
     std::vector<VertexMesh>& verts = TerrainManager::getComputeVertexesX();
     ComputeShader* compute = TerrainManager::getComputeShader();
 
-    compute->setXDispatchCount(34 * numchunks.m_x * numchunks.m_y);
+    compute->setXDispatchCount(34 * numchunks.x * numchunks.y);
     compute->setYDispatchCount(1);
 
     //provide settings to the input for the compute shader
-    Vector2D input[2] = { origin, numchunks };
+    Vec2 input[2] = { origin, numchunks };
     compute->updateInputData(&input[0], sizeof(Vector4D));
 
     //get the new data
     compute->runComputeShader();
     int num_verts_per_chunk = 34 * 34;
-    verts.resize(num_verts_per_chunk * numchunks.m_x * numchunks.m_y);
-    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.m_x * numchunks.m_y);
+    verts.resize(num_verts_per_chunk * numchunks.x * numchunks.y);
+    memcpy(&verts[0], compute->getOutputData(), num_verts_per_chunk * sizeof(VertexMesh) * numchunks.x * numchunks.y);
 
     //signal to the terrain manager that it is okay to start filling in empty chunks with the new data
     TerrainManager::setMultithreadIsBusy(false);

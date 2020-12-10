@@ -2,75 +2,75 @@
 #include <d3d11.h>
 #include <cmath> 
 
-class Vector2D
+class Vec2
 {
 public:
-	Vector2D() :m_x(0), m_y(0)
+	Vec2() :x(0), y(0)
 	{
 	}
-	Vector2D(float x, float y) :m_x(x), m_y(y)
+	Vec2(float x, float y) :x(x), y(y)
 	{
 	}
-	Vector2D(const Vector2D& vector) :m_x(vector.m_x), m_y(vector.m_y)
+	Vec2(const Vec2& vector) :x(vector.x), y(vector.y)
 	{
 	}
 
-	static float dot(Vector2D a, Vector2D b)
+	static float dot(Vec2 a, Vec2 b)
 	{
-		return (a.m_x * b.m_x + a.m_y * b.m_y);
+		return (a.x * b.x + a.y * b.y);
 	}
 
 	float length()
 	{
-		return sqrt(m_x * m_x + m_y * m_y);
+		return sqrt(x * x + y * y);
 	}
 
 	void normalize()
 	{
 		float l = length();
-		m_x /= l;
-		m_y /= l;
+		x /= l;
+		y /= l;
 	}
 
-	Vector2D operator *(float num)
+	Vec2 operator *(float num)
 	{
-		return Vector2D(m_x * num, m_y * num);
+		return Vec2(x * num, y * num);
 	}
 
-	Vector2D operator *(Vector2D v2)
+	Vec2 operator *(Vec2 v2)
 	{
-		return Vector2D(m_x * v2.m_x, m_y * v2.m_y);
+		return Vec2(x * v2.x, y * v2.y);
 	}
 
-	Vector2D operator +(Vector2D vec)
+	Vec2 operator +(Vec2 vec)
 	{
-		return Vector2D(m_x + vec.m_x, m_y + vec.m_y);
+		return Vec2(x + vec.x, y + vec.y);
 	}
 
-	Vector2D operator -(Vector2D vec)
+	Vec2 operator -(Vec2 vec)
 	{
-		return Vector2D(m_x - vec.m_x, m_y - vec.m_y);
+		return Vec2(x - vec.x, y - vec.y);
 	}
 
-	Vector2D operator -(float num)
+	Vec2 operator -(float num)
 	{
-		return Vector2D(m_x - num, m_y - num);
+		return Vec2(x - num, y - num);
 	}
 
-	Vector2D operator /(float a)
+	Vec2 operator /(float a)
 	{
-		return Vector2D(m_x / a, m_y / a);
+		return Vec2(x / a, y / a);
 	}
 
-	bool operator !=(Vector2D vec)
+	bool operator !=(Vec2 vec)
 	{
-		return (this->m_x != vec.m_x || this->m_y != vec.m_y);
+		return (this->x != vec.x || this->y != vec.y);
 	}
 
-	~Vector2D()
+	~Vec2()
 	{
 	}
 
 public:
-	float m_x, m_y;
+	float x, y;
 };

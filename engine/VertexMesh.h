@@ -11,13 +11,13 @@ public:
 	VertexMesh() :m_position(), m_texcoord()//, m_bone_influence(), m_bone_indices()
 	{
 	}
-	VertexMesh(Vector3D position, Vector2D texcoord) :m_position(position), m_texcoord(texcoord)
+	VertexMesh(Vec3 position, Vec2 texcoord) :m_position(position), m_texcoord(texcoord)
 	{
 	}
-	VertexMesh(Vector3D position, Vector2D texcoord, Vector3D normal) :m_position(position), m_texcoord(texcoord), m_normal(normal)
+	VertexMesh(Vec3 position, Vec2 texcoord, Vec3 normal) :m_position(position), m_texcoord(texcoord), m_normal(normal)
 	{
 	}
-	VertexMesh(Vector3D position, Vector3D normal, Vector4D influence) :m_position(position), m_texcoord(Vector2D(0,0)), m_normal(normal)
+	VertexMesh(Vec3 position, Vec3 normal, Vector4D influence) :m_position(position), m_texcoord(Vec2(0,0)), m_normal(normal)
 	{
 		m_bone_influence[0] = influence.m_x;
 		m_bone_influence[1] = influence.m_y;
@@ -40,9 +40,9 @@ public:
 	}
 
 public:
-	Vector3D m_position;
-	Vector2D m_texcoord;
-	Vector3D m_normal;
+	Vec3 m_position;
+	Vec2 m_texcoord;
+	Vec3 m_normal;
 	float m_bone_influence[MAX_BONE_INFLUENCES] = {};
 	int m_bone_indices[MAX_BONE_INFLUENCES] = {};
 };

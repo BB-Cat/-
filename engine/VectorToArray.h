@@ -7,20 +7,20 @@
 class VectorToArray
 {
 public:
-	VectorToArray(Vector2D* v)
+	VectorToArray(Vec2* v)
 	{
-		float* f = &v->m_x;
+		float* f = &v->x;
 		vals.push_back(f);
-		f = &v->m_y;
+		f = &v->y;
 		vals.push_back(f);
 	}
-	VectorToArray(Vector3D* v)
+	VectorToArray(Vec3* v)
 	{
-		float* f = &v->m_x;
+		float* f = &v->x;
 		vals.push_back(f);
-		f = &v->m_y;
+		f = &v->y;
 		vals.push_back(f);
-		f = &v->m_z;
+		f = &v->z;
 		vals.push_back(f);
 	}
 	VectorToArray(Vector4D* v)

@@ -32,18 +32,18 @@ PrimitiveCapsule::PrimitiveCapsule(float x_radius, float y_radius, int slice_cou
 			float sinPhi = sinf(phi);
 			float cosPhi = cosf(phi);
 
-			Vector3D v;
+			Vec3 v;
 			float normX, normY, normZ;
 			normX = cosPhi * sinTheta;
 			normY = cosTheta;
 			normZ = sinPhi * sinTheta;
 
-			v.m_x = x_radius * normX;
-			v.m_y = y_radius * normY;
-			v.m_z = (x_radius + y_radius) / 2 * normZ;
+			v.x = x_radius * normX;
+			v.y = y_radius * normY;
+			v.z = (x_radius + y_radius) / 2 * normZ;
 
 
-			v_list.push_back(vertex(v, Vector3D(0.2f, 0.05f * j, 0.05f * i), Vector3D((float)i / stack_count, (float)j / slice_count, 0.2f)));
+			v_list.push_back(vertex(v, Vec3(0.2f, 0.05f * j, 0.05f * i), Vec3((float)i / stack_count, (float)j / slice_count, 0.2f)));
 		}
 	}
 

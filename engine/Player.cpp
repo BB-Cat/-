@@ -9,6 +9,7 @@
 #include "ActorManager.h"
 #include "AnmEnumeration.h"
 #include "CameraManager.h"
+#include "WorldObjectManager.h"
 
 
 Player::Player(bool has_shadow) : Actor(has_shadow)
@@ -58,15 +59,34 @@ void Player::update(float delta)
 	m_input.lshift = AppWindow::getKeyState(VK_LSHIFT);
 	m_input.lctrl = AppWindow::getKeyState(VK_LCONTROL);
 
-	Vector3D cam_dir = CameraManager::get()->getCamera().getZDirection();
+	Vec3 cam_dir = CameraManager::get()->getCamera().getZDirection();
 	//get rid of the y value since we want the 2D forward vector for comparisons with the player's 2d forward vector
-	cam_dir.m_y = 0;
+	cam_dir.y = 0;
 	cam_dir.normalize();
 	//convert radian result to degrees like the actor class stores
-	m_input.cam_angle = atan2(cam_dir.m_x, cam_dir.m_z) / 0.01745f;
+	m_input.cam_angle = atan2(cam_dir.x, cam_dir.z) / 0.01745f;
 	//prevent spinning by adjusting the angle when cam angle jumps between positive and negative
 	float larger = m_input.cam_angle * (m_input.cam_angle >= m_angle) + m_angle * (m_input.cam_angle < m_angle);
 	float smaller = m_input.cam_angle * (m_input.cam_angle < m_angle) + m_angle * (m_input.cam_angle >= m_angle);
+
+
+	// TEMP //
+	Vec3 hitbox_pos = m_pos + Vec3(0, 1.5f, 0);
+	Vec3 bottom_check = m_pos + Vec3(0, 1.4f, 0);
+
+	//Vec3 adjusted_pos = WorldObjectManager::get()->BBoxCollisionResolveCont(old_ppos, new_ppos, Vec3(2, 3, 2));
+	
+	bool floorcheck = WorldObjectManager::get()->BBoxCollisionCheckCont(hitbox_pos, bottom_check, Vec3(2, 3, 2));
+	if (m_state != PlayerState::Jump && !floorcheck)
+	{
+		m_state = PlayerState::Jump;
+		m_jump = true;
+		m_jump_speed = 0;
+	}
+	else if (m_state == PlayerState::Jump && m_jump_speed < 0 && floorcheck)
+	{
+		endJump(0);
+	}
 
 	//更新関数の選択
 	switch (m_state)
@@ -264,13 +284,13 @@ void Player::moveForward(float delta)
 		target_angle += 60.0f;
 	}
 
-	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	Vec3 target_vec = Vec3(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
 	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+	m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
-	Vector3D move = (getDirectionVector() * m_momentum) * delta;
-	CameraManager::get()->moveCamera(move);
+	Vec3 move = (getDirectionVector() * m_momentum) * delta;
+	//CameraManager::get()->moveCamera(move);
 	m_pos += move;
 
 	m_model->setBlendAnmFrame(m_model->getActiveAnmPercent());
@@ -341,14 +361,14 @@ void Player::moveBackward(float delta)
 		target_angle -= 60.0f;
 	}
 
-	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	Vec3 target_vec = Vec3(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
 	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+	m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
 
-	Vector3D move = (getDirectionVector() * m_momentum) * delta;
-	CameraManager::get()->moveCamera(move);
+	Vec3 move = (getDirectionVector() * m_momentum) * delta;
+	//CameraManager::get()->moveCamera(move);
 	m_pos += move;
 }
 
@@ -403,14 +423,14 @@ void Player::strafeRight(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+	Vec3 target_vec = Vec3(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
 	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+	m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
 
-	Vector3D move = (getRightVector() * m_momentum) * delta;
-	CameraManager::get()->moveCamera(move);
+	Vec3 move = (getRightVector() * m_momentum) * delta;
+	//CameraManager::get()->moveCamera(move);
 	m_pos += move;
 }
 
@@ -466,14 +486,14 @@ void Player::strafeLeft(float delta)
 
 	//lerp to the same direction as the camera
 	float target_angle = m_input.cam_angle;
-	Vector3D target_vec = Vector3D(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
+	Vec3 target_vec = Vec3(sinf(target_angle * 0.01745f), 0, cosf(target_angle * 0.01745f));
 	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+	m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
 
-	Vector3D move = (getRightVector() * m_momentum * -1) * delta;
-	CameraManager::get()->moveCamera(move);
+	Vec3 move = (getRightVector() * m_momentum * -1) * delta;
+	//CameraManager::get()->moveCamera(move);
 	m_pos += move;
 }
 
@@ -514,10 +534,10 @@ void Player::jump(float delta)
 	}
 
 	//lerp to the same direction as the camera
-	Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+	Vec3 target_vec = Vec3(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
 	//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 	target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-	m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+	m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
 
 	if (m_jump == false)
@@ -526,22 +546,22 @@ void Player::jump(float delta)
 		m_jump_speed = P_JUMP_SPEED;
 	}
 
-	Vector3D move = (getDirectionVector() * m_momentum + Vector3D(0, m_jump_speed, 0)) * delta;
-	CameraManager::get()->moveCamera(move);
+	Vec3 move = (getDirectionVector() * m_momentum + Vec3(0, m_jump_speed, 0)) * delta;
+	//CameraManager::get()->moveCamera(move);
 	m_pos += move;
 
 	if (m_jump)
 	{
 		m_jump_speed -= P_GRAVITY;
 
-		if (m_pos.m_y < 0)
-		{
-			m_model->triggerAnimationFinish(true);
-			m_pos.m_y = 0;
+		//if (m_pos.y < 0)
+		//{
+		//	m_model->triggerAnimationFinish(true);
+		//	m_pos.y = 0;
 
-			endJump(delta);
-			return;
-		}
+		//	endJump(delta);
+		//	return;
+		//}
 	}
 }
 
@@ -575,13 +595,13 @@ void Player::land(float delta, int landing_type)
 		}
 
 		//lerp to the same direction as the camera
-		Vector3D target_vec = Vector3D(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
+		Vec3 target_vec = Vec3(sinf(m_input.cam_angle * 0.01745f), 0, cosf(m_input.cam_angle * 0.01745f));
 		//m_angle = m_angle * (1.0f - delta * 6) + target_angle * delta * 6;
 		target_vec = getDirectionVector() * (1.0f - delta * 6) + target_vec * delta * 6;
-		m_angle = atan2(target_vec.m_x, target_vec.m_z) / 0.01745f;
+		m_angle = atan2(target_vec.x, target_vec.z) / 0.01745f;
 
-		Vector3D move = (getDirectionVector() * m_momentum) * delta;
-		CameraManager::get()->moveCamera(move);
+		Vec3 move = (getDirectionVector() * m_momentum) * delta;
+		//CameraManager::get()->moveCamera(move);
 		m_pos += move;
 	}
 
@@ -617,13 +637,13 @@ void Player::roll(float delta)
 	float ease = pow(1.0f - percent_complete, 2.0f);
 
 	m_angle = m_input.cam_angle;
-	Vector3D dir = getDirectionVector();
-	Vector3D target_pos = dir * ease * P_ROLL_DIST + m_pos;
+	Vec3 dir = getDirectionVector();
+	Vec3 target_pos = dir * ease * P_ROLL_DIST + m_pos;
 
-	Vector3D temp = m_pos;
-	m_pos = Vector3D::lerp(m_pos, target_pos, ease);
+	Vec3 temp = m_pos;
+	m_pos = Vec3::lerp(m_pos, target_pos, ease);
 
-	CameraManager::get()->moveCamera(m_pos - temp);
+	//CameraManager::get()->moveCamera(m_pos - temp);
 
 
 	if (m_model->getIfAnimInterruptable())
@@ -660,14 +680,14 @@ void Player::dodgeBack(float delta)
 	float percent_complete = m_model->getActiveAnmPercent();
 	float ease = pow(1.0f - percent_complete, 2.0f);
 	m_angle = m_input.cam_angle;
-	Vector3D dir = getDirectionVector();
-	Vector3D target_pos = dir * ease * P_ROLL_DIST * -0.5f + m_pos;
+	Vec3 dir = getDirectionVector();
+	Vec3 target_pos = dir * ease * P_ROLL_DIST * -0.5f + m_pos;
 
 	//m_pos = Vector3D::lerp(m_pos, target_pos, ease);
-	Vector3D temp = m_pos;
-	m_pos = Vector3D::lerp(m_pos, target_pos, ease);
+	Vec3 temp = m_pos;
+	m_pos = Vec3::lerp(m_pos, target_pos, ease);
 
-	CameraManager::get()->moveCamera(m_pos - temp);
+	//CameraManager::get()->moveCamera(m_pos - temp);
 
 	if (m_model->getIfAnimFinished() || (m_model->getIfAnimInterruptable() && (m_input.w || m_input.s )))
 	{
@@ -725,13 +745,13 @@ void Player::attack2(float delta)
 
 void Player::render(float delta)
 {
-	m_model->renderMesh(delta, Vector3D(1, 1, 1), m_pos, Vector3D(0, m_angle * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
+	m_model->renderMesh(delta, Vec3(1, 1, 1), m_pos, Vec3(0, m_angle * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 }
 
 void Player::renderShadow(float delta)
 {
 	//アニメーションが複数回更新しないようにアニメーション生成速度を０に設定して描画する
-	m_model->renderMesh(delta, Vector3D(1, 1, 1), m_pos, Vector3D(0, m_angle * 0.01745f, 0), Shaders::SHADOWMAP, false, 0);
+	m_model->renderMesh(delta, Vec3(1, 1, 1), m_pos, Vec3(0, m_angle * 0.01745f, 0), Shaders::SHADOWMAP, false, 0);
 }
 
 void Player::endJump(float delta)

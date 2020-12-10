@@ -52,9 +52,9 @@ public:
 	//現在起動状態しているプレイヤーオブジェクトの位置情報を取得
 	int getActivePlayerState();
 	//現在起動状態しているプレイヤーオブジェクトの位置情報を取得
-	Vector3D getActivePlayerPosition();
+	Vec3 getActivePlayerPosition();
 	//起動状態のプレイヤーオブジェクトの位置を設定する
-	void setActivePlayerPosition(Vector3D pos);
+	void setActivePlayerPosition(Vec3 pos);
 	//起動状態のプレイヤーオブジェクトの上昇を止める
 	void stopActivePlayerAscent();
 	//起動状態のプレイヤーオブジェクトの着地をさせる
@@ -62,7 +62,7 @@ public:
 	//起動状態のプレイヤーオブジェクトの着地をさせる
 	void startActivePlayerFall();
 	//現在起動状態しているプレイヤーオブジェクトの回転情報を取得
-	Vector3D getActivePlayerDirection();
+	Vec3 getActivePlayerDirection();
 
 public:
 	//現在起動状態しているプレイヤーオブジェクトのimguiウインドーを描画する

@@ -41,12 +41,12 @@ public:
 	void setBlendAnimation(int type);
 	void setBlendAnmFrame(float percent);
 	void setAnmPercentTick(float tick);
-	void setColor(Vector3D color);
+	void setColor(Vec3 color);
 	void setMaterial(Material_Obj mat) { m_mat = mat; }
 
 	void triggerAnimationFinish(bool trigger);
 
-	void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, 
+	void renderMesh(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, int shader, 
 		bool is_textured = true, float animation_speed = 1.0f) override;
 
 	//this function does not start a new imgui window, so you need to set the 

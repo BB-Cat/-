@@ -14,7 +14,7 @@ public:
 
 
 public:
-	virtual void renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, 
+	virtual void renderMesh(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, 
 		int shader, bool is_textured = true, float animation_speed = 1.0f) = 0;
 
 
@@ -29,7 +29,7 @@ protected:
 
 
 
-	Matrix4x4 applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate);
+	Matrix4x4 applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate);
 protected:
 	friend class DeviceContext;
 

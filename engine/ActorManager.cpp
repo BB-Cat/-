@@ -115,22 +115,27 @@ int ActorManager::getActivePlayerState()
 	return -1;
 }
 
-Vector3D ActorManager::getActivePlayerPosition()
+Vec3 ActorManager::getActivePlayerPosition()
 {
 	if (m_player != nullptr)
 	{
-		return m_player->getPosition();
+		return m_player->m_pos;
 	}
 
 	//プレイヤーが存在しない場合初期化Vector3Dを返す
-	return Vector3D();
+	return Vec3();
 }
 
-void ActorManager::setActivePlayerPosition(Vector3D pos)
+void ActorManager::setActivePlayerPosition(Vec3 pos)
 {
 	if (m_player != nullptr)
 	{
+		if (m_player->m_pos.x != pos.x || m_player->m_pos.z != pos.z)
+		{
+			int a = 3;
+		}
 		m_player->m_pos = pos;
+		//m_player->m_pos = Vec3(0, 0, 0);
 	}
 }
 
@@ -160,7 +165,7 @@ void ActorManager::startActivePlayerFall()
 	}
 }
 
-Vector3D ActorManager::getActivePlayerDirection()
+Vec3 ActorManager::getActivePlayerDirection()
 {
 	if (m_actor_lists[FactionID::PLAYER].m_actors.size() > m_active_player)
 	{
@@ -168,7 +173,7 @@ Vector3D ActorManager::getActivePlayerDirection()
 	}
 
 	//プレイヤーが存在しない場合初期化Vector3Dを返す
-	return Vector3D();
+	return Vec3();
 }
 
 void ActorManager::activePlayerImGui()

@@ -16,7 +16,7 @@ public:
 	~TextRenderer();
 
 	//void update(const wchar_t* string);
-	void render(const wchar_t text[], Vector2D pos, Vector2D size, int color);
+	void render(const wchar_t text[], Vec2 pos, Vec2 size, int color);
 
 	void changeFontSize(float size);
 

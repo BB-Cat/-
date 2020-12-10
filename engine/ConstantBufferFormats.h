@@ -52,7 +52,7 @@ struct cb_mesh_light_properties
 __declspec(align(16))
 struct cb_scene_lighting
 {
-	Vector3D m_global_light_dir;
+	Vec3 m_global_light_dir;
 	float	 m_global_light_strength;
 	Vector4D m_global_light_color;
 	Vector4D m_ambient_light_color;

@@ -19,7 +19,7 @@ Scene10::Scene10(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(CAMERA_STATE::TP);
-	CameraManager::get()->setCamPos(Vector3D(0, 4, -5));
+	CameraManager::get()->setCamPos(Vec3(0, 4, -5));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_floor = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\Floor\\floor.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -56,16 +56,16 @@ Scene10::Scene10(SceneManager* sm) : Scene(sm)
 	m_cloud_props.m_sampling_resolution = Vector4D(8, 7, 7, 7);
 	m_cloud_props.m_sampling_weight = Vector4D(0.3, 0.3, 0.2, 0.2);
 	m_cloud_props.m_speed = 0.7f;
-	m_cloud_props.m_move_dir = Vector3D(0.5f, 0, 0);
+	m_cloud_props.m_move_dir = Vec3(0.5f, 0, 0);
 
 	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
 
-	m_global_light_rotation = Vector2D(3.521f, 0.181f);
+	m_global_light_rotation = Vec2(3.521f, 0.181f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(1.0f, 1.0f, 0.8f);
-	m_ambient_light_color = Vector3D(1.0, 0.59f, 0.38f);
+	m_light_color = Vec3(1.0f, 1.0f, 0.8f);
+	m_ambient_light_color = Vec3(1.0, 0.59f, 0.38f);
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
@@ -82,7 +82,7 @@ void Scene10::update(float delta, const float& width, const float& height)
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height);
 
-	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
+	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -124,9 +124,9 @@ void Scene10::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Character Interface Popup");
@@ -154,14 +154,14 @@ void Scene10::shadowRenderPass(float delta)
 
 void Scene10::mainRenderPass(float delta)
 {
-	Vector3D campos = CameraManager::get()->getCamera().getTranslation();
+	Vec3 campos = CameraManager::get()->getCamera().getTranslation();
 	//m_model->renderMesh(delta, Vector3D(1, 1, 1), Vector3D(0, 0, 2), Vector3D(0, 180 * 0.01745f, 0), Shaders::LAMBERT_RIMLIGHT);
 	ActorManager::get()->renderFaction(L"Player", delta);
 	//m_cube->render(Vector3D(3, 3, 3), Vector3D(), Vector3D(), Shaders::LAMBERT_SPECULAR, false);
 
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D->getShaderResourceView());
-	m_sky->renderMesh(delta, Vector3D(700, 700, 700), campos, Vector3D(0, 0, 0), Shaders::ATMOSPHERE, false);
-	m_floor->renderMesh(delta, Vector3D(10, 10, 10), Vector3D(campos.m_x, 0, campos.m_z), Vector3D(0, 0, 0), Shaders::SIMPLE_STAGE, false);
+	m_sky->renderMesh(delta, Vec3(700, 700, 700), campos, Vec3(0, 0, 0), Shaders::ATMOSPHERE, false);
+	m_floor->renderMesh(delta, Vec3(10, 10, 10), Vec3(campos.x, 0, campos.z), Vec3(0, 0, 0), Shaders::SIMPLE_STAGE, false);
 
 
 }

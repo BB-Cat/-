@@ -13,10 +13,10 @@ public:
 	Sprite(const wchar_t* full_path);
 	~Sprite();
 public:
-	void renderSprite(Vector3D scale, Vector3D position, Vector3D rotation, 
-		Vector2D texture_pos, Vector2D texture_size, Vector2D origin);
+	void renderSprite(Vec3 scale, Vec3 position, Vec3 rotation, 
+		Vec2 texture_pos, Vec2 texture_size, Vec2 origin);
 
-	Matrix4x4 applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate);
+	Matrix4x4 applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate);
 
 protected:
 	TexturePtr m_tex;
@@ -25,7 +25,7 @@ protected:
 	ID3D11DepthStencilState* m_dss;
 	ID3D11RasterizerState* m_rs;
 
-	Matrix4x4 applyTransformations(Vector2D scale, Vector2D rot, Vector2D translate);
+	Matrix4x4 applyTransformations(Vec2 scale, Vec2 rot, Vec2 translate);
 protected:
 	friend class DeviceContext;
 };

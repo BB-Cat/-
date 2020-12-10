@@ -132,9 +132,9 @@ public:
 		return;
 	}
 
-	bool Frustum::checkPoint(Vector3D v)
+	bool Frustum::checkPoint(Vec3 v)
 	{
-		DirectX::XMVECTOR p = { v.m_x, v.m_y, v.m_z };
+		DirectX::XMVECTOR p = { v.x, v.y, v.z };
 		DirectX::XMFLOAT4 res;
 
 
@@ -148,21 +148,21 @@ public:
 		return true;
 	}
 
-	bool checkCube(Vector3D center, float radius)
+	bool checkCube(Vec3 center, float radius)
 	{
 		//for (int i = 0; i < 8; i++)
 		//{
 		//	if (checkPoint(v[i])) return true;
 		//}
 
-		DirectX::XMVECTOR c = { center.m_x, center.m_y, center.m_z };
+		DirectX::XMVECTOR c = { center.x, center.y, center.z };
 		DirectX::XMVECTOR check;
 		DirectX::XMFLOAT4 res;
 
 		// Check if any one point of the cube is in the view frustum.
 		for (int i = 0; i < 6; i++)
 		{
-			check = {center.m_x - radius, center.m_y - radius, center.m_z - radius};
+			check = {center.x - radius, center.y - radius, center.z - radius};
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter - radius), (yCenter - radius), (zCenter - radius))) >= 0.0f)
@@ -170,7 +170,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x + radius, center.m_y - radius, center.m_z - radius };
+			check = { center.x + radius, center.y - radius, center.z - radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter + radius), (yCenter - radius), (zCenter - radius))) >= 0.0f)
@@ -178,7 +178,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x - radius, center.m_y + radius, center.m_z - radius };
+			check = { center.x - radius, center.y + radius, center.z - radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter - radius), (yCenter + radius), (zCenter - radius))) >= 0.0f)
@@ -186,7 +186,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x + radius, center.m_y + radius, center.m_z - radius };
+			check = { center.x + radius, center.y + radius, center.z - radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter + radius), (yCenter + radius), (zCenter - radius))) >= 0.0f)
@@ -194,7 +194,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x - radius, center.m_y - radius, center.m_z + radius };
+			check = { center.x - radius, center.y - radius, center.z + radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter - radius), (yCenter - radius), (zCenter + radius))) >= 0.0f)
@@ -202,7 +202,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x + radius, center.m_y - radius, center.m_z + radius };
+			check = { center.x + radius, center.y - radius, center.z + radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter + radius), (yCenter - radius), (zCenter + radius))) >= 0.0f)
@@ -210,7 +210,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x - radius, center.m_y + radius, center.m_z + radius };
+			check = { center.x - radius, center.y + radius, center.z + radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter - radius), (yCenter + radius), (zCenter + radius))) >= 0.0f)
@@ -218,7 +218,7 @@ public:
 		//	continue;
 		//}
 
-			check = { center.m_x + radius, center.m_y + radius, center.m_z + radius };
+			check = { center.x + radius, center.y + radius, center.z + radius };
 			DirectX::XMStoreFloat4(&res, DirectX::XMPlaneDotCoord(m_planes[i], check));
 			if (res.x >= 0.0f) continue;
 		//if (D3DXPlaneDotCoord(&m_planes[i], &D3DXVECTOR3((xCenter + radius), (yCenter + radius), (zCenter + radius))) >= 0.0f)
@@ -231,9 +231,9 @@ public:
 		return true;
 	}
 
-	bool checkSphere(Vector3D v, float radius)
+	bool checkSphere(Vec3 v, float radius)
 	{
-		DirectX::XMVECTOR p = { v.m_x, v.m_y, v.m_z };
+		DirectX::XMVECTOR p = { v.x, v.y, v.z };
 		DirectX::XMFLOAT4 res;
 
 		// Check if the radius of the sphere is inside the view frustum.

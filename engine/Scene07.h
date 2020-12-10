@@ -16,10 +16,10 @@ private:
 
     float m_speed = 0.35f;
 
-    Vector2D m_global_light_rotation;
+    Vec2 m_global_light_rotation;
     float m_global_light_strength;
-    Vector3D m_light_color;
-    Vector3D m_ambient_light_color;
+    Vec3 m_light_color;
+    Vec3 m_ambient_light_color;
 
 
     int m_int_vor_octave;

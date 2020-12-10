@@ -29,8 +29,8 @@ public:
 	~GBuffer();
 
 	//void clearRenderTargets(const SwapChainPtr& swap_chain, float r, float g, float b, float a);
-	void renderToSwapChain(int final_pass_shader_type, Vector2D pos, Vector2D scale, Vector2D rot);
-	void renderToSwapChain(int buffer, int final_pass_shader_type, Vector2D pos, Vector2D scale, Vector2D rot);
+	void renderToSwapChain(int final_pass_shader_type, Vec2 pos, Vec2 scale, Vec2 rot);
+	void renderToSwapChain(int buffer, int final_pass_shader_type, Vec2 pos, Vec2 scale, Vec2 rot);
 
 	void setShadowMapTex();
 

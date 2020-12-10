@@ -36,12 +36,12 @@ PrimitiveCylinder::PrimitiveCylinder(float bottom_radius, float top_radius, floa
 			float cosTheta = cosf(j * theta);
 			float sinTheta = sinf(j * theta);
 
-			Vector3D v;
-			v.m_x = r * cosTheta;
-			v.m_y = y;
-			v.m_z = r * sinTheta;
+			Vec3 v;
+			v.x = r * cosTheta;
+			v.y = y;
+			v.z = r * sinTheta;
 
-			v_list.push_back(vertex(v, Vector3D(i * 0.05f, 0.2f, 0.2f), Vector3D(0, j * 0.05f, 0.2f)));
+			v_list.push_back(vertex(v, Vec3(i * 0.05f, 0.2f, 0.2f), Vec3(0, j * 0.05f, 0.2f)));
 		}
 	}
 
@@ -79,10 +79,10 @@ PrimitiveCylinder::PrimitiveCylinder(float bottom_radius, float top_radius, floa
 		float x = top_radius * cosf(i * theta);
 		float z = top_radius * sinf(i * theta);
 
-		v_list.push_back(vertex(Vector3D(x, y, z), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+		v_list.push_back(vertex(Vec3(x, y, z), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	}
 
-	v_list.push_back(vertex(Vector3D(0, y, 0), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+	v_list.push_back(vertex(Vec3(0, y, 0), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	int center_index = v_list.size() - 1;
 
 	for (int i = 0; i < slice_count; i++)
@@ -104,10 +104,10 @@ PrimitiveCylinder::PrimitiveCylinder(float bottom_radius, float top_radius, floa
 		float x = bottom_radius * cosf(i * theta);
 		float z = bottom_radius * sinf(i * theta);
 
-		v_list.push_back(vertex(Vector3D(x, y, z), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+		v_list.push_back(vertex(Vec3(x, y, z), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	}
 
-	v_list.push_back(vertex(Vector3D(0, y, 0), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+	v_list.push_back(vertex(Vec3(0, y, 0), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	center_index = v_list.size() - 1;
 
 	for (int i = 0; i < slice_count; i++)
@@ -167,10 +167,10 @@ void PrimitiveCylinder::buildTopCap(float top_radius, float height, int slice_co
 		float x = top_radius * cosf(i * theta);
 		float z = top_radius * sinf(i * theta);
 
-		v_list.push_back(vertex(Vector3D(x, y, z), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+		v_list.push_back(vertex(Vec3(x, y, z), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	}
 
-	v_list.push_back(vertex(Vector3D(0, y, 0), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+	v_list.push_back(vertex(Vec3(0, y, 0), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	int center_index = v_list.size() - 1;
 
 	for (int i = 0; i < slice_count; i++)
@@ -193,10 +193,10 @@ void PrimitiveCylinder::buildBottomCap(float bottom_radius, float height, int sl
 		float x = bottom_radius * cosf(i * theta);
 		float z = bottom_radius * sinf(i * theta);
 
-		v_list.push_back(vertex(Vector3D(x, y, z), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+		v_list.push_back(vertex(Vec3(x, y, z), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	}
 
-	v_list.push_back(vertex(Vector3D(0, y, 0), Vector3D(0.2f, 0.2f, 0.2f), Vector3D(0.4f, 0.4f, 0.4f)));
+	v_list.push_back(vertex(Vec3(0, y, 0), Vec3(0.2f, 0.2f, 0.2f), Vec3(0.4f, 0.4f, 0.4f)));
 	int center_index = v_list.size() - 1;
 
 	for (int i = 0; i < slice_count; i++)

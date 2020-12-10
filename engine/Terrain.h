@@ -9,9 +9,9 @@
 struct HeightMapInfo {        // Heightmap structure
 	int terrainWidth;        // Width of heightmap
 	int terrainHeight;        // Height (Length) of heightmap
-	Vector3D* height_map;    // Array to store terrain's vertex positions
-	Vector3D* forward_seam_hm;  //  Array to store the vertex positions of the seam along the upper edge of chunk
-	Vector3D* right_seam_hm; // Array to store the vertex positions of the seamalong the rightward edge of chunk
+	Vec3* height_map;    // Array to store terrain's vertex positions
+	Vec3* forward_seam_hm;  //  Array to store the vertex positions of the seam along the upper edge of chunk
+	Vec3* right_seam_hm; // Array to store the vertex positions of the seamalong the rightward edge of chunk
 	Vector4D* terrain_color; //Array to store terrain's type 
 	Vector4D* forward_seam_tc; //Array to store terrain's type 
 	Vector4D* right_seam_tc; //Array to store terrain's type 
@@ -45,46 +45,45 @@ enum SeamLOD
 	LOW
 };
 
-/* TODO: adjust terrain generation to read from a second heightmap which works as a multiplier to provide a more smooth mesh */
 class Terrain
 {
 public:
 	//constructor to load terrain data directly from a prepared text file
-	Terrain(Vector2D map_pos, bool from_generated = false);
+	Terrain(Vec2 map_pos, bool from_generated = false);
 	//constructor to load terrain piece by piece from image file.  The data can then be saved to a text file with outputFile().
-	Terrain(const char* filename_heightmap, const char* filename_terraintype, Vector2D map_pos);
+	Terrain(const char* filename_heightmap, const char* filename_terraintype, Vec2 map_pos);
 
-	Terrain(Vector2D map_pos, const std::vector<VertexMesh>& verts);
+	Terrain(Vec2 map_pos, const std::vector<VertexMesh>& verts);
 	~Terrain();
 	//vb_id is the indicator about which vertex buffer to load (the terrain chunk, the forward seam, or the right seam in that order)
 	void render(int lod = 0, int vb_id = 0, int seam_lod = HIGH);
 
 public:
 	//Vector3D clampToTerrain(const Vector3D& pos);
-	float getTerrainY(const Vector3D& pos);
+	float getTerrainY(const Vec3& pos);
 	//Get the world position x/z of the currently loaded chunk's center according to preloaded size
-	Vector2D getCenterPreloaded();
+	Vec2 getCenterPreloaded();
 	//Get the world position x/z of the currently loaded chunk's center according to compute shader size
-	Vector2D getCenterComputed();
+	Vec2 getCenterComputed();
 
 	//Get the world position x/y/z of the currently loaded chunk's 4 corners
-	void getCorners(Vector3D* corner_array);
+	void getCorners(Vec3* corner_array);
 
 public:
 	//output the loaded data to a text file
-	void outputFile(Vector2D output_offset);
+	void outputFile(Vec2 output_offset);
 	//update the currently loaded texture splat data from a new image
-	void updateTextureSplat(const char* file, Vector2D max);
+	void updateTextureSplat(const char* file, Vec2 max);
 
 private:
 
-	bool fetchMaps(const char* height_filename, const char* tex_filename, HeightMapInfo& hminfo, Vector2D chunk_id);
+	bool fetchMaps(const char* height_filename, const char* tex_filename, HeightMapInfo& hminfo, Vec2 chunk_id);
 	//function which reads the entirety of an image file to create a heightmap
 	bool fetchHeightMap(const char* filename, HeightMapInfo& hminfo);
 	//function which reads a one-chunk section of an image file to create a height map for only one section
-	bool fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector2D chunk_id);
+	bool fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vec2 chunk_id);
 	//retrieve the terrain balances at each vertex (Very important that the terrain type file is the SAME size as the height map!)
-	bool fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vector2D chunk_id);
+	bool fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vec2 chunk_id);
 
 	//sample a bitmap image in several locations to provide the average surrounding height
 	float sampleHeight(const unsigned char* bmp, int step, int start_offset, int row_step, int bmp_max);
@@ -117,6 +116,6 @@ private:
 	std::vector<VertexMesh> m_vec_vm_seamR;
 	std::vector<VertexMesh> m_vec_vm_seamF;
 
-	Vector2D m_pos;
+	Vec2 m_pos;
 };
 

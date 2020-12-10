@@ -23,8 +23,8 @@ void Emitter::render()
 	{
 		//send the camera position to particles
 		Matrix4x4 cam = CameraManager::get()->getCamera();
-		Vector3D cam_dir = cam.getZDirection();
+		Vec3 cam_dir = cam.getZDirection();
 
-		(*it)->render(cam_dir, Vector2D(0,0), Vector2D(300,300), Vector2D(150, 150));
+		(*it)->render(cam_dir, Vec2(0,0), Vec2(300,300), Vec2(150, 150));
 	}
 }

@@ -53,12 +53,12 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 
 	m_raster = true;
 
-	m_mat.m_diffuse_color = Vector3D(0.6f, 0.6f, 0.6f);	
+	m_mat.m_diffuse_color = Vec3(0.6f, 0.6f, 0.6f);	
 	m_mat.m_transparency = 1.0f;
 	m_mat.m_metallic = 0.4f;
 	m_mat.m_shininess = 12;
-	m_mat.m_specular_color = Vector3D(0.9f, 0.9f, 0.9f);
-	m_mat.m_rim_color = Vector3D(1.0f, 1.0f, 1.0f);
+	m_mat.m_specular_color = Vec3(0.9f, 0.9f, 0.9f);
+	m_mat.m_rim_color = Vec3(1.0f, 1.0f, 1.0f);
 	m_mat.m_rim_color.m_w = 1.0f;
 	m_mat.m_rim_power = 2.0f;
 
@@ -150,7 +150,7 @@ void SkinnedMesh::setAnmPercentTick(float tick)
 	m_percent_tick = tick;
 }
 
-void SkinnedMesh::setColor(Vector3D color)
+void SkinnedMesh::setColor(Vec3 color)
 {
 	m_mat.m_diffuse_color = color;
 }
@@ -194,7 +194,7 @@ void SkinnedMesh::triggerAnimationFinish(bool trigger)
 	if(m_active_animation >= 0) m_animation[m_active_animation].setFinishTrigger(trigger);
 }
 
-void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, 
+void SkinnedMesh::renderMesh(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, 
 	int shader, bool is_textured, float animation_speed)
 {
 	BlendMode::get()->SetBlend(BlendType::ALPHA);
@@ -299,11 +299,8 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vector3D scale, Vector3D positi
 			//set displacement map for the domain shader
 			GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDisplacementTexDS(m_displace);
 
-			/////////////////////////////////////////////////////////////////////////////
-			////TODO: this needs to be cleaned up for sure
-			/////////////////////////////////////////////////////////////////////////////
-			//for real model rendering it WILL be important for each subset to contain its own material object structure.
-			//this should be created and maintained starting from the constructor, but for now (for imgui) we will use one structure.
+
+			/* TODO : implement seperate material / shader support for each different subset of the model */
 			GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(m_mat);
 
 

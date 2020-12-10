@@ -15,9 +15,9 @@ public:
 	void initializeConstantBuffers();
 
 	//update the constant buffer for local light properties
-	void updateLocalLightPropertyBuffer(Vector3D pos, Vector3D color, float strength);
+	void updateLocalLightPropertyBuffer(Vec3 pos, Vec3 color, float strength);
 	//update the constant buffer for global light properties
-	void updateGlobalLightPropertyBuffer(Vector3D dir, float strength, Vector4D color, Vector4D ambient_color);
+	void updateGlobalLightPropertyBuffer(Vec3 dir, float strength, Vector4D color, Vector4D ambient_color);
 	//update the constant buffer for hull shader
 	void updateHullShaderBuffer(int tesselation_factor);
 

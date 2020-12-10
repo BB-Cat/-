@@ -90,7 +90,7 @@ void MyGeometricPrimitive::createRasterizerStates()
 
 }
 
-void MyGeometricPrimitive::updateTransformation(RECT window_rect, Vector3D scale, Vector3D translate, Vector3D rotate)
+void MyGeometricPrimitive::updateTransformation(RECT window_rect, Vec3 scale, Vec3 translate, Vec3 rotate)
 {
 	constant cc;
 	cc.m_time = ::GetTickCount();
@@ -106,15 +106,15 @@ void MyGeometricPrimitive::updateTransformation(RECT window_rect, Vector3D scale
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationZ(rotate.m_z);
+	temp.setRotationZ(rotate.z);
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationY(rotate.m_y);
+	temp.setRotationY(rotate.y);
 	cc.m_world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationX(rotate.m_x);
+	temp.setRotationX(rotate.x);
 	cc.m_world *= temp;
 
 
@@ -130,7 +130,7 @@ void MyGeometricPrimitive::updateTransformation(RECT window_rect, Vector3D scale
 	m_constant_buffer->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 }
 
-void MyGeometricPrimitive::render(RECT window_rect, Vector3D scale, Vector3D translate, Vector3D rotate, bool isWireframe)
+void MyGeometricPrimitive::render(RECT window_rect, Vec3 scale, Vec3 translate, Vec3 rotate, bool isWireframe)
 {
 	updateTransformation(window_rect, scale, translate, rotate);
 

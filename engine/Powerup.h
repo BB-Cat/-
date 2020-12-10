@@ -5,12 +5,12 @@
 class PowerUp : public Actor
 {
 public:
-	PowerUp(Vector3D pos);
+	PowerUp(Vec3 pos);
 	~PowerUp();
 	void update();
 	void render(float delta);
 public:
-	bool checkPowerUpHit(Vector3D pos);
+	bool checkPowerUpHit(Vec3 pos);
 
 private:
 	SkinnedMeshPtr m_mesh;

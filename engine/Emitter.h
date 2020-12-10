@@ -23,7 +23,7 @@ public:
 
 protected:
 	std::vector<SpriteParticle*> m_parts;
-	Vector3D m_pos; //position of the emitter in 3D space
+	Vec3 m_pos; //position of the emitter in 3D space
 	float m_radius; //radius where the emitter can spawn particles
 	bool m_is_active;		//bool which tells the particle system to delete if it turns false
 	int m_max_particles;	//integer which tracks the limit of particles this emitter is allowed to create

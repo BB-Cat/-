@@ -28,7 +28,7 @@ public:
 	//retrieve the output data by using reinterpret_cast<DATATYPE*>(mappedResource.pData);
 	void* getOutputData() { return m_output_data; }
 
-	ID3D11ShaderResourceView* createTextureSRVFromOutput(Vector2D size);
+	ID3D11ShaderResourceView* createTextureSRVFromOutput(Vec2 size);
 
 public: //!! This needs to be switched to private from public, but I'm still not sure how to handle releasing data after use from inside the class...
 	//void pointer to the output data which can be used for things like creating an SRV for image data

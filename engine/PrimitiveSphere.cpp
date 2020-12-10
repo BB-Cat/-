@@ -34,18 +34,18 @@ PrimitiveSphere::PrimitiveSphere(float radius, int slice_count, int stack_count)
 			float sinPhi = sinf(phi);
 			float cosPhi = cosf(phi);
 
-			Vector3D v;
+			Vec3 v;
 			float normX, normY, normZ;
 			normX = cosPhi * sinTheta;
 			normY = cosTheta;
 			normZ = sinPhi * sinTheta;
 
-			v.m_x = radius * normX;
-			v.m_y = radius * normY;
-			v.m_z = radius * normZ;
+			v.x = radius * normX;
+			v.y = radius * normY;
+			v.z = radius * normZ;
 
 
-			v_list.push_back(vertex(v, Vector3D(0.2f, 0.05f * j, 0.05f * i), Vector3D((float)i / stack_count, (float)j / slice_count, 0.2f)));
+			v_list.push_back(vertex(v, Vec3(0.2f, 0.05f * j, 0.05f * i), Vec3((float)i / stack_count, (float)j / slice_count, 0.2f)));
 		}
 	}
 

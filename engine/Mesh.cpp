@@ -47,7 +47,7 @@ Mesh::~Mesh()
 	if(m_depth_stencil) m_depth_stencil->Release();
 }
 
-Matrix4x4 Mesh::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
+Matrix4x4 Mesh::applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate)
 {
 	Matrix4x4 out = global;
 	Matrix4x4 temp;
@@ -59,13 +59,13 @@ Matrix4x4 Mesh::applyTransformations(const Matrix4x4& global, Vector3D scale, Ve
 
 	//Rotation
 	temp.setIdentity();
-	temp.setRotationZ(rot.m_z);
+	temp.setRotationZ(rot.z);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationX(rot.m_x);
+	temp.setRotationX(rot.x);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationY(rot.m_y);
+	temp.setRotationY(rot.y);
 	out *= temp;
 
 	//Translation

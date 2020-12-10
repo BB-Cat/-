@@ -5,12 +5,12 @@
 #include <iostream>
 #include <fstream>  
 
-Texture3D::Texture3D(Vector3D dimensions, const std::vector<float>& data)
+Texture3D::Texture3D(Vec3 dimensions, const std::vector<float>& data)
 {
     // Create texture3d
-    const UINT cWidth = dimensions.m_x;
-    const UINT cHeight = dimensions.m_y;
-    const UINT cDepth = dimensions.m_z;
+    const UINT cWidth = dimensions.x;
+    const UINT cHeight = dimensions.y;
+    const UINT cDepth = dimensions.z;
     m_width = cWidth;
     m_height = cHeight;
     m_depth = cDepth;

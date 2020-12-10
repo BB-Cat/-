@@ -16,10 +16,10 @@ Sprite::Sprite(const wchar_t* full_path):Resource(full_path)
 
 	VertexMesh vertices[4] =
 	{
-		VertexMesh(Vector3D(0.0f, 1.0f, 0), Vector2D(0, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 1.0f, 0), Vector2D(1, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(0.0f, 0.0f, 0), Vector2D(0, 0), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 0.0f, 0), Vector2D(1, 0), Vector3D(0.0f, 0.0f, -1.0f))
+		VertexMesh(Vec3(0.0f, 1.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 1.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(0.0f, 0.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 0.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
 	};
 
 	D3D11_BUFFER_DESC bd = {};
@@ -97,38 +97,38 @@ Sprite::~Sprite()
 	if(m_rs) m_rs->Release();
 }
 
-void Sprite::renderSprite(Vector3D scale, Vector3D position, Vector3D rotation,
-	Vector2D texture_pos, Vector2D texture_size, Vector2D origin)
+void Sprite::renderSprite(Vec3 scale, Vec3 position, Vec3 rotation,
+	Vec2 texture_pos, Vec2 texture_size, Vec2 origin)
 {
-	if (scale.m_x == 0.0f || scale.m_y == 0.0f) return;
+	if (scale.x == 0.0f || scale.y == 0.0f) return;
 
 	VertexMesh vertices[] =
 	{
-		VertexMesh(Vector3D(0.0f, 1.0f, 0), Vector2D(0, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 1.0f, 0), Vector2D(1, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(0.0f, 0.0f, 0), Vector2D(0, 0), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 0.0f, 0), Vector2D(1, 0), Vector3D(0.0f, 0.0f, -1.0f))
+		VertexMesh(Vec3(0.0f, 1.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 1.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(0.0f, 0.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 0.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
 	};
 
-	Vector2D image_size = m_tex->getSize();
+	Vec2 image_size = m_tex->getSize();
 	
-	float left = texture_pos.m_x / image_size.m_x;
-	float right = left + texture_size.m_x / image_size.m_x;
-	float top = texture_pos.m_y / image_size.m_y;
-	float bottom = top + texture_size.m_y / image_size.m_y;
+	float left = texture_pos.x / image_size.x;
+	float right = left + texture_size.x / image_size.x;
+	float top = texture_pos.y / image_size.y;
+	float bottom = top + texture_size.y / image_size.y;
 
-	vertices[0].m_texcoord = Vector2D(left, top);
-	vertices[1].m_texcoord = Vector2D(right, top);
-	vertices[2].m_texcoord = Vector2D(left, bottom);
-	vertices[3].m_texcoord = Vector2D(right, bottom);
+	vertices[0].m_texcoord = Vec2(left, top);
+	vertices[1].m_texcoord = Vec2(right, top);
+	vertices[2].m_texcoord = Vec2(left, bottom);
+	vertices[3].m_texcoord = Vec2(right, bottom);
 
-	float modX = origin.m_x / texture_size.m_x;
-	float modY = origin.m_y / texture_size.m_y;
+	float modX = origin.x / texture_size.x;
+	float modY = origin.y / texture_size.y;
 
-	vertices[0].m_position = vertices[0].m_position - Vector3D(modX, modY, 0);
-	vertices[1].m_position = vertices[1].m_position - Vector3D(modX, modY, 0);
-	vertices[2].m_position = vertices[2].m_position - Vector3D(modX, modY, 0);
-	vertices[3].m_position = vertices[3].m_position - Vector3D(modX, modY, 0);
+	vertices[0].m_position = vertices[0].m_position - Vec3(modX, modY, 0);
+	vertices[1].m_position = vertices[1].m_position - Vec3(modX, modY, 0);
+	vertices[2].m_position = vertices[2].m_position - Vec3(modX, modY, 0);
+	vertices[3].m_position = vertices[3].m_position - Vec3(modX, modY, 0);
 
 
 	D3D11_MAPPED_SUBRESOURCE msr;
@@ -158,7 +158,7 @@ void Sprite::renderSprite(Vector3D scale, Vector3D position, Vector3D rotation,
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawTriangleStrip(4, 0);
 }
 
-Matrix4x4 Sprite::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
+Matrix4x4 Sprite::applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate)
 {
 	Matrix4x4 out = global;
 	Matrix4x4 temp;
@@ -170,13 +170,13 @@ Matrix4x4 Sprite::applyTransformations(const Matrix4x4& global, Vector3D scale, 
 
 	//Rotation
 	temp.setIdentity();
-	temp.setRotationZ(rot.m_z);
+	temp.setRotationZ(rot.z);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationX(rot.m_x);
+	temp.setRotationX(rot.x);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationY(rot.m_y);
+	temp.setRotationY(rot.y);
 	out *= temp;
 
 	//Translation

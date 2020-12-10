@@ -23,18 +23,18 @@ public:
 		m_mat[3][3] = 1;
 	}
 
-	void setTranslation(const Vector3D& translation)
+	void setTranslation(const Vec3& translation)
 	{
-		m_mat[3][0] = translation.m_x;
-		m_mat[3][1] = translation.m_y;
-		m_mat[3][2] = translation.m_z;
+		m_mat[3][0] = translation.x;
+		m_mat[3][1] = translation.y;
+		m_mat[3][2] = translation.z;
 	}
 
-	void setScale(const Vector3D& scale)
+	void setScale(const Vec3& scale)
 	{
-		m_mat[0][0] = scale.m_x;
-		m_mat[1][1] = scale.m_y;
-		m_mat[2][2] = scale.m_z;
+		m_mat[0][0] = scale.x;
+		m_mat[1][1] = scale.y;
+		m_mat[2][2] = scale.z;
 	}
 
 	void setRotationX(float x)
@@ -111,27 +111,27 @@ public:
 		this->setMatrix(out);
 	}
 
-	void lookAt(Vector3D target, Vector3D pos, Vector3D up)
+	void lookAt(Vec3 target, Vec3 pos, Vec3 up)
 	{
-		Vector3D forward = target - pos;
+		Vec3 forward = target - pos;
 		forward.normalize();
-		Vector3D side = Vector3D::cross(forward, up);
+		Vec3 side = Vec3::cross(forward, up);
 		side.normalize();
-		Vector3D upward = Vector3D::cross(forward, side);
+		Vec3 upward = Vec3::cross(forward, side);
 
 		setIdentity();
 
-		m_mat[0][0] = side.m_x;
-		m_mat[0][1] = side.m_y;
-		m_mat[0][2] = side.m_z;
+		m_mat[0][0] = side.x;
+		m_mat[0][1] = side.y;
+		m_mat[0][2] = side.z;
 
-		m_mat[1][0] = upward.m_x;
-		m_mat[1][1] = upward.m_y;
-		m_mat[1][2] = upward.m_z;
+		m_mat[1][0] = upward.x;
+		m_mat[1][1] = upward.y;
+		m_mat[1][2] = upward.z;
 
-		m_mat[2][0] = forward.m_x;
-		m_mat[2][1] = forward.m_y;
-		m_mat[2][2] = forward.m_z;
+		m_mat[2][0] = forward.x;
+		m_mat[2][1] = forward.y;
+		m_mat[2][2] = forward.z;
 
 		m_mat[3][0]	 = 0;
 		m_mat[3][1]	 = 0;
@@ -238,13 +238,13 @@ public:
 		setMatrix(output);
 	}
 
-	Vector3D operator *(const Vector3D& v3)
+	Vec3 operator *(const Vec3& v3)
 	{
-		Vector3D output;
+		Vec3 output;
 
-		output.m_x = v3.m_x * m_mat[0][0] + v3.m_y * m_mat[0][1] + v3.m_z * m_mat[0][2] + 1.0f * m_mat[0][3];
-		output.m_y = v3.m_x * m_mat[1][0] + v3.m_y * m_mat[1][1] + v3.m_z * m_mat[1][2] + 1.0f * m_mat[1][3];
-		output.m_z = v3.m_x * m_mat[2][0] + v3.m_y * m_mat[2][1] + v3.m_z * m_mat[2][2] + 1.0f * m_mat[2][3];
+		output.x = v3.x * m_mat[0][0] + v3.y * m_mat[0][1] + v3.z * m_mat[0][2] + 1.0f * m_mat[0][3];
+		output.y = v3.x * m_mat[1][0] + v3.y * m_mat[1][1] + v3.z * m_mat[1][2] + 1.0f * m_mat[1][3];
+		output.z = v3.x * m_mat[2][0] + v3.y * m_mat[2][1] + v3.z * m_mat[2][2] + 1.0f * m_mat[2][3];
 		
 		return output;
 	}
@@ -271,21 +271,21 @@ public:
 		::memcpy(m_mat, matrix.m_mat, sizeof(float) * 16);
 	}
 
-	Vector3D getZDirection()
+	Vec3 getZDirection()
 	{
-		return Vector3D(m_mat[2][0], m_mat[2][1], m_mat[2][2]);
+		return Vec3(m_mat[2][0], m_mat[2][1], m_mat[2][2]);
 	}
-	Vector3D getYDirection()
+	Vec3 getYDirection()
 	{
-		return Vector3D(m_mat[1][0], m_mat[1][1], m_mat[1][2]);
+		return Vec3(m_mat[1][0], m_mat[1][1], m_mat[1][2]);
 	}
-	Vector3D getXDirection()
+	Vec3 getXDirection()
 	{
-		return Vector3D(m_mat[0][0], m_mat[0][1], m_mat[0][2]);
+		return Vec3(m_mat[0][0], m_mat[0][1], m_mat[0][2]);
 	}
-	Vector3D getTranslation()
+	Vec3 getTranslation()
 	{
-		return Vector3D(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
+		return Vec3(m_mat[3][0], m_mat[3][1], m_mat[3][2]);
 	}
 
 	void setPerspectiveFovLH(float fov, float aspect, float znear, float zfar)

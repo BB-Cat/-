@@ -132,7 +132,7 @@ bool PrefabManager::ImGuiModifyPrefabs()
 				}
 				else
 				{
-					Collider* temp = new CubeCollider(Vector3D(1, 1, 1));
+					Collider* temp = new CubeCollider(Vec3(1, 1, 1));
 					m_prefabs[m_focused_prefab].collider = temp;
 					focused_has_collider = true;
 					m_show_collider = true;
@@ -144,12 +144,12 @@ bool PrefabManager::ImGuiModifyPrefabs()
 				if (m_show_collider)
 				{
 					ImGui::PushID("Collider");
-					Vector3D bounding_box = m_prefabs[m_focused_prefab].collider->getBoundingBox();
+					Vec3 bounding_box = m_prefabs[m_focused_prefab].collider->getBoundingBox();
 					v = VectorToArray(&bounding_box);
 					ImGui::DragFloat3("Size", v.setArray(), 0.025f, 0.01);
 					m_prefabs[m_focused_prefab].collider->setBoundingBox(bounding_box);
 
-					Vector3D offset = m_prefabs[m_focused_prefab].collider->getOffset();
+					Vec3 offset = m_prefabs[m_focused_prefab].collider->getOffset();
 					v = VectorToArray(&offset);
 					ImGui::DragFloat3("Offset", v.setArray(), 0.025f, 0.01);
 					m_prefabs[m_focused_prefab].collider->setOffset(offset);
@@ -169,7 +169,7 @@ void PrefabManager::renderEditingPrefab()
 	if (m_focused_prefab >= 0 && m_focused_prefab < m_prefabs.size())
 	{
 		PrefabMesh *m = &m_prefabs[m_focused_prefab];
-		m->mesh->renderMesh(0, m->default_scale, Vector3D(0, 0, 0), m->default_rot, m->default_shader);
+		m->mesh->renderMesh(0, m->default_scale, Vec3(0, 0, 0), m->default_rot, m->default_shader);
 
 		if (m_show_collider) renderEditingBoundingBox();
 	}
@@ -178,7 +178,7 @@ void PrefabManager::renderEditingPrefab()
 void PrefabManager::renderEditingBoundingBox()
 {
 	//create a cube to render bounding boxes.  temporary
-	PrimitivePtr cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, nullptr);
+	PrimitivePtr cube = PrimitiveGenerator::get()->createUnitCube(nullptr, nullptr, nullptr, nullptr);
 
 	//GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::FLAT);
 
@@ -195,9 +195,9 @@ void PrefabManager::renderEditingBoundingBox()
 	Collider* c = m_prefabs[m_focused_prefab].collider;
 	if (c == nullptr) return;
 
-	Vector3D s = c->getBoundingBox();
-	Vector3D p = c->getOffset();
-	Vector3D r = {};
+	Vec3 s = c->getBoundingBox();
+	Vec3 p = c->getOffset();
+	Vec3 r = {};
 
 	cube->render(s, p, r, Shaders::LAMBERT);
 

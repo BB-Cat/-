@@ -88,10 +88,10 @@ GBuffer::GBuffer(UINT width, UINT height)
 	//////////////////////////////////////////////
 	VertexMesh vertices[4] =
 	{
-		VertexMesh(Vector3D(0.0f, 1.0f, 0), Vector2D(0, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 1.0f, 0), Vector2D(1, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(0.0f, 0.0f, 0), Vector2D(0, 0), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(1.0f, 0.0f, 0), Vector2D(1, 0), Vector3D(0.0f, 0.0f, -1.0f))
+		VertexMesh(Vec3(0.0f, 1.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 1.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(0.0f, 0.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 0.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
 	};
 
 	D3D11_BUFFER_DESC bd = {};
@@ -176,21 +176,21 @@ GBuffer::~GBuffer()
 
 }
 
-void GBuffer::renderToSwapChain(int final_pass_shader_type,Vector2D pos, Vector2D scale, Vector2D rot)
+void GBuffer::renderToSwapChain(int final_pass_shader_type,Vec2 pos, Vec2 scale, Vec2 rot)
 {
 	VertexMesh vertices[] =
 	{
-		VertexMesh(Vector3D(0.0f, 0.0f, 0), Vector2D(0, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(2.0f, 0.0f, 0), Vector2D(1, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(0.0f, 2.0f, 0), Vector2D(0, 0), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(2.0f, 2.0f, 0), Vector2D(1, 0), Vector3D(0.0f, 0.0f, -1.0f))
+		VertexMesh(Vec3(0.0f, 0.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(2.0f, 0.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(0.0f, 2.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(2.0f, 2.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
 	};
 
 	for (int i = 0; i < 4; i++)
 	{
-		vertices[i].m_position = vertices[i].m_position * Vector3D(scale.m_x, scale.m_y, 1);
+		vertices[i].m_position = vertices[i].m_position * Vec3(scale.x, scale.y, 1);
 		vertices[i].m_position += pos;
-		vertices[i].m_position -= Vector3D(1, 1, 0);
+		vertices[i].m_position -= Vec3(1, 1, 0);
 	}
 
 	D3D11_MAPPED_SUBRESOURCE msr;
@@ -215,21 +215,21 @@ void GBuffer::renderToSwapChain(int final_pass_shader_type,Vector2D pos, Vector2
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->drawTriangleStrip(4, 0);
 }
 
-void GBuffer::renderToSwapChain(int buffer, int final_pass_shader_type, Vector2D pos, Vector2D scale, Vector2D rot)
+void GBuffer::renderToSwapChain(int buffer, int final_pass_shader_type, Vec2 pos, Vec2 scale, Vec2 rot)
 {
 	VertexMesh vertices[] =
 	{
-		VertexMesh(Vector3D(0.0f, 0.0f, 0), Vector2D(0, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(2.0f, 0.0f, 0), Vector2D(1, 1), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(0.0f, 2.0f, 0), Vector2D(0, 0), Vector3D(0.0f, 0.0f, -1.0f)),
-		VertexMesh(Vector3D(2.0f, 2.0f, 0), Vector2D(1, 0), Vector3D(0.0f, 0.0f, -1.0f))
+		VertexMesh(Vec3(0.0f, 0.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(2.0f, 0.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(0.0f, 2.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(2.0f, 2.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
 	};
 
 	for (int i = 0; i < 4; i++)
 	{
-		vertices[i].m_position = vertices[i].m_position * Vector3D(scale.m_x, scale.m_y, 1);
+		vertices[i].m_position = vertices[i].m_position * Vec3(scale.x, scale.y, 1);
 		vertices[i].m_position += pos;
-		vertices[i].m_position -= Vector3D(1, 1, 0);
+		vertices[i].m_position -= Vec3(1, 1, 0);
 	}
 
 	D3D11_MAPPED_SUBRESOURCE msr;

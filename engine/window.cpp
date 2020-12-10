@@ -62,7 +62,7 @@ Window::Window()
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hInstance = NULL;
-	wc.lpszClassName = L"描画エンジン";
+	wc.lpszClassName = L"BB Engine";
 	wc.lpszMenuName = L"";
 	wc.style = NULL;
 	wc.lpfnWndProc = &fnWndProc;
@@ -73,7 +73,7 @@ Window::Window()
 		throw std::exception("Registration of the windows class has failed");
 
 	//Creation of the window
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"描画エンジン", L"描画エンジン", WS_OVERLAPPEDWINDOW, 
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW, 
 		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, NULL);
 
 	//if the creation of the window fails throw an exception

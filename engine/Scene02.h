@@ -19,7 +19,7 @@ private:
     SkinnedMeshPtr m_sky;
 
 private: //ImGui variables
-    Vector2D m_global_light_rotation;
+    Vec2 m_global_light_rotation;
 
 
 public:

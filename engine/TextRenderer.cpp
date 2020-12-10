@@ -100,7 +100,7 @@ TextRenderer::~TextRenderer()
 
 }
 
-void TextRenderer::render(const wchar_t text[], Vector2D pos, Vector2D size, int color)
+void TextRenderer::render(const wchar_t text[], Vec2 pos, Vec2 size, int color)
 {
     //set text and check the size
     m_display_text = text;
@@ -110,10 +110,10 @@ void TextRenderer::render(const wchar_t text[], Vector2D pos, Vector2D size, int
 
     //create the binding box area which will display the text
     D2D1_RECT_F layoutRect = D2D1::RectF(
-        static_cast<FLOAT>(pos.m_x),
-        static_cast<FLOAT>(pos.m_y),
-        static_cast<FLOAT>((pos.m_x + size.m_x)),
-        static_cast<FLOAT>((pos.m_y + size.m_y))
+        static_cast<FLOAT>(pos.x),
+        static_cast<FLOAT>(pos.y),
+        static_cast<FLOAT>((pos.x + size.x)),
+        static_cast<FLOAT>((pos.y + size.y))
     );
 
     m_d2d_devcon->BeginDraw();

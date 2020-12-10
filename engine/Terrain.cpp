@@ -10,7 +10,7 @@
 #include <iostream>
 #include <fstream>  
 
-Terrain::Terrain(Vector2D map_pos, bool from_generated) : m_pos(map_pos)
+Terrain::Terrain(Vec2 map_pos, bool from_generated) : m_pos(map_pos)
 {
     int cols = CHUNK_AND_SEAM_SIZE;
     int rows = CHUNK_AND_SEAM_SIZE;
@@ -39,7 +39,7 @@ Terrain::Terrain(Vector2D map_pos, bool from_generated) : m_pos(map_pos)
 
 }
 
-Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintype, Vector2D map_pos) : m_pos(map_pos)
+Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintype, Vec2 map_pos) : m_pos(map_pos)
 {
     //get the terrain data 
     fetchMaps(filename_heightmap, filename_terraintype, m_heightmap_info, map_pos);
@@ -60,10 +60,10 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
         for (DWORD j = 0; j < loaded_cols; ++j)
         {
             verts[i * loaded_cols + j].m_position = m_heightmap_info.height_map[i * loaded_cols + j]
-                + Vector3D(map_pos.m_x * CHUNK_AND_SEAM_SIZE, 0, map_pos.m_y * CHUNK_AND_SEAM_SIZE)
-                + Vector3D( -3 * (m_left_buffer), 0, -3 * (m_bottom_buffer));
+                + Vec3(map_pos.x * CHUNK_AND_SEAM_SIZE, 0, map_pos.y * CHUNK_AND_SEAM_SIZE)
+                + Vec3( -3 * (m_left_buffer), 0, -3 * (m_bottom_buffer));
 
-            verts[i * loaded_cols + j].m_normal = Vector3D(0.0f, 1.0f, 0.0f);
+            verts[i * loaded_cols + j].m_normal = Vec3(0.0f, 1.0f, 0.0f);
             verts[i * loaded_cols + j].m_bone_influence[0] = m_heightmap_info.terrain_color[i * loaded_cols + j].m_x;
             verts[i * loaded_cols + j].m_bone_influence[1] = m_heightmap_info.terrain_color[i * loaded_cols + j].m_y;
             verts[i * loaded_cols + j].m_bone_influence[2] = m_heightmap_info.terrain_color[i * loaded_cols + j].m_z;
@@ -81,23 +81,23 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
         for (DWORD j = 0; j < loaded_cols - 1; j++)
         {
             indices[k] = i * loaded_cols + j;        // Bottom left of quad
-            verts[i * loaded_cols + j].m_texcoord = Vector2D(texUIndex + 0.0f, texVIndex + 1.0f);
+            verts[i * loaded_cols + j].m_texcoord = Vec2(texUIndex + 0.0f, texVIndex + 1.0f);
 
             indices[k + 1] = i * loaded_cols + j + 1;        // Bottom right of quad
-            verts[i * loaded_cols + j + 1].m_texcoord = Vector2D(texUIndex + 1.0f, texVIndex + 1.0f);
+            verts[i * loaded_cols + j + 1].m_texcoord = Vec2(texUIndex + 1.0f, texVIndex + 1.0f);
 
             indices[k + 2] = (i + 1) * loaded_cols + j;    // Top left of quad
-            verts[(i + 1) * loaded_cols + j].m_texcoord = Vector2D(texUIndex + 0.0f, texVIndex + 0.0f);
+            verts[(i + 1) * loaded_cols + j].m_texcoord = Vec2(texUIndex + 0.0f, texVIndex + 0.0f);
 
 
             indices[k + 3] = (i + 1) * loaded_cols + j;    // Top left of quad
-            verts[(i + 1) * loaded_cols + j].m_texcoord = Vector2D(texUIndex + 0.0f, texVIndex + 0.0f);
+            verts[(i + 1) * loaded_cols + j].m_texcoord = Vec2(texUIndex + 0.0f, texVIndex + 0.0f);
 
             indices[k + 4] = i * loaded_cols + j + 1;        // Bottom right of quad
-            verts[i * loaded_cols + j + 1].m_texcoord = Vector2D(texUIndex + 1.0f, texVIndex + 1.0f);
+            verts[i * loaded_cols + j + 1].m_texcoord = Vec2(texUIndex + 1.0f, texVIndex + 1.0f);
 
             indices[k + 5] = (i + 1) * loaded_cols + j + 1;    // Top right of quad
-            verts[(i + 1) * loaded_cols + j + 1].m_texcoord = Vector2D(texUIndex + 1.0f, texVIndex + 0.0f);
+            verts[(i + 1) * loaded_cols + j + 1].m_texcoord = Vec2(texUIndex + 1.0f, texVIndex + 0.0f);
 
             k += 6; // next quad
 
@@ -110,10 +110,10 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
 
     //////////////////////Compute Normals///////////////////////////
     //Now we will compute the normals for each vertex using normal averaging
-    std::vector<Vector3D> tempNormal;
+    std::vector<Vec3> tempNormal;
 
     //normalized and unnormalized normals
-    Vector3D unnormalized = Vector3D(0.0f, 0.0f, 0.0f);
+    Vec3 unnormalized = Vec3(0.0f, 0.0f, 0.0f);
 
     //Used to get vectors (sides) from the position of the verts
     float vecX, vecY, vecZ;
@@ -126,19 +126,19 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
     for (int i = 0; i < m_num_faces; ++i)
     {
         //Get the vector describing one edge of our triangle (edge 0,2)
-        vecX = verts[indices[(i * 3)]].m_position.m_x - verts[indices[(i * 3) + 1]].m_position.m_x;
-        vecY = verts[indices[(i * 3)]].m_position.m_y - verts[indices[(i * 3) + 1]].m_position.m_y;
-        vecZ = verts[indices[(i * 3)]].m_position.m_z - verts[indices[(i * 3) + 1]].m_position.m_z;
+        vecX = verts[indices[(i * 3)]].m_position.x - verts[indices[(i * 3) + 1]].m_position.x;
+        vecY = verts[indices[(i * 3)]].m_position.y - verts[indices[(i * 3) + 1]].m_position.y;
+        vecZ = verts[indices[(i * 3)]].m_position.z - verts[indices[(i * 3) + 1]].m_position.z;
         edge1 = Vector4D(vecX, vecY, vecZ, 0.0f);    //Create our first edge
 
         //Get the vector describing another edge of our triangle (edge 2,1)
-        vecX = verts[indices[(i * 3) + 2]].m_position.m_x - verts[indices[(i * 3) + 1]].m_position.m_x;
-        vecY = verts[indices[(i * 3) + 2]].m_position.m_y - verts[indices[(i * 3) + 1]].m_position.m_y;
-        vecZ = verts[indices[(i * 3) + 2]].m_position.m_z - verts[indices[(i * 3) + 1]].m_position.m_z;
+        vecX = verts[indices[(i * 3) + 2]].m_position.x - verts[indices[(i * 3) + 1]].m_position.x;
+        vecY = verts[indices[(i * 3) + 2]].m_position.y - verts[indices[(i * 3) + 1]].m_position.y;
+        vecZ = verts[indices[(i * 3) + 2]].m_position.z - verts[indices[(i * 3) + 1]].m_position.z;
         edge2 = Vector4D(vecX, vecY, vecZ, 0.0f);    //Create our second edge
 
         //Cross multiply the two edge vectors to get the un-normalized face normal
-        unnormalized = Vector3D::cross(Vector3D(edge1.m_x, edge1.m_y, edge1.m_z), Vector3D(edge2.m_x, edge2.m_y, edge2.m_z));
+        unnormalized = Vec3::cross(Vec3(edge1.m_x, edge1.m_y, edge1.m_z), Vec3(edge2.m_x, edge2.m_y, edge2.m_z));
         tempNormal.push_back(unnormalized);            //Save unormalized normal (for normal averaging)
     }
 
@@ -159,9 +159,9 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
                 indices[(j * 3) + 1] == i ||
                 indices[(j * 3) + 2] == i)
             {
-                tX = normalSum.m_x + tempNormal[j].m_x;
-                tY = normalSum.m_y + tempNormal[j].m_y;
-                tZ = normalSum.m_z + tempNormal[j].m_z;
+                tX = normalSum.m_x + tempNormal[j].x;
+                tY = normalSum.m_y + tempNormal[j].y;
+                tZ = normalSum.m_z + tempNormal[j].z;
 
                 normalSum = Vector4D(tX, tY, tZ, 0.0f);    //If a face is using the vertex, add the unormalized face normal to the normalSum
                 facesUsing++;
@@ -172,15 +172,15 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
         normalSum = normalSum / facesUsing;
 
         //Normalize the normalSum vector
-        Vector3D normalizedSum;
-        normalizedSum = Vector3D(normalSum.m_x, normalSum.m_y, normalSum.m_z);
+        Vec3 normalizedSum;
+        normalizedSum = Vec3(normalSum.m_x, normalSum.m_y, normalSum.m_z);
         normalizedSum.normalize();
         normalSum = normalizedSum;
 
         //Store the normal in our current vertex
-        verts[i].m_normal.m_x = -normalSum.m_x;
-        verts[i].m_normal.m_y = -normalSum.m_y;
-        verts[i].m_normal.m_z = -normalSum.m_z;
+        verts[i].m_normal.x = -normalSum.m_x;
+        verts[i].m_normal.y = -normalSum.m_y;
+        verts[i].m_normal.z = -normalSum.m_z;
 
         //Clear normalSum and facesUsing for next vertex
         normalSum = Vector4D(0.0f, 0.0f, 0.0f, 0.0f);
@@ -190,7 +190,7 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
     //save the dot product of each face with straight down which we will use later for wall collision detection
     for (int i = 0; i < verts.size(); i++)
     {
-        float dot = Vector3D::dot(verts[i].m_normal, Vector3D(0, -1, 0));
+        float dot = Vec3::dot(verts[i].m_normal, Vec3(0, -1, 0));
         verts[i].m_bone_influence[3] = -dot;
     }
 
@@ -264,7 +264,7 @@ Terrain::Terrain(const char* filename_heightmap, const char* filename_terraintyp
 }
 
 
-Terrain::Terrain(Vector2D map_pos, const std::vector<VertexMesh>& verts)
+Terrain::Terrain(Vec2 map_pos, const std::vector<VertexMesh>& verts)
 {
     m_pos = map_pos;
 
@@ -438,55 +438,55 @@ void Terrain::render(int lod, int vb_id, int seam_lod)
 //    return (x_height * (1.0f - z_remainder))  + (z_height * z_remainder);
 //}
 
-Vector2D Terrain::getCenterPreloaded()
+Vec2 Terrain::getCenterPreloaded()
 {
-    return (Vector2D(m_pos.m_x, m_pos.m_y) * (CHUNK_AND_SEAM_SIZE - 1) +
-        Vector2D((CHUNK_AND_SEAM_SIZE-1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * PRELOADED_SCALE;
+    return (Vec2(m_pos.x, m_pos.y) * (CHUNK_AND_SEAM_SIZE - 1) +
+        Vec2((CHUNK_AND_SEAM_SIZE-1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * PRELOADED_SCALE;
 }
 
-Vector2D Terrain::getCenterComputed()
+Vec2 Terrain::getCenterComputed()
 {
-    return (Vector2D(m_pos.m_x, m_pos.m_y) * (CHUNK_AND_SEAM_SIZE - 1) +
-        Vector2D((CHUNK_AND_SEAM_SIZE - 1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * COMPUTED_SCALE;
+    return (Vec2(m_pos.x, m_pos.y) * (CHUNK_AND_SEAM_SIZE - 1) +
+        Vec2((CHUNK_AND_SEAM_SIZE - 1) / 2.0f, (CHUNK_AND_SEAM_SIZE - 1) / 2.0f)) * COMPUTED_SCALE;
 }
 
-void Terrain::getCorners(Vector3D* corner_array)
+void Terrain::getCorners(Vec3* corner_array)
 {
-    Vector2D corners[4];
+    Vec2 corners[4];
     
 
     //calculate the x/z locations of each corner at 0 level
     corners[0] = m_pos * (CHUNK_AND_SEAM_SIZE - 1);
-    corners[1] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vector2D((CHUNK_AND_SEAM_SIZE - 1), 0);
-    corners[2] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vector2D(0, (CHUNK_AND_SEAM_SIZE - 1));
-    corners[3] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vector2D((CHUNK_AND_SEAM_SIZE - 1), (CHUNK_AND_SEAM_SIZE - 1));
+    corners[1] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vec2((CHUNK_AND_SEAM_SIZE - 1), 0);
+    corners[2] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vec2(0, (CHUNK_AND_SEAM_SIZE - 1));
+    corners[3] = m_pos * (CHUNK_AND_SEAM_SIZE - 1) + Vec2((CHUNK_AND_SEAM_SIZE - 1), (CHUNK_AND_SEAM_SIZE - 1));
 
     //find the Y value of each corner's vertex
-    float h1 = m_vec_vm_chunk[0].m_position.m_y;
-    float h2 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE - 1)].m_position.m_y;
-    float h3 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE) - (1 + (int)(CHUNK_AND_SEAM_SIZE - 1))].m_position.m_y;
-    float h4 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE) - 1].m_position.m_y;
+    float h1 = m_vec_vm_chunk[0].m_position.y;
+    float h2 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE - 1)].m_position.y;
+    float h3 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE) - (1 + (int)(CHUNK_AND_SEAM_SIZE - 1))].m_position.y;
+    float h4 = m_vec_vm_chunk[(int)(CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE) - 1].m_position.y;
 
     //output the 8 chunk corners
 
-    corner_array[0] = Vector3D(corners[0].m_x, 0, corners[0].m_y);
-    corner_array[1] = Vector3D(corners[1].m_x, 0, corners[1].m_y);
-    corner_array[2] = Vector3D(corners[2].m_x, 0, corners[2].m_y);
-    corner_array[3] = Vector3D(corners[3].m_x, 0, corners[3].m_y);
-    corner_array[4] = Vector3D(corners[0].m_x, h1, corners[0].m_y);
-    corner_array[5] = Vector3D(corners[1].m_x, h2, corners[1].m_y);
-    corner_array[6] = Vector3D(corners[2].m_x, h3, corners[2].m_y);
-    corner_array[7] = Vector3D(corners[3].m_x, h4, corners[3].m_y);
+    corner_array[0] = Vec3(corners[0].x, 0, corners[0].y);
+    corner_array[1] = Vec3(corners[1].x, 0, corners[1].y);
+    corner_array[2] = Vec3(corners[2].x, 0, corners[2].y);
+    corner_array[3] = Vec3(corners[3].x, 0, corners[3].y);
+    corner_array[4] = Vec3(corners[0].x, h1, corners[0].y);
+    corner_array[5] = Vec3(corners[1].x, h2, corners[1].y);
+    corner_array[6] = Vec3(corners[2].x, h3, corners[2].y);
+    corner_array[7] = Vec3(corners[3].x, h4, corners[3].y);
 }
 
-void Terrain::outputFile(Vector2D output_offset)
+void Terrain::outputFile(Vec2 output_offset)
 {
 
     std::string folder = "..\\ChunkData\\Generated\\";
 
     std::string chunk_x, chunk_z;
-    chunk_x = std::to_string((int)(m_pos.m_x + output_offset.m_x));
-    chunk_z = std::to_string((int)(m_pos.m_y + output_offset.m_y));
+    chunk_x = std::to_string((int)(m_pos.x + output_offset.x));
+    chunk_z = std::to_string((int)(m_pos.y + output_offset.y));
 
 //====================================================================================
     //output the chunk data
@@ -494,7 +494,7 @@ void Terrain::outputFile(Vector2D output_offset)
     std::string file = folder + chunk_x + "_" + chunk_z + "_chunk.txt";
     std::ofstream outfile(file.c_str());
 
-    Vector3D pos, normal;
+    Vec3 pos, normal;
     float tex_splat[4];
 
     for (int i = 0; i < m_vec_vm_chunk.size(); i++)
@@ -507,14 +507,14 @@ void Terrain::outputFile(Vector2D output_offset)
         tex_splat[3] = m_vec_vm_chunk[i].m_bone_influence[3];
 
         //output position
-        outfile << std::to_string(pos.m_x) << " ";
-        outfile << std::to_string(pos.m_y) << " ";
-        outfile << std::to_string(pos.m_z) << " ";
+        outfile << std::to_string(pos.x) << " ";
+        outfile << std::to_string(pos.y) << " ";
+        outfile << std::to_string(pos.z) << " ";
 
         //output normal
-        outfile << std::to_string(normal.m_x) << " ";
-        outfile << std::to_string(normal.m_y) << " ";
-        outfile << std::to_string(normal.m_z) << " ";
+        outfile << std::to_string(normal.x) << " ";
+        outfile << std::to_string(normal.y) << " ";
+        outfile << std::to_string(normal.z) << " ";
 
         //output texture splat data
         outfile << std::to_string(tex_splat[0]) << " ";
@@ -529,7 +529,7 @@ void Terrain::outputFile(Vector2D output_offset)
 //====================================================================================
     //output the right seam
 //------------------------------------------------------------------------------------
-    file = folder + std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamR.txt";
+    file = folder + std::to_string((int)(m_pos.x)) + "_" + std::to_string((int)(m_pos.y)) + "_seamR.txt";
     std::ofstream outfile2(file.c_str());
 
     if (m_seam_vb_right != nullptr)
@@ -544,14 +544,14 @@ void Terrain::outputFile(Vector2D output_offset)
             tex_splat[3] = m_vec_vm_seamR[i].m_bone_influence[3];
 
             //output position
-            outfile << std::to_string(pos.m_x) << " ";
-            outfile << std::to_string(pos.m_y) << " ";
-            outfile << std::to_string(pos.m_z) << " ";
+            outfile << std::to_string(pos.x) << " ";
+            outfile << std::to_string(pos.y) << " ";
+            outfile << std::to_string(pos.z) << " ";
 
             //output normal
-            outfile << std::to_string(normal.m_x) << " ";
-            outfile << std::to_string(normal.m_y) << " ";
-            outfile << std::to_string(normal.m_z) << " ";
+            outfile << std::to_string(normal.x) << " ";
+            outfile << std::to_string(normal.y) << " ";
+            outfile << std::to_string(normal.z) << " ";
 
             //output texture splat data
             outfile << std::to_string(tex_splat[0]) << " ";
@@ -571,7 +571,7 @@ void Terrain::outputFile(Vector2D output_offset)
 //====================================================================================
     //output the forward seam
 //------------------------------------------------------------------------------------
-    file = folder + std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamF.txt";
+    file = folder + std::to_string((int)(m_pos.x)) + "_" + std::to_string((int)(m_pos.y)) + "_seamF.txt";
     std::ofstream outfile3(file.c_str());
 
     if (m_seam_vb_forward != nullptr)
@@ -586,14 +586,14 @@ void Terrain::outputFile(Vector2D output_offset)
             tex_splat[3] = m_vec_vm_seamF[i].m_bone_influence[3];
 
             //output position
-            outfile << std::to_string(pos.m_x) << " ";
-            outfile << std::to_string(pos.m_y) << " ";
-            outfile << std::to_string(pos.m_z) << " ";
+            outfile << std::to_string(pos.x) << " ";
+            outfile << std::to_string(pos.y) << " ";
+            outfile << std::to_string(pos.z) << " ";
 
             //output normal
-            outfile << std::to_string(normal.m_x) << " ";
-            outfile << std::to_string(normal.m_y) << " ";
-            outfile << std::to_string(normal.m_z) << " ";
+            outfile << std::to_string(normal.x) << " ";
+            outfile << std::to_string(normal.y) << " ";
+            outfile << std::to_string(normal.z) << " ";
 
             //output texture splat data
             outfile << std::to_string(tex_splat[0]) << " ";
@@ -613,7 +613,7 @@ void Terrain::outputFile(Vector2D output_offset)
 
 }
 
-void Terrain::updateTextureSplat(const char* file, Vector2D max)
+void Terrain::updateTextureSplat(const char* file, Vec2 max)
 {
     //if (m_pos.m_x < 0 || m_pos.m_y < 0 || m_pos.m_x >= max.m_x || m_pos.m_y >= max.m_y) return;
 
@@ -790,7 +790,7 @@ void Terrain::updateTextureSplat(const char* file, Vector2D max)
         (UINT)m_vec_vm_seamR.size(), shader_byte_code, (UINT)size_shader);
 }
 
-bool Terrain::fetchMaps(const char* height_filename, const char* tex_filename, HeightMapInfo& hminfo, Vector2D chunk_id)
+bool Terrain::fetchMaps(const char* height_filename, const char* tex_filename, HeightMapInfo& hminfo, Vec2 chunk_id)
 {
     FILE *filePtr, *filePtrTex;                            // Point to the current position in the file
     BITMAPFILEHEADER bitmapFileHeader, bitmapFileHeaderTex;        // Structure which stores information about file
@@ -857,15 +857,15 @@ bool Terrain::fetchMaps(const char* height_filename, const char* tex_filename, H
 
     //if there is terrain data beyond this chunk, we load the next several rows to calculate normal data for our seams correctly.
     //it will take a little more time, but the end result will be prettier.
-    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_y < num_chunks_z - 1) + 3 * (chunk_id.m_y > 0);
-    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_x < num_chunks_x - 1) + 3 * (chunk_id.m_x > 0);
-    if (chunk_id.m_y < num_chunks_z - 1) m_has_forward_seam = true;
-    if (chunk_id.m_x < num_chunks_x - 1) m_has_right_seam = true;
-    if (chunk_id.m_y > 0) m_bottom_buffer = true;
-    if (chunk_id.m_x > 0) m_left_buffer = true;
+    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.y < num_chunks_z - 1) + 3 * (chunk_id.y > 0);
+    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.x < num_chunks_x - 1) + 3 * (chunk_id.x > 0);
+    if (chunk_id.y < num_chunks_z - 1) m_has_forward_seam = true;
+    if (chunk_id.x < num_chunks_x - 1) m_has_right_seam = true;
+    if (chunk_id.y > 0) m_bottom_buffer = true;
+    if (chunk_id.y > 0) m_left_buffer = true;
 
     // Initialize the heightMap array (stores the vertices of our terrain)
-    hminfo.height_map = new Vector3D[loaded_cols * loaded_rows];
+    hminfo.height_map = new Vec3[loaded_cols * loaded_rows];
     hminfo.terrain_color = new Vector4D[loaded_cols * loaded_rows];
 
 
@@ -881,10 +881,10 @@ bool Terrain::fetchMaps(const char* height_filename, const char* tex_filename, H
     int k = 0;
 
     //calculate the data offsets for the chunk we will load
-    int x_offset = (((chunk_id.m_x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.m_y * CHUNK_AND_SEAM_SIZE)) * 3;
+    int x_offset = (((chunk_id.x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.y * CHUNK_AND_SEAM_SIZE)) * 3;
 
     //adjust the x offset to account for the unused bytes at the end of each row of pixel data
-    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.m_x;
+    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.x;
     //if we are reading the left and bottom portions of the map as well we need to push the x offset backwards
     if (m_bottom_buffer) x_offset -= 3 * 3;
     if (m_left_buffer) x_offset -= strideInBytes * 3;
@@ -911,9 +911,9 @@ bool Terrain::fetchMaps(const char* height_filename, const char* tex_filename, H
 
             index = (loaded_cols * j) + i;
 
-            hminfo.height_map[index].m_x = (float)j;
-            hminfo.height_map[index].m_y = sampleHeight(bitmapImage, k, x_offset, full_row_offset, image_size) / EROSION;
-            hminfo.height_map[index].m_z = (float)i;
+            hminfo.height_map[index].x = (float)j;
+            hminfo.height_map[index].y = sampleHeight(bitmapImage, k, x_offset, full_row_offset, image_size) / EROSION;
+            hminfo.height_map[index].z = (float)i;
 
 
             float r = bitmapImageTex[k + x_offset];
@@ -990,7 +990,7 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo)
 
 
     // Initialize the heightMap array (stores the vertices of our terrain)
-    hminfo.height_map = new Vector3D[hminfo.terrainWidth * hminfo.terrainHeight];
+    hminfo.height_map = new Vec3[hminfo.terrainWidth * hminfo.terrainHeight];
 
     // We use a greyscale image, so all 3 rgb values are the same, but we only need one for the height
     // So we use this counter to skip the next two components in the image data (we read R, then skip BG)
@@ -1005,9 +1005,9 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo)
 
             index = (hminfo.terrainHeight * j) + i;
 
-            hminfo.height_map[index].m_x = (float)j;// / widthFactor;
-            hminfo.height_map[index].m_y = (float)height / EROSION;// / heightFactor;
-            hminfo.height_map[index].m_z = (float)i;// / widthFactor;
+            hminfo.height_map[index].x = (float)j;// / widthFactor;
+            hminfo.height_map[index].y = (float)height / EROSION;// / heightFactor;
+            hminfo.height_map[index].z = (float)i;// / widthFactor;
 
             k += 3;
         }
@@ -1019,7 +1019,7 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo)
 
     return true;
 }
-bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector2D chunk_id)
+bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vec2 chunk_id)
 {
     FILE* filePtr;                            // Point to the current position in the file
     BITMAPFILEHEADER bitmapFileHeader;        // Structure which stores information about file
@@ -1079,17 +1079,17 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector
     int unused_bytes = num_chunks_z % 4;
 
     // Initialize the heightMap array (stores the vertices of our terrain)
-    hminfo.height_map = new Vector3D[CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE];
+    hminfo.height_map = new Vec3[CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE];
 
     // We use a greyscale image, so all 3 rgb values are the same, but we only need one for the height
     // So we use this counter to skip the next two components in the image data (we read R, then skip BG)
     int k = 0;
 
     //calculate the data offsets for the chunk we will load
-    int x_offset = (( (chunk_id.m_x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.m_y * CHUNK_AND_SEAM_SIZE)) * 3;
+    int x_offset = (( (chunk_id.x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.y * CHUNK_AND_SEAM_SIZE)) * 3;
 
     //adjust the x offset to account for the unused bytes at the end of each row of pixel data
-    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.m_x;
+    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.x;
     
 
     //z offset is the height of the total image, minus the size of just the chunk we are loading.
@@ -1099,8 +1099,8 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector
 
     //if there is terrain data beyond this chunk, we load the next several rows to calculate normal data for our seams correctly.
     //it will take a little more time, but the end result will be prettier.
-    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_y < num_chunks_z - 1);
-    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_x < num_chunks_x - 1);
+    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.y < num_chunks_z - 1);
+    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.x < num_chunks_x - 1);
 
     if (loaded_cols > CHUNK_AND_SEAM_SIZE) m_has_forward_seam = true;
     if (loaded_rows > CHUNK_AND_SEAM_SIZE) m_has_right_seam = true;
@@ -1117,9 +1117,9 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector
 
             index = (CHUNK_AND_SEAM_SIZE * j) + i;
 
-            hminfo.height_map[index].m_x = (float)j;
-            hminfo.height_map[index].m_y = sampleHeight(bitmapImage, k, x_offset, full_row_offset, image_size) / EROSION;
-            hminfo.height_map[index].m_z = (float)i;
+            hminfo.height_map[index].x = (float)j;
+            hminfo.height_map[index].y = sampleHeight(bitmapImage, k, x_offset, full_row_offset, image_size) / EROSION;
+            hminfo.height_map[index].z = (float)i;
 
             k += 3;
         }
@@ -1230,7 +1230,7 @@ bool Terrain::fetchHeightMap(const char* filename, HeightMapInfo& hminfo, Vector
     return true;
 }
 
-bool Terrain::fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vector2D chunk_id)
+bool Terrain::fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vec2 chunk_id)
 {
     FILE* filePtrTex;                            // Point to the current position in the file
     BITMAPFILEHEADER bitmapFileHeaderTex;        // Structure which stores information about file
@@ -1286,12 +1286,12 @@ bool Terrain::fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vec
 
     //if there is terrain data beyond this chunk, we load the next several rows to calculate normal data for our seams correctly.
     //it will take a little more time, but the end result will be prettier.
-    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_y < num_chunks_z - 1) + 3 * (chunk_id.m_y > 0);
-    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.m_x < num_chunks_x - 1) + 3 * (chunk_id.m_x > 0);
-    if (chunk_id.m_y < num_chunks_z - 1) m_has_forward_seam = true;
-    if (chunk_id.m_x < num_chunks_x - 1) m_has_right_seam = true;
-    if (chunk_id.m_y > 0) m_bottom_buffer = true;
-    if (chunk_id.m_x > 0) m_left_buffer = true;
+    loaded_cols = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.y < num_chunks_z - 1) + 3 * (chunk_id.y > 0);
+    loaded_rows = CHUNK_AND_SEAM_SIZE + 3 * (chunk_id.x < num_chunks_x - 1) + 3 * (chunk_id.x > 0);
+    if (chunk_id.y < num_chunks_z - 1) m_has_forward_seam = true;
+    if (chunk_id.x < num_chunks_x - 1) m_has_right_seam = true;
+    if (chunk_id.y > 0) m_bottom_buffer = true;
+    if (chunk_id.x > 0) m_left_buffer = true;
 
     // Initialize the heightMap array (stores the vertices of our terrain)
     hminfo.terrain_color = new Vector4D[loaded_cols * loaded_rows];
@@ -1305,10 +1305,10 @@ bool Terrain::fetchTerrainTypes(const char* filename, HeightMapInfo& hminfo, Vec
     int k = 0;
 
     //calculate the data offsets for the chunk we will load
-    int x_offset = (((chunk_id.m_x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.m_y * CHUNK_AND_SEAM_SIZE)) * 3;
+    int x_offset = (((chunk_id.x * CHUNK_AND_SEAM_SIZE) * hminfo.terrainHeight) + (chunk_id.y * CHUNK_AND_SEAM_SIZE)) * 3;
 
     //adjust the x offset to account for the unused bytes at the end of each row of pixel data
-    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.m_x;
+    x_offset += unused_bytes * CHUNK_AND_SEAM_SIZE * chunk_id.x;
     //if we are reading the left and bottom portions of the map as well we need to push the x offset backwards
     if (m_bottom_buffer) x_offset -= 3 * 3;
     if (m_left_buffer) x_offset -= strideInBytes * 3;
@@ -1499,9 +1499,9 @@ void Terrain::findCaps(const std::vector<VertexMesh> chunk, int height, int widt
     int offset_x = 3 * (m_left_buffer); 
     int offset_z = 3 * (m_bottom_buffer);
 
-    Vector3D h1, h2, h3, h4;
+    Vec3 h1, h2, h3, h4;
     Vector4D t1, t2, t3, t4;
-    Vector3D n1, n2, n3, n4;
+    Vec3 n1, n2, n3, n4;
 
         
     //Bottom right cap
@@ -1527,7 +1527,7 @@ void Terrain::findCaps(const std::vector<VertexMesh> chunk, int height, int widt
         t3.loadFloat(&chunk[offset_z + height * (CHUNK_AND_SEAM_SIZE + offset_x)].m_bone_influence[0]);
         t4.loadFloat(&chunk[offset_z + height * (CHUNK_AND_SEAM_SIZE + offset_x) - 1].m_bone_influence[0]);
 
-        *right = VertexMesh(Vector3D((h1 + h2 + h3 + h4) / 4.0f), Vector3D((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
+        *right = VertexMesh(Vec3((h1 + h2 + h3 + h4) / 4.0f), Vec3((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
     }
 
     //Top Right Cap
@@ -1546,7 +1546,7 @@ void Terrain::findCaps(const std::vector<VertexMesh> chunk, int height, int widt
     t3.loadFloat(&chunk[offset_z + CHUNK_AND_SEAM_SIZE + height * (CHUNK_AND_SEAM_SIZE + offset_x)].m_bone_influence[0]);
     t4.loadFloat(&chunk[offset_z + CHUNK_AND_SEAM_SIZE + height * (CHUNK_AND_SEAM_SIZE + offset_x) - 1].m_bone_influence[0]);
 
-    *topright = VertexMesh(Vector3D((h1 + h2 + h3 + h4) / 4.0f), Vector3D((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
+    *topright = VertexMesh(Vec3((h1 + h2 + h3 + h4) / 4.0f), Vec3((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
 
     //Top Left Cap
 
@@ -1572,14 +1572,14 @@ void Terrain::findCaps(const std::vector<VertexMesh> chunk, int height, int widt
     t3.loadFloat(&chunk[offset_z + CHUNK_AND_SEAM_SIZE + height * (offset_x)].m_bone_influence[0]);
     t4.loadFloat(&chunk[offset_z + CHUNK_AND_SEAM_SIZE + height * (offset_x) - 1].m_bone_influence[0]);
 
-    *topleft = VertexMesh(Vector3D((h1 + h2 + h3 + h4) / 4.0f), Vector3D((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
+    *topleft = VertexMesh(Vec3((h1 + h2 + h3 + h4) / 4.0f), Vec3((n1 + n2 + n3 + n4) / 4.0f), Vector4D((t1 + t2 + t3 + t4) / 4.0f));
 }
 
 
 
 void Terrain::loadChunkFromText(bool from_generated)
 {
-    std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_chunk.txt";
+    std::string file = std::to_string((int)(m_pos.x)) + "_" + std::to_string((int)(m_pos.y)) + "_chunk.txt";
     std::ifstream fin;
 
     //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
@@ -1588,14 +1588,14 @@ void Terrain::loadChunkFromText(bool from_generated)
 
     _ASSERT_EXPR(fin.is_open(), L"Terrain Data File not found!");
 
-    Vector3D pos, norm;
+    Vec3 pos, norm;
     Vector4D texsplat;
 
     for (int i = 0; i < CHUNK_AND_SEAM_SIZE * CHUNK_AND_SEAM_SIZE; i++)
     {
-        fin >> pos.m_x >> pos.m_y >> pos.m_z;
+        fin >> pos.x >> pos.y >> pos.z;
         pos = pos * PRELOADED_SCALE;
-        fin >> norm.m_x >> norm.m_y >> norm.m_z;
+        fin >> norm.x >> norm.y >> norm.z;
         fin >> texsplat.m_x >> texsplat.m_y >> texsplat.m_z >> texsplat.m_w;
         //TODO: As a temporary fix, we are reversing the w value (cliff face value) as a mistake was made and they were all saved as negative values before.
         //next time new terrain is generated we need to reverse the calculation.
@@ -1607,7 +1607,7 @@ void Terrain::loadChunkFromText(bool from_generated)
 
 void Terrain::loadSeamRFromText(bool from_generated)
 {
-    std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamR.txt";
+    std::string file = std::to_string((int)(m_pos.x)) + "_" + std::to_string((int)(m_pos.y)) + "_seamR.txt";
     std::ifstream fin;
 
     //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
@@ -1617,14 +1617,14 @@ void Terrain::loadSeamRFromText(bool from_generated)
     //if there is no seam for this chunk, simply return
     if (!fin) return;
 
-    Vector3D pos, norm;
+    Vec3 pos, norm;
     Vector4D texsplat;
 
     for (int i = 0; i < CHUNK_AND_SEAM_SIZE * 2 + 2; i++)
     {
-        fin >> pos.m_x >> pos.m_y >> pos.m_z;
+        fin >> pos.x >> pos.y >> pos.z;
         pos = pos * PRELOADED_SCALE;
-        fin >> norm.m_x >> norm.m_y >> norm.m_z;
+        fin >> norm.x >> norm.y >> norm.z;
         fin >> texsplat.m_x >> texsplat.m_y >> texsplat.m_z >> texsplat.m_w;
         //TODO: As a temporary fix, we are reversing the w value (cliff face value) as a mistake was made and they were all saved as negative values before.
         //next time new terrain is generated we need to reverse the calculation.
@@ -1636,7 +1636,7 @@ void Terrain::loadSeamRFromText(bool from_generated)
 
 void Terrain::loadSeamFFromText(bool from_generated)
 {
-    std::string file = std::to_string((int)(m_pos.m_x)) + "_" + std::to_string((int)(m_pos.m_y)) + "_seamF.txt";
+    std::string file = std::to_string((int)(m_pos.x)) + "_" + std::to_string((int)(m_pos.y)) + "_seamF.txt";
     std::ifstream fin;
 
     //if (from_generated)  fin = std::ifstream("..\\ChunkData\\Generated\\" + file);
@@ -1646,14 +1646,14 @@ void Terrain::loadSeamFFromText(bool from_generated)
     //if there is no seam for this chunk, simply return
     if (!fin) return;
 
-    Vector3D pos, norm;
+    Vec3 pos, norm;
     Vector4D texsplat;
 
     for (int i = 0; i < CHUNK_AND_SEAM_SIZE * 2 + 2; i++)
     {
-        fin >> pos.m_x >> pos.m_y >> pos.m_z;
+        fin >> pos.x >> pos.y >> pos.z;
         pos = pos * PRELOADED_SCALE;
-        fin >> norm.m_x >> norm.m_y >> norm.m_z;
+        fin >> norm.x >> norm.y >> norm.z;
         fin >> texsplat.m_x >> texsplat.m_y >> texsplat.m_z >> texsplat.m_w;
         //TODO: As a temporary fix, we are reversing the w value (cliff face value) as a mistake was made and they were all saved as negative values before.
         //next time new terrain is generated we need to reverse the calculation.

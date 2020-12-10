@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	Vector4D(const Vector3D& vector3d) : m_x(vector3d.m_x), m_y(vector3d.m_y), m_z(vector3d.m_z), m_w(1.0f)
+	Vector4D(const Vec3& vector3d) : m_x(vector3d.x), m_y(vector3d.y), m_z(vector3d.z), m_w(1.0f)
 	{
 	}
 
@@ -26,9 +26,9 @@ public:
 		this->m_w = -(v1.m_x * (v2.m_y * v3.m_z - v3.m_y * v2.m_z) - v1.m_y * (v2.m_x * v3.m_z - v3.m_x * v2.m_z) + v1.m_z * (v2.m_x * v3.m_y - v3.m_x * v2.m_y));
 	}
 
-	Vector3D xyz()
+	Vec3 xyz()
 	{
-		return Vector3D(m_x, m_y, m_z);
+		return Vec3(m_x, m_y, m_z);
 	}
 
 	~Vector4D()

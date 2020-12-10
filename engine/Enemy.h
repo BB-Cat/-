@@ -11,7 +11,7 @@
 class Enemy : public Actor
 {
 public:
-	Enemy(Vector3D pos, float scale = 1.0f, Vector3D rot = Vector3D(0,0,0));
+	Enemy(Vec3 pos, float scale = 1.0f, Vec3 rot = Vec3(0,0,0));
 	virtual ~Enemy();
 
 	virtual void update(float delta, Terrain* terrain) = 0;
@@ -27,7 +27,7 @@ protected:
 class Enemy1 : public Enemy //chases the player directly at a low speed
 {
 public:
-	Enemy1(Vector3D pos, float scale = 1.0f, Vector3D rot = Vector3D(0, 0, 0), bool is_giant = false);
+	Enemy1(Vec3 pos, float scale = 1.0f, Vec3 rot = Vec3(0, 0, 0), bool is_giant = false);
 
 	virtual void update(float delta, Terrain* terrain) override;
 private:
@@ -37,7 +37,7 @@ private:
 class Enemy2 : public Enemy //stops and occasionally shoots bullets at the player
 {
 public:
-	Enemy2(Vector3D pos, float scale = 1.0f, Vector3D rot = Vector3D(0, 0, 0), bool is_giant = false);
+	Enemy2(Vec3 pos, float scale = 1.0f, Vec3 rot = Vec3(0, 0, 0), bool is_giant = false);
 
 	virtual void update(float delta, Terrain* terrain) override;
 private:
@@ -46,7 +46,7 @@ private:
 class Enemy3 : public Enemy //stops and occasionally shoots bullets at the player
 {
 public:
-	Enemy3(Vector3D pos, float scale = 1.0f, Vector3D rot = Vector3D(0, 0, 0), bool is_giant = false);
+	Enemy3(Vec3 pos, float scale = 1.0f, Vec3 rot = Vec3(0, 0, 0), bool is_giant = false);
 	virtual void render(float delta) override;
 
 	virtual void update(float delta, Terrain* terrain) override;

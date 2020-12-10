@@ -8,9 +8,9 @@ class Actor
 public:
 	Actor(bool has_shadow = false) : m_has_shadow(has_shadow) {}
 
-	Vector3D getPosition() { return m_pos; };
-	Vector3D getDirectionVector() { return Vector3D(sinf(m_angle * 0.01745f), 0, cosf(m_angle * 0.01745f)); };
-	Vector3D getRightVector() { return Vector3D(sinf((m_angle + 90.0f) * 0.01745f), 0, cosf((m_angle + 90.0f) * 0.01745f)); };
+	Vec3 getPosition() { return m_pos; };
+	Vec3 getDirectionVector() { return Vec3(sinf(m_angle * 0.01745f), 0, cosf(m_angle * 0.01745f)); };
+	Vec3 getRightVector() { return Vec3(sinf((m_angle + 90.0f) * 0.01745f), 0, cosf((m_angle + 90.0f) * 0.01745f)); };
 
 	virtual void update(float delta) = 0;
 	virtual void render(float delta) = 0;
@@ -19,9 +19,9 @@ public:
 	virtual void imGuiWindow() {}
 	//virtual void animationTree() {}
 protected:
-	Vector3D m_pos;
-	Vector3D m_rot;
-	Vector3D m_scale;
+	Vec3 m_pos;
+	Vec3 m_rot;
+	Vec3 m_scale;
 	float m_angle;
 	SkinnedMeshPtr m_mesh;
 	//stateの初期値の０が全てのアニメーションネームスペースでは待機という意味を持つので、初期状態が必ず０です。

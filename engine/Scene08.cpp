@@ -15,24 +15,24 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vector3D(950.7f, 333.62f, 407.45f));
-	CameraManager::get()->setCamRot(Vector2D(6.7f, 42.0f));
+	CameraManager::get()->setCamPos(Vec3(950.7f, 333.62f, 407.45f));
+	CameraManager::get()->setCamRot(Vec2(6.7f, 42.0f));
 
 	m_light = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_BACK);
-	m_light->setColor(Vector3D(1, 1, 1));
+	m_light->setColor(Vec3(1, 1, 1));
 	
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
 
-	m_global_light_rotation = Vector2D(2.63f, 2.0f);
+	m_global_light_rotation = Vec2(1.7f, -0.33f);
 	m_global_light_strength = 0.85f;
-	m_light_color = Vector3D(1.0, 0.85, 0.8);
+	m_light_color = Vec3(1.0, 0.85, 0.8);
 
 	//initial cloud property settings
 	m_cloud_props.m_cloud_density = 2.0f;
 	m_cloud_props.m_sampling_resolution = Vector4D(1.0f, 0, 0, 0);
 	m_cloud_props.m_sampling_weight = Vector4D(1.0f, 0.0f, 0.19f, 0.42f);
 	m_cloud_props.m_speed = 0.19f;
-	m_cloud_props.m_move_dir = Vector3D(-0.34f, -0.071f, -0.2f);
+	m_cloud_props.m_move_dir = Vec3(-0.34f, -0.071f, -0.2f);
 	m_cloud_props.m_ray_offset_strength = 9.95f;
 	m_cloud_props.m_phase_parameters = Vector4D(0.00f, 0.493f, 0.043f, 0.058f);
 	m_cloud_props.m_density_offset = 60.0f;
@@ -46,9 +46,9 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 
 	//completely static
 	//position
-	m_cloud_props.m_cloud_position = Vector3D(0, -120.0f, 0);
+	m_cloud_props.m_cloud_position = Vec3(0, -120.0f, 0);
 	//size
-	m_cloud_props.m_cloud_size = Vector3D(1000, 600, 1000);
+	m_cloud_props.m_cloud_size = Vec3(1000, 600, 1000);
 	//ray offset
 	m_cloud_props.m_ray_offset_strength = 9.0f;
 	//light steps - 2
@@ -65,7 +65,7 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 	//texture density
 	m_preset1.m_cloud_density = 0.335f;
 	//movement direction
-	m_preset1.m_move_dir = Vector3D(0.088f, -0.2f, -0.2f);
+	m_preset1.m_move_dir = Vec3(0.088f, -0.2f, -0.2f);
 	//movement speed
 	m_preset1.m_speed = 0.39f;
 	//phase parameters
@@ -93,7 +93,7 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 	//texture resolution
 	m_preset2.m_sampling_resolution.m_x = 1.13f;
 	//movement direction
-	m_preset2.m_move_dir = Vector3D(-0.112f, 0, 0.127f);
+	m_preset2.m_move_dir = Vec3(-0.112f, 0, 0.127f);
 	//movement speed
 	m_preset2.m_speed = 1.63f;
 	// sample weight
@@ -126,7 +126,7 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 	//texture resolution
 	m_preset3.m_sampling_resolution.m_x = 1.6f;
 	//movement direction
-	m_preset3.m_move_dir = Vector3D(0.01f, -0.2f, 0.01f);
+	m_preset3.m_move_dir = Vec3(0.01f, -0.2f, 0.01f);
 	//movement speed
 	m_preset3.m_speed = 0.87f;
 	// sample weight
@@ -184,7 +184,7 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 
 	m_blue_noise = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Noise\\bluenoise1.png");
 
-	Lighting::get()->updateSceneLight(Vector3D(0.4, 0.6, 0), Vector3D(1, 1, 0.8), 1.0f, Vector3D(0.1, 0.1, 0.4));
+	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 }
 
 Scene08::~Scene08()
@@ -197,7 +197,7 @@ void Scene08::update(float delta, const float& width, const float& height)
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height);
 
-	m_scene_light_dir = Vector3D(sinf(m_global_light_rotation.m_x), m_global_light_rotation.m_y, cosf(m_global_light_rotation.m_x));
+	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -372,9 +372,9 @@ void Scene08::imGuiRender()
 	if (m_first_time)
 	{
 		ImGui::SetNextWindowSize(ImVec2(400, 400));
-		Vector2D size = AppWindow::getScreenSize();
+		Vec2 size = AppWindow::getScreenSize();
 
-		ImGui::SetNextWindowPos(ImVec2(size.m_x / 2, size.m_y / 2), 0, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
 		//ImTextureID t = m_tex1->getSRV();
 
 		ImGui::OpenPopup("Cloud Popup");
@@ -396,10 +396,10 @@ void Scene08::shadowRenderPass(float delta)
 void Scene08::mainRenderPass(float delta)
 {
 
-	Vector3D lightpos = m_cloud_props.m_cloud_position.xyz() + (m_scene_light_dir * -1) * 1000;
+	Vec3 lightpos = m_cloud_props.m_cloud_position.xyz() + (m_scene_light_dir * -1) * 1000;
 	//Vector3D lightpos = m_cloud_props.m_cloud_position.xyz();
 	int a = 3;
-	m_light->renderMesh(delta, Vector3D(100, 100, 100), lightpos, Vector3D(0, 0, 0), Shaders::FLAT);
+	m_light->renderMesh(delta, Vec3(100, 100, 100), lightpos, Vec3(0, 0, 0), Shaders::FLAT);
 
 	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex3D_main->getShaderResourceView());
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseNormalGlossTexPS
@@ -407,11 +407,11 @@ void Scene08::mainRenderPass(float delta)
 
 	if (m_show_vertices)
 	{
-		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vector3D(0, 0, 0), Shaders::LAMBERT_RIMLIGHT);
+		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vec3(0, 0, 0), Shaders::LAMBERT_RIMLIGHT);
 	}
 	else
 	{
-		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vector3D(0, 0, 0), Shaders::VOLUME_CLOUD);
+		m_model->renderMesh(delta, m_cloud_props.m_cloud_size.xyz(), m_cloud_props.m_cloud_position.xyz(), Vec3(0, 0, 0), Shaders::VOLUME_CLOUD);
 	}
 
 }

@@ -9,6 +9,7 @@
 #include "ShaderManager.h"
 #include "CameraManager.h"
 #include "SkinnedMesh.h"
+#include "Collision.h"
 
 #include <iostream>
 #include <fstream>  
@@ -317,7 +318,7 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 	//
 
 	int numcubes, num_prefab_objects, collider_type;
-	Vector3D size, pos, rot, bounding_box, offset;
+	Vec3 size, pos, rot, bounding_box, offset;
 	std::string diffuse, normal, roughness, prefab_name;
 	diffuse.clear();
 	normal.clear();
@@ -340,17 +341,17 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		size = Vector3D(x, y, z);
+		size = Vec3(x, y, z);
 
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		pos = Vector3D(x, y, z);
+		pos = Vec3(x, y, z);
 
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		rot = Vector3D(x, y, z);
+		rot = Vec3(x, y, z);
 
 		// fetch material data //
 		Material_Obj mat;
@@ -378,7 +379,7 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		fin >> mat.m_rim_color.m_z;
 		fin >> mat.m_rim_color.m_w;
 		/////////////////////////
-		PrimitivePtr p = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, &mat);
+		PrimitivePtr p = PrimitiveGenerator::get()->createUnitCube(nullptr, nullptr, nullptr, &mat);
 		WorldObjectPtr w = std::shared_ptr<WorldObject>(new WorldObject(p, ColliderTypes::Cube, pos, size, rot));
 		m_objects.push_back(w);
 		m_objects[i]->getPrimitive()->fetchDiffuseTex(diffuse);
@@ -401,17 +402,17 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		size = Vector3D(x, y, z);
+		size = Vec3(x, y, z);
 
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		pos = Vector3D(x, y, z);
+		pos = Vec3(x, y, z);
 
 		fin >> x;
 		fin >> y;
 		fin >> z;
-		rot = Vector3D(x, y, z);
+		rot = Vec3(x, y, z);
 
 		// fetch material data //
 		Material_Obj mat;
@@ -448,13 +449,13 @@ bool WorldObjectManager::loadSceneData(std::string filename)
 		{
 			fin >> collider_type;
 
-			fin >> bounding_box.m_x;
-			fin >> bounding_box.m_y;
-			fin >> bounding_box.m_z;
+			fin >> bounding_box.x;
+			fin >> bounding_box.y;
+			fin >> bounding_box.z;
 
-			fin >> offset.m_x;
-			fin >> offset.m_y;
-			fin >> offset.m_z;
+			fin >> offset.x;
+			fin >> offset.y;
+			fin >> offset.z;
 
 			switch (collider_type)
 			{
@@ -507,7 +508,7 @@ void WorldObjectManager::imGuiRender()
 		return;
 	}
 
-	VectorToArray v(&Vector3D());
+	VectorToArray v(&Vec3());
 	ImVec2 button_size = ImVec2(130, 20);
 
 	ImGui::SetNextWindowSize(ImVec2(600, 250));
@@ -532,8 +533,8 @@ void WorldObjectManager::imGuiRender()
 	if (ImGui::Button("Edit Prefabs", button_size))
 	{
 		m_show_prefab_editor = true;
-		CameraManager::get()->setCamPos(Vector3D(0, 0, -15.0f));
-		CameraManager::get()->setCamRot(Vector2D(0, 0));
+		CameraManager::get()->setCamPos(Vec3(0, 0, -15.0f));
+		CameraManager::get()->setCamRot(Vec2(0, 0));
 	}
 
 
@@ -746,7 +747,7 @@ void WorldObjectManager::imGuiRender()
 			ImGui::NewLine();
 			if (ImGui::Button("Add Collider", button_size))
 			{
-				Collider* temp = new CubeCollider(Vector3D(1, 1, 1));
+				Collider* temp = new CubeCollider(Vec3(1, 1, 1));
 				m_objects[m_object_id]->setCollider(temp);
 				m_objects[m_object_id]->toggleBoundingBoxRender();
 			}
@@ -758,12 +759,12 @@ void WorldObjectManager::imGuiRender()
 			if (temp_bool)
 			{
 				ImGui::PushID("Collider");
-				Vector3D bounding_box = m_objects[m_object_id]->getCollider()->getBoundingBox();
+				Vec3 bounding_box = m_objects[m_object_id]->getCollider()->getBoundingBox();
 				v = VectorToArray(&bounding_box);
 				ImGui::DragFloat3("Size", v.setArray(), 0.025f, 0.01);
 				m_objects[m_object_id]->getCollider()->setBoundingBox(bounding_box);
 
-				Vector3D offset = m_objects[m_object_id]->getCollider()->getOffset();
+				Vec3 offset = m_objects[m_object_id]->getCollider()->getOffset();
 				v = VectorToArray(&offset);
 				ImGui::DragFloat3("Offset", v.setArray(), 0.025f, 0.01);
 				m_objects[m_object_id]->getCollider()->setOffset(offset);
@@ -814,11 +815,11 @@ void WorldObjectManager::imGuiRender()
 	if (ImGui::Button("Spawn Cube"))
 	{
 		m_show_obj_window = true;
-		m_focused_pos = Vector3D(0, 0, 0);
-		m_focused_scale = Vector3D(1, 1, 1);
-		m_focused_rot = Vector3D(0, 0, 0);
+		m_focused_pos = Vec3(0, 0, 0);
+		m_focused_scale = Vec3(1, 1, 1);
+		m_focused_rot = Vec3(0, 0, 0);
 
-		PrimitivePtr p = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, nullptr);
+		PrimitivePtr p = PrimitiveGenerator::get()->createUnitCube(nullptr, nullptr, nullptr, nullptr);
 		WorldObjectPtr w = std::shared_ptr<WorldObject>(new WorldObject(p, ColliderTypes::Cube, m_focused_scale, m_focused_pos, m_focused_rot));
 		m_objects.push_back(w);
 
@@ -835,7 +836,7 @@ void WorldObjectManager::imGuiRender()
 			std::vector<PrefabMesh> temp = PrefabManager::get()->getPrefabs();
 
 			m_show_obj_window = true;
-			m_focused_pos = Vector3D(0, 0, 0);
+			m_focused_pos = Vec3(0, 0, 0);
 			m_focused_scale = temp[i].default_scale;
 			m_focused_rot = temp[i].default_rot;
 
@@ -890,9 +891,9 @@ void WorldObjectManager::renderSelectedHighlight()
 	//set the blend to screen
 	//BlendMode::get()->SetBlend(SCREEN);
 	
-	Vector3D s = m_objects[m_object_id]->getScale();
-	Vector3D p = m_objects[m_object_id]->getPosition();
-	Vector3D r = m_objects[m_object_id]->getRotation();
+	Vec3 s = m_objects[m_object_id]->getScale();
+	Vec3 p = m_objects[m_object_id]->getPosition();
+	Vec3 r = m_objects[m_object_id]->getRotation();
 
 	//get the material of the object
 	Material_Obj m = m_objects[m_object_id]->getMaterial();
@@ -911,13 +912,13 @@ void WorldObjectManager::renderSelectedHighlight()
 	m_objects[m_object_id]->setMaterial(m);
 }
 
-void WorldObjectManager::renderBoundingBoxes()
+void WorldObjectManager::renderBoundingBoxes(bool force_show)
 {
 	//temporary code//
 	/* this function is only being used short term for testing and will be reworked. */
 
 	//create a cube to render bounding boxes.  temporary
-	PrimitivePtr cube = PrimitiveGenerator::get()->createCube(nullptr, nullptr, nullptr, nullptr);
+	PrimitivePtr cube = PrimitiveGenerator::get()->createUnitCube(nullptr, nullptr, nullptr, nullptr);
 
 	//GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::FLAT);
 
@@ -929,16 +930,20 @@ void WorldObjectManager::renderBoundingBoxes()
 	cube->setMaterial(m);
 
 	Collider* c = nullptr;
-	Vector3D s;
-	Vector3D p;
-	Vector3D r = {};
+	Vec3 s;
+	Vec3 p;
+	Vec3 r = {};
 
 	//set the blend to screen
 	BlendMode::get()->SetBlend(SCREEN);
 
 	for (int i = 0; i < m_objects.size(); i++)
 	{
-		if (!m_objects[i]->getBoundingBoxRenderState()) continue;
+		if (!force_show)
+		{
+			if (!m_objects[i]->getBoundingBoxRenderState()) continue;
+		}
+
 		c = m_objects[i]->getCollider();
 		if (c == nullptr) continue;
 
@@ -952,13 +957,13 @@ void WorldObjectManager::renderBoundingBoxes()
 	BlendMode::get()->SetBlend(ALPHA);
 }
 
-Vector3D WorldObjectManager::BoundingBoxCollision(Vector3D old_pos, Vector3D new_pos, Vector3D size)
+Vec3 WorldObjectManager::BBoxCollisionResolveDiscrete(Vec3 old_pos, Vec3 new_pos, Vec3 size)
 {
-	Vector3D move = new_pos - old_pos;
+	Vec3 move = new_pos - old_pos;
 
-	Vector3D halfsize = size / 2.0f;
-	Vector3D pos2;
-	Vector3D halfsize2;
+	Vec3 halfsize = size / 2.0f;
+	Vec3 pos2;
+	Vec3 halfsize2;
 	Collider* col = nullptr;
 
 	for (int i = 0; i < m_objects.size(); i++)
@@ -967,79 +972,295 @@ Vector3D WorldObjectManager::BoundingBoxCollision(Vector3D old_pos, Vector3D new
 		//if (m_objects[i]->getObjectType() == ObjectType::Mesh) continue;
 		col = m_objects[i]->getCollider();
 		if (col == nullptr) continue;
-		//pos2 = m_cubes[i]->getPosition();
-		//halfsize2 = m_cubes[i]->getScale() / 2.0f;
-
-		////óßï˚ëÃìØémÇÃìñÇΩÇËîªíË
-		//Vector3D dif = pos2 - new_pos;
-		//if (abs(dif.m_x) > (halfsize.m_x + halfsize2.m_x)) continue;
-		//if (abs(dif.m_y) > (halfsize.m_y + halfsize2.m_y)) continue;
-		//if (abs(dif.m_z) > (halfsize.m_z + halfsize2.m_z)) continue;
 
 		pos2 = m_objects[i]->getPosition() + col->getOffset();
 		halfsize2 = col->getBoundingBox() / 2.0f;
 
 		//óßï˚ëÃìØémÇÃìñÇΩÇËîªíË
-		Vector3D dif = new_pos - pos2;
+		Vec3 dif = new_pos - pos2;
 		//êVÇµÇ¢à íuÇ™ìñÇΩÇÁÇ»Ç¢èÍçáÇÕÉRÉìÉeÉBÉjÉÖÅ[
-		if (abs(dif.m_x) > (halfsize.m_x + halfsize2.m_x)) continue;
-		if (abs(dif.m_y) > (halfsize.m_y + halfsize2.m_y)) continue;
-		if (abs(dif.m_z) > (halfsize.m_z + halfsize2.m_z)) continue;
+		if (abs(dif.x) > (halfsize.x + halfsize2.x)) continue;
+		if (abs(dif.y) > (halfsize.y + halfsize2.y)) continue;
+		if (abs(dif.z) > (halfsize.z + halfsize2.z)) continue;
 
 
 		//ìñÇΩÇ¡ÇΩèÍçáÅAâåàÇ∑ÇÈ
-		Vector3D result = old_pos + Vector3D(move.m_x, 0, 0);
+		Vec3 result = old_pos + Vec3(move.x, 0, 0);
 		dif = result - pos2;
 		bool collide = true;
 
 		//if (abs(dif.m_x) > (halfsize.m_x + halfsize2.m_x)) collide = false;
-		if ((result.m_x - halfsize.m_x >= pos2.m_x - halfsize2.m_x || move.m_x <= 0) &&
-			(result.m_x + halfsize.m_x <= pos2.m_x + halfsize2.m_x || move.m_x >= 0)) collide = false;
-		//if () collide = false;
-
-		//if (abs(dif.m_x) < (halfsize.m_x + halfsize2.m_x) &&
-		//	abs(dif.m_y) < (halfsize.m_y + halfsize2.m_y) &&
-		//	abs(dif.m_z) < (halfsize.m_z + halfsize2.m_z)) collide = true;
+		if ((result.x - halfsize.x >= pos2.x - halfsize2.x || move.x <= 0) &&
+			(result.x + halfsize.x <= pos2.x + halfsize2.x || move.x >= 0)) collide = false;
 
 		//X movement collision
 		if (collide)
 		{
-			if (dif.m_x < 0) result.m_x = pos2.m_x - (halfsize.m_x + halfsize2.m_x + 0.01f);
-			else result.m_x = pos2.m_x + (halfsize.m_x + halfsize2.m_x + 0.01f);
+			if (dif.x < 0) result.x = pos2.x - (halfsize.x + halfsize2.x + 0.01f);
+			else result.x = pos2.x + (halfsize.x + halfsize2.x + 0.01f);
 		}
 
 		collide = true;
-		result += Vector3D(0, move.m_y, 0);
+		result += Vec3(0, move.y, 0);
 		dif = result - pos2;
 
 		//if (abs(dif.m_y) > (halfsize.m_y + halfsize2.m_y)) collide = false;
-		if ((result.m_y - halfsize.m_y >= pos2.m_y - halfsize2.m_y || move.m_y <= 0) &&
-			(result.m_y + halfsize.m_y <= pos2.m_y + halfsize2.m_y || move.m_y >= 0)) collide = false;
+		if ((result.y - halfsize.y >= pos2.y - halfsize2.y || move.y <= 0) &&
+			(result.y + halfsize.y <= pos2.y + halfsize2.y || move.y >= 0)) collide = false;
 
 		//Y movement collision
 		if (collide)
 		{
-			if (dif.m_y < 0) result.m_y = pos2.m_y - (halfsize.m_y + halfsize2.m_y + 0.01f);
-			else result.m_y = pos2.m_y + (halfsize.m_y + halfsize2.m_y + 0.01f);
+			if (dif.y < 0) result.y = pos2.y - (halfsize.y + halfsize2.y + 0.01f);
+			else result.y = pos2.y + (halfsize.y + halfsize2.y + 0.01f);
 		}
 
 		collide = true;
-		result += Vector3D(0, 0, move.m_z);
+		result += Vec3(0, 0, move.z);
 		dif = result - pos2;
 
 		//if (abs(dif.m_z) > (halfsize.m_z + halfsize2.m_z)) collide = false;
-		if ((result.m_z - halfsize.m_z >= pos2.m_z - halfsize2.m_z || move.m_z <= 0) &&
-			(result.m_z + halfsize.m_z <= pos2.m_z + halfsize2.m_z || move.m_z >= 0)) collide = false;
+		if ((result.z - halfsize.z >= pos2.z - halfsize2.z || move.z <= 0) &&
+			(result.z + halfsize.z <= pos2.z + halfsize2.z || move.z >= 0)) collide = false;
 
 		//Z movement collision
 		if (collide)
 		{
-			if (dif.m_z < 0) result.m_z = pos2.m_z - (halfsize.m_z + halfsize2.m_z + 0.01f);
-			else result.m_z = pos2.m_z + (halfsize.m_z + halfsize2.m_z + 0.01f);
+			if (dif.z < 0) result.z = pos2.z - (halfsize.z + halfsize2.z + 0.01f);
+			else result.z = pos2.z + (halfsize.z + halfsize2.z + 0.01f);
 		}
 
 		return result;
 	}
 
 	return new_pos;
+}
+
+Vec3 WorldObjectManager::BBoxCollisionResolveCont(Vec3 old_pos, Vec3 new_pos, Vec3 size)
+{
+	Vec3 move = new_pos - old_pos;
+	float speed = move.length();
+
+	Vec3 halfsize = size / 2.0f;
+	Vec3 pos2;
+	Vec3 halfsize2;
+	Collider* col = nullptr;
+	float time_x = -1;
+	float time_y = -1;
+	float time_z = -1;
+	//float lowest_time = 1000;
+	bool hit = false;
+
+	float pos1_val, pos2_val;
+	Vec3 adjusted_pos;
+
+	for (int i = 0; i < m_objects.size(); i++)
+	{
+		adjusted_pos = new_pos;
+		//temp
+		//if (m_objects[i]->getObjectType() == ObjectType::Mesh) continue;
+		col = m_objects[i]->getCollider();
+		if (col == nullptr) continue;
+
+		pos2 = m_objects[i]->getPosition() + col->getOffset();
+		halfsize2 = col->getBoundingBox() / 2.0f;
+
+		//óßï˚ëÃìØémÇÃìñÇΩÇËîªíË
+
+		//Xé≤ÇÃéûä‘ç∑
+		if (move.x > 0)
+		{
+			pos1_val = old_pos.x + halfsize.x;
+			pos2_val = pos2.x - halfsize2.x;
+		}
+		else
+		{
+			pos1_val = old_pos.x - halfsize.x;
+			pos2_val = pos2.x + halfsize2.x;
+		}
+		time_x = (pos2_val - pos1_val) / move.x;
+
+		//Yé≤ÇÃéûä‘ç∑
+		if (move.y > 0)
+		{
+			pos1_val = old_pos.y + halfsize.y;
+			pos2_val = pos2.y - halfsize2.y;
+		}
+		else
+		{
+			pos1_val = old_pos.y - halfsize.y;
+			pos2_val = pos2.y + halfsize2.y;
+		}
+		time_y = (pos2_val - pos1_val) / move.y;
+
+		//Zé≤ÇÃéûä‘ç∑
+		if (move.z > 0)
+		{
+			pos1_val = old_pos.z + halfsize.z;
+			pos2_val = pos2.z - halfsize2.z;
+		}
+		else
+		{
+			pos1_val = old_pos.z - halfsize.z;
+			pos2_val = pos2.z + halfsize2.z;
+		}
+		time_z = (pos2_val - pos1_val) / move.z;
+
+
+		//è’ìÀÇÃîªíË
+		//move.normalize();
+		Vec3 min2 = Vec3(pos2 - halfsize2);
+		Vec3 max2 = Vec3(pos2 + halfsize2);
+		if (time_x < 1.0f && time_x > 0)
+		{
+			Vec3 min1 = old_pos + move * time_x * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_x * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				adjusted_pos.x = pos2.x - (halfsize2.x + halfsize.x + 0.01f) * ((move.x > 0) * 2 - 1);
+				hit = true;
+			}
+		}
+		//if (time_y < speed && time_y > 0 && time_y < lowest_time) lowest_time = time_y;
+		//if (time_z < speed && time_z > 0 && time_z < lowest_time) lowest_time = time_z;
+		if (time_y < 1.0f && time_y > 0)
+		{
+			Vec3 min1 = old_pos + move * time_y * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_y * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				adjusted_pos.y = pos2.y - (halfsize2.y + halfsize.y + 0.01f) * ((move.y > 0) * 2 - 1);
+				hit = true;
+			}
+		}
+
+		if (time_z < 1.0f && time_z > 0)
+		{
+			Vec3 min1 = old_pos + move * time_z * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_z * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				adjusted_pos.z = pos2.z - (halfsize2.z + halfsize.z + 0.01f) * ((move.z > 0) * 2 - 1);
+				hit = true;
+			}
+		}
+
+		if (hit)
+		{
+ 			return adjusted_pos;
+		}
+	}
+
+	return new_pos;
+}
+
+bool WorldObjectManager::BBoxCollisionCheckCont(Vec3 old_pos, Vec3 new_pos, Vec3 size)
+{
+	Vec3 move = new_pos - old_pos;
+	float speed = move.length();
+
+	Vec3 halfsize = size / 2.0f;
+	Vec3 pos2;
+	Vec3 halfsize2;
+	Collider* col = nullptr;
+	float time_x = -1;
+	float time_y = -1;
+	float time_z = -1;
+	//float lowest_time = 1000;
+	bool hit = false;
+
+	float pos1_val, pos2_val;
+	Vec3 adjusted_pos;
+
+	for (int i = 0; i < m_objects.size(); i++)
+	{
+		adjusted_pos = new_pos;
+		//temp
+		//if (m_objects[i]->getObjectType() == ObjectType::Mesh) continue;
+		col = m_objects[i]->getCollider();
+		if (col == nullptr) continue;
+
+		pos2 = m_objects[i]->getPosition() + col->getOffset();
+		halfsize2 = col->getBoundingBox() / 2.0f;
+
+		//óßï˚ëÃìØémÇÃìñÇΩÇËîªíË
+
+		//Xé≤ÇÃéûä‘ç∑
+		if (move.x > 0)
+		{
+			pos1_val = old_pos.x + halfsize.x;
+			pos2_val = pos2.x - halfsize2.x;
+		}
+		else
+		{
+			pos1_val = old_pos.x - halfsize.x;
+			pos2_val = pos2.x + halfsize2.x;
+		}
+		time_x = (pos2_val - pos1_val) / move.x;
+
+		//Yé≤ÇÃéûä‘ç∑
+		if (move.y > 0)
+		{
+			pos1_val = old_pos.y + halfsize.y;
+			pos2_val = pos2.y - halfsize2.y;
+		}
+		else
+		{
+			pos1_val = old_pos.y - halfsize.y;
+			pos2_val = pos2.y + halfsize2.y;
+		}
+		time_y = (pos2_val - pos1_val) / move.y;
+
+		//Zé≤ÇÃéûä‘ç∑
+		if (move.z > 0)
+		{
+			pos1_val = old_pos.z + halfsize.z;
+			pos2_val = pos2.z - halfsize2.z;
+		}
+		else
+		{
+			pos1_val = old_pos.z - halfsize.z;
+			pos2_val = pos2.z + halfsize2.z;
+		}
+		time_z = (pos2_val - pos1_val) / move.z;
+
+		//if (time_x < 1.0f || time_x > 0 &&
+		//	time_y < 1.0f || time_y > 0 &&
+		//	time_z < 1.0f || time_z > 0) return true;
+		Vec3 min2 = Vec3(pos2 - halfsize2);
+		Vec3 max2 = Vec3(pos2 + halfsize2);
+		if (time_x < 1.0f && time_x > 0)
+		{
+			Vec3 min1 = old_pos + move * time_x * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_x * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				return true;
+			}
+		}
+		//if (time_y < speed && time_y > 0 && time_y < lowest_time) lowest_time = time_y;
+		//if (time_z < speed && time_z > 0 && time_z < lowest_time) lowest_time = time_z;
+		if (time_y < 1.0f && time_y > 0)
+		{
+			Vec3 min1 = old_pos + move * time_y * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_y * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				return true;
+			}
+		}
+
+		if (time_z < 1.0f && time_z > 0)
+		{
+			Vec3 min1 = old_pos + move * time_z * 1.01f - halfsize;
+			Vec3 max1 = old_pos + move * time_z * 1.01f + halfsize;
+			if (Collision::DetectAABB(min1, max1, min2, max2))
+			{
+				return true;
+			}
+		}
+	
+	}
+
+	return false;
 }

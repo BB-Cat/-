@@ -16,7 +16,7 @@ private:
     TexturePtr m_roughness;
     TexturePtr m_ao;
 
-    Vector3D m_light_pos;
+    Vec3 m_light_pos;
 
     bool m_first_time = true;
 
@@ -26,10 +26,10 @@ private:
 private: //ImGui variables
     bool m_show_sky;
     int m_shader_type;
-    Vector2D m_global_light_rotation;
+    Vec2 m_global_light_rotation;
     float m_global_light_strength;
-    Vector3D m_light_color;
-    Vector3D m_ambient_light_color;
+    Vec3 m_light_color;
+    Vec3 m_ambient_light_color;
 
 public:
     Scene01(SceneManager*);

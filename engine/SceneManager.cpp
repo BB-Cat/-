@@ -13,6 +13,7 @@
 #include "Scene11.h"
 #include "Scene12.h"
 #include "Scene13.h"
+#include "Scene14.h"
 
 SceneManager::SceneManager() :m_next_scene(0), m_clear_flag()
 {
@@ -51,99 +52,54 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
         m_clear_flag = true;
         m_scene_stack.pop();
         m_next_scene = next_scene;
-
-        switch (next_scene)
-        {
-        case SCENESELECT:
-            m_scene_stack.emplace(std::make_unique<SceneSelect>(this));
-            break;
-        case SCENE01:
-            m_scene_stack.emplace(std::make_unique<Scene01>(this));
-            break;
-        case SCENE02:
-            m_scene_stack.emplace(std::make_unique<Scene02>(this));
-            break;
-        case SCENE03:
-            m_scene_stack.emplace(std::make_unique<Scene03>(this));
-            break;
-        case SCENE04:
-            m_scene_stack.emplace(std::make_unique<Scene04>(this));
-            break;
-        case SCENE05:
-            m_scene_stack.emplace(std::make_unique<Scene05>(this));
-            break;
-        case SCENE06:
-            m_scene_stack.emplace(std::make_unique<Scene06>(this));
-            break;
-        case SCENE07:
-            m_scene_stack.emplace(std::make_unique<Scene07>(this));
-            break;
-        case SCENE08:
-            m_scene_stack.emplace(std::make_unique<Scene08>(this));
-            break;
-        case SCENE09:
-            m_scene_stack.emplace(std::make_unique<Scene09>(this));
-            break;
-        case SCENE10:
-            m_scene_stack.emplace(std::make_unique<Scene10>(this));
-            break;
-        case SCENE11:
-            m_scene_stack.emplace(std::make_unique<Scene11>(this));
-            break;
-        case SCENE12:
-            m_scene_stack.emplace(std::make_unique<Scene12>(this));
-            break;
-        case SCENE13:
-            m_scene_stack.emplace(std::make_unique<Scene13>(this));
-            break;
-        }
     }
-    else
+    switch (next_scene)
     {
-        switch (next_scene)
-        {
-        case SCENESELECT:
-            m_scene_stack.emplace(std::make_unique<SceneSelect>(this));
-            break;
-        case SCENE01:
-            m_scene_stack.emplace(std::make_unique<Scene01>(this));
-            break;
-        case SCENE02:
-            m_scene_stack.emplace(std::make_unique<Scene02>(this));
-            break;
-        case SCENE03:
-            m_scene_stack.emplace(std::make_unique<Scene03>(this));
-            break;
-        case SCENE04:
-            m_scene_stack.emplace(std::make_unique<Scene04>(this));
-            break;
-        case SCENE05:
-            m_scene_stack.emplace(std::make_unique<Scene05>(this));
-            break;
-        case SCENE06:
-            m_scene_stack.emplace(std::make_unique<Scene06>(this));
-            break;
-        case SCENE07:
-            m_scene_stack.emplace(std::make_unique<Scene07>(this));
-            break;
-        case SCENE08:
-            m_scene_stack.emplace(std::make_unique<Scene08>(this));
-            break;
-        case SCENE09:
-            m_scene_stack.emplace(std::make_unique<Scene09>(this));
-            break;
-        case SCENE10:
-            m_scene_stack.emplace(std::make_unique<Scene10>(this));
-            break;
-        case SCENE11:
-            m_scene_stack.emplace(std::make_unique<Scene11>(this));
-            break;
-        case SCENE12:
-            m_scene_stack.emplace(std::make_unique<Scene12>(this));
-            break;
-        case SCENE13:
-            m_scene_stack.emplace(std::make_unique<Scene13>(this));
-            break;
-        }
+    case SCENESELECT:
+        m_scene_stack.emplace(std::make_unique<SceneSelect>(this));
+        break;
+    case SCENE01:
+        m_scene_stack.emplace(std::make_unique<Scene01>(this));
+        break;
+    case SCENE02:
+        m_scene_stack.emplace(std::make_unique<Scene02>(this));
+        break;
+    case SCENE03:
+        m_scene_stack.emplace(std::make_unique<Scene03>(this));
+        break;
+    case SCENE04:
+        m_scene_stack.emplace(std::make_unique<Scene04>(this));
+        break;
+    case SCENE05:
+        m_scene_stack.emplace(std::make_unique<Scene05>(this));
+        break;
+    case SCENE06:
+        m_scene_stack.emplace(std::make_unique<Scene06>(this));
+        break;
+    case SCENE07:
+        m_scene_stack.emplace(std::make_unique<Scene07>(this));
+        break;
+    case SCENE08:
+        m_scene_stack.emplace(std::make_unique<Scene08>(this));
+        break;
+    case SCENE09:
+        m_scene_stack.emplace(std::make_unique<Scene09>(this));
+        break;
+    case SCENE10:
+        m_scene_stack.emplace(std::make_unique<Scene10>(this));
+        break;
+    case SCENE11:
+        m_scene_stack.emplace(std::make_unique<Scene11>(this));
+        break;
+    case SCENE12:
+        m_scene_stack.emplace(std::make_unique<Scene12>(this));
+        break;
+    case SCENE13:
+        m_scene_stack.emplace(std::make_unique<Scene13>(this));
+        break;
+    case SCENE14:
+        m_scene_stack.emplace(std::make_unique<Scene14>(this));
+        break;
     }
+   
 }

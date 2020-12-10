@@ -18,9 +18,9 @@ class WorldObject
 public:
 	//WorldObject(VertexBufferPtr vertexes, IndexBufferPtr indexes, Collider* collider = nullptr);
 	WorldObject(PrimitivePtr primitive, int collider_type, 
-		Vector3D pos = Vector3D(0,0,0), Vector3D scale = Vector3D(1,1,1), Vector3D rot = Vector3D(0,0,0), int shader = Shaders::LAMBERT);
+		Vec3 pos = Vec3(0,0,0), Vec3 scale = Vec3(1,1,1), Vec3 rot = Vec3(0,0,0), int shader = Shaders::LAMBERT);
 	WorldObject(SkinnedMeshPtr mesh, Collider* collider = nullptr,
-		Vector3D pos = Vector3D(0, 0, 0), Vector3D scale = Vector3D(1, 1, 1), Vector3D rot = Vector3D(0, 0, 0), int shader = Shaders::LAMBERT);
+		Vec3 pos = Vec3(0, 0, 0), Vec3 scale = Vec3(1, 1, 1), Vec3 rot = Vec3(0, 0, 0), int shader = Shaders::LAMBERT);
 	~WorldObject();
 
 	//render using the cube object's position, rotation and scale values
@@ -28,7 +28,7 @@ public:
 	void render(float elapsed_time, int shader = -1, bool is_textured = true);
 	//render with manually set position, rotation and scale values
 	/* (Set the shader to -1 to use the cube's internal shader setting - Lambert by default) */
-	void render(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader = -1, bool is_textured = true);
+	void render(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, int shader = -1, bool is_textured = true);
 
 	//bool loadDiffuseTex(const wchar_t* file);
 	//bool loadNormalTex(const wchar_t* file);
@@ -43,18 +43,18 @@ public:
 	//bool fetchRoughnessTex(std::string name);
 
 
-	void setPosition(Vector3D pos) { m_pos = pos; }
-	void setScale(Vector3D scale) { m_scale = scale; }
-	void setRotation(Vector3D rot) { m_rot = rot; }
+	void setPosition(Vec3 pos) { m_pos = pos; }
+	void setScale(Vec3 scale) { m_scale = scale; }
+	void setRotation(Vec3 rot) { m_rot = rot; }
 	//void setMaterial(Material_Obj mat) { m_mat = mat; }
 	void setShader(int shader) { m_shader = shader; }
 	void setCollider(Collider* collider) { m_collider = collider; }
 	void setMaterial(Material_Obj mat);
 	void setPrefabName(std::string name) { m_prefab_name = name; }
 
-	Vector3D getPosition() { return m_pos; }
-	Vector3D getScale() { return m_scale; }
-	Vector3D getRotation() { return m_rot; }
+	Vec3 getPosition() { return m_pos; }
+	Vec3 getScale() { return m_scale; }
+	Vec3 getRotation() { return m_rot; }
 	int getShader() { return m_shader; }
 	Collider* getCollider() { return m_collider; }
 	Material_Obj getMaterial();
@@ -70,7 +70,7 @@ public:
 
 
 private:
-	Matrix4x4 applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate);
+	Matrix4x4 applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate);
 
 private:
 	PrimitivePtr m_primitive = nullptr;
@@ -90,9 +90,9 @@ private:
 	//std::string			m_roughness_name = "none";
 
 	//Material_Obj		m_mat;
-	Vector3D			m_pos;
-	Vector3D			m_scale;
-	Vector3D			m_rot;
+	Vec3			m_pos;
+	Vec3			m_scale;
+	Vec3			m_rot;
 	Collider*			m_collider = nullptr;
 	bool				m_render_bounding_box = false;
 

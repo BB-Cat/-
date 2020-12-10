@@ -389,14 +389,23 @@
     <Filter Include="Sources\GameWorld\WorldObjectManager\WorldObject">
       <UniqueIdentifier>{7c403410-b8c2-436f-be35-de9f60195c5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\GameEngine\Collider">
-      <UniqueIdentifier>{af61e369-8682-45c8-a2d7-52078ab8375e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\GameWorld\WorldObjectManager\PrefabManager">
       <UniqueIdentifier>{371dc251-e7ed-42a9-b92f-9731bc94a54b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameWorld\WorldObjectManager\Primitives">
       <UniqueIdentifier>{6dd0e471-e4c9-48fe-b9ae-d9763d0cd8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Collision">
+      <UniqueIdentifier>{aa7b260b-e556-4e73-976e-e5b0059da1da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Collision\Collider">
+      <UniqueIdentifier>{af61e369-8682-45c8-a2d7-52078ab8375e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameEngine\Collision\Collision">
+      <UniqueIdentifier>{9f1286ba-0c26-4dc4-96ce-b35173c8a673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\14">
+      <UniqueIdentifier>{b722e029-8d73-4c05-8c40-3eeab4d425f0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -660,6 +669,15 @@
     </ClCompile>
     <ClCompile Include="PrefabManager.cpp">
       <Filter>Sources\GameWorld\WorldObjectManager\PrefabManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Sources\GameEngine\Collision\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene14.cpp">
+      <Filter>Sources\Scenes\14</Filter>
+    </ClCompile>
+    <ClCompile Include="Colliders.cpp">
+      <Filter>Sources\GameEngine\Collision\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1000,7 +1018,7 @@
       <Filter>Sources\Scenes\13</Filter>
     </ClInclude>
     <ClInclude Include="Colliders.h">
-      <Filter>Sources\GameEngine\Collider</Filter>
+      <Filter>Sources\GameEngine\Collision\Collider</Filter>
     </ClInclude>
     <ClInclude Include="WorldObject.h">
       <Filter>Sources\GameWorld\WorldObjectManager\WorldObject</Filter>
@@ -1013,6 +1031,12 @@
     </ClInclude>
     <ClInclude Include="DebugErrors.h">
       <Filter>Sources\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Sources\GameEngine\Collision\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene14.h">
+      <Filter>Sources\Scenes\14</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

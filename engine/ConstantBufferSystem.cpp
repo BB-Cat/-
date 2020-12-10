@@ -65,10 +65,10 @@ void ConstantBufferSystem::createGlobalLightPropertyBuffer()
 {
 	cb_scene_lighting gl;
 
-	gl.m_global_light_color = Vector3D(1.0f, 0.9f, 0.3f);
-	gl.m_global_light_dir = Vector3D(0.05f, 1.0f, 0.05f);
+	gl.m_global_light_color = Vec3(1.0f, 0.9f, 0.3f);
+	gl.m_global_light_dir = Vec3(0.05f, 1.0f, 0.05f);
 	gl.m_global_light_strength = 1.0f;
-	gl.m_ambient_light_color = Vector3D(0, 0, 0);
+	gl.m_ambient_light_color = Vec3(0, 0, 0);
 
 	m_global_light_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&gl, sizeof(cb_scene_lighting));
 }
@@ -171,7 +171,7 @@ void ConstantBufferSystem::createCloudBuffer()
 
 }
 
-void ConstantBufferSystem::updateLocalLightPropertyBuffer(Vector3D pos, Vector3D color, float strength)
+void ConstantBufferSystem::updateLocalLightPropertyBuffer(Vec3 pos, Vec3 color, float strength)
 {
 	if (m_lights_set < NUM_LIGHTS) 
 	{
@@ -184,7 +184,7 @@ void ConstantBufferSystem::updateLocalLightPropertyBuffer(Vector3D pos, Vector3D
 	m_local_light_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &m_l);
 }
 
-void ConstantBufferSystem::updateGlobalLightPropertyBuffer(Vector3D dir, float strength, Vector4D color, Vector4D ambient_color)
+void ConstantBufferSystem::updateGlobalLightPropertyBuffer(Vec3 dir, float strength, Vector4D color, Vector4D ambient_color)
 {
 	cb_scene_lighting gl;
 	gl.m_global_light_dir = dir;

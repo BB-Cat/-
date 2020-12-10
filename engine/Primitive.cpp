@@ -14,13 +14,13 @@ Primitive::Primitive(VertexBufferPtr vertexes, IndexBufferPtr indexes)
 	m_index_buffer = indexes;
 
 	//default cube material values
-	m_mat.m_diffuse_color = Vector3D(0.6f, 0.7f, 0.6f);
+	m_mat.m_diffuse_color = Vec3(0.6f, 0.7f, 0.6f);
 	m_mat.m_transparency = 1.0f;
-	m_mat.m_diffuse_color = Vector3D(0.7f, 0.7f, 0.7f);
+	m_mat.m_diffuse_color = Vec3(0.7f, 0.7f, 0.7f);
 	m_mat.m_metallic = 0.445f;
 	m_mat.m_shininess = 3;
-	m_mat.m_specular_color = Vector3D(0.5, 0.2, 0.5);
-	m_mat.m_rim_color = Vector3D(0.4f, 0.7f, 0.7f);
+	m_mat.m_specular_color = Vec3(0.5, 0.2, 0.5);
+	m_mat.m_rim_color = Vec3(0.4f, 0.7f, 0.7f);
 	m_mat.m_rim_color.m_w = 1.0f;
 	m_mat.m_rim_power = 4.4f;
 
@@ -49,7 +49,7 @@ Primitive::~Primitive()
 	if (m_solid_rast) m_solid_rast->Release();
 }
 
-void Primitive::render(Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured)
+void Primitive::render(Vec3 scale, Vec3 position, Vec3 rotation, int shader, bool is_textured)
 {
 	//set the vertices which will be drawn
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexBuffer(m_vertex_buffer);
@@ -83,7 +83,7 @@ void Primitive::render(Vector3D scale, Vector3D position, Vector3D rotation, int
 	(m_index_buffer->getSizeIndexList(), 0, 0);
 }
 
-Matrix4x4 Primitive::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
+Matrix4x4 Primitive::applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate)
 {
 	Matrix4x4 out = global;
 	Matrix4x4 temp;
@@ -95,13 +95,13 @@ Matrix4x4 Primitive::applyTransformations(const Matrix4x4& global, Vector3D scal
 
 	//Rotation
 	temp.setIdentity();
-	temp.setRotationZ(rot.m_z);
+	temp.setRotationZ(rot.z);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationX(rot.m_x);
+	temp.setRotationX(rot.x);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationY(rot.m_y);
+	temp.setRotationY(rot.y);
 	out *= temp;
 
 	//Translation
@@ -184,4 +184,14 @@ bool Primitive::fetchRoughnessTex(std::string name)
 
 	m_roughness_name = name;
 	return true;
+}
+
+void Primitive::setColor(Vec3 col)
+{
+	m_mat.m_diffuse_color = col;
+}
+
+void Primitive::setTransparency(float t)
+{
+	m_mat.m_transparency = t;
 }

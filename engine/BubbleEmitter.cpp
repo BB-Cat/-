@@ -3,7 +3,7 @@
 #include "ParticlePrerequisites.h"
 #include <d3d11.h>
 
-BubbleEmitter::BubbleEmitter(int num_particles, Vector3D pos, float radius)
+BubbleEmitter::BubbleEmitter(int num_particles, Vec3 pos, float radius)
 {
 	m_max_particles = num_particles;
 	m_pos = pos;
@@ -31,18 +31,18 @@ void BubbleEmitter::update(float delta)
 
 void BubbleEmitter::spawn()
 {
-	Vector3D p_pos = m_pos + Vector3D(
+	Vec3 p_pos = m_pos + Vec3(
 		m_radius * ((float)(rand() % 20) / 20.0f - 0.5f), 
 		m_radius * ((float)(rand() % 20) / 20.0f - 0.5f), 
 		m_radius * ((float)(rand() % 20) / 20.0f - 0.5f));
 
 	float size = BUBBLE_MAX_SIZE - ((float)(rand() % 50) / 50.0f) * BUBBLE_SIZE_VARIATION;
-	Vector3D scale = Vector3D(size, size, size);
+	Vec3 scale = Vec3(size, size, size);
 
 	float time = BUBBLE_DURATION - ((float)(rand() % 50) / 50.0f) * BUBBLE_DURATION_VARIATION;
 
 	SpriteParticle* p = new SP_Bubble(&particle_sprites[Bubble], time,
-		p_pos, scale, Vector3D(p_pos - m_pos), Vector3D(0, 0, 0));
+		p_pos, scale, Vec3(p_pos - m_pos), Vec3(0, 0, 0));
 
 	m_parts.push_back(p);
 }

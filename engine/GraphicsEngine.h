@@ -35,7 +35,7 @@ public:
 	//create the text renderer
 	void createTextRenderer(HWND* hwnd, SwapChainPtr swapchain);
 	//render a string at the target location on screen
-	void renderText(const wchar_t text[], Vector2D pos, Vector2D size, int color);
+	void renderText(const wchar_t text[], Vec2 pos, Vec2 size, int color);
 	//change the text renderer's font size
 	void changeTextSize(float size);
 

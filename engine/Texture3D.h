@@ -21,7 +21,7 @@ class Texture3D
 {
 public:
 	//計算済みのデーターを用いてテクスチャーを作る
-	Texture3D(Vector3D dimensions, const std::vector<float>& data);
+	Texture3D(Vec3 dimensions, const std::vector<float>& data);
 	//ファイルから準備してある3次元テクスチャーを読み込む
 	Texture3D(std::string filename);
 	~Texture3D();

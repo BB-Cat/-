@@ -124,7 +124,7 @@ void GraphicsEngine::createTextRenderer(HWND* hwnd, SwapChainPtr swapchain)
 	m_text = new TextRenderer(hwnd, swapchain);
 }
 
-void GraphicsEngine::renderText(const wchar_t text[], Vector2D pos, Vector2D size, int color)
+void GraphicsEngine::renderText(const wchar_t text[], Vec2 pos, Vec2 size, int color)
 {
 	m_text->render(text, pos, size, color);
 }

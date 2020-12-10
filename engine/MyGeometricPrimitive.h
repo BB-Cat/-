@@ -17,8 +17,8 @@ public:
 
 	void createRasterizerStates();
 
-	void updateTransformation(RECT window_rect, Vector3D scale, Vector3D translate, Vector3D rotate);
-	void render(RECT window_rect, Vector3D scale, Vector3D translate, Vector3D rotate, bool isWireframe);
+	void updateTransformation(RECT window_rect, Vec3 scale, Vec3 translate, Vec3 rotate);
+	void render(RECT window_rect, Vec3 scale, Vec3 translate, Vec3 rotate, bool isWireframe);
 
 protected:
 	VertexBuffer* m_vertex_buffer;

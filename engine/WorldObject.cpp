@@ -10,7 +10,7 @@
 #include "Primitive.h"
 
 WorldObject::WorldObject(PrimitivePtr primitive, int collider_type,
-	Vector3D pos, Vector3D scale, Vector3D rot, int shader)
+	Vec3 pos, Vec3 scale, Vec3 rot, int shader)
 {
 	m_primitive = primitive;
 	m_object_type = ObjectType::Primitive;
@@ -30,7 +30,7 @@ WorldObject::WorldObject(PrimitivePtr primitive, int collider_type,
 		m_collider = new CubeCollider(m_scale);
 		break;
 	case ColliderTypes::Sphere:
-		m_collider = new SphereCollider(m_scale.m_x / 2.0f);
+		m_collider = new SphereCollider(m_scale.x / 2.0f);
 		break;
 	case ColliderTypes::Capsule:
 		//still needs to be implemented
@@ -40,7 +40,7 @@ WorldObject::WorldObject(PrimitivePtr primitive, int collider_type,
 	}
 }
 
-WorldObject::WorldObject(SkinnedMeshPtr mesh, Collider* collider, Vector3D pos, Vector3D scale, Vector3D rot, int shader)
+WorldObject::WorldObject(SkinnedMeshPtr mesh, Collider* collider, Vec3 pos, Vec3 scale, Vec3 rot, int shader)
 {
 	m_mesh = mesh;
 	m_object_type = ObjectType::Mesh;
@@ -68,7 +68,7 @@ void WorldObject::render(float elapsed_time, int shader, bool is_textured)
 	render(elapsed_time, m_scale, m_pos, m_rot, shader, is_textured);
 }
 
-void WorldObject::render(float elapsed_time, Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured)
+void WorldObject::render(float elapsed_time, Vec3 scale, Vec3 position, Vec3 rotation, int shader, bool is_textured)
 {
 	int active_shader = m_shader;
 	if (shader >= 0) active_shader = shader;
@@ -114,7 +114,7 @@ Material_Obj WorldObject::getMaterial()
 	return mat;
 }
 
-Matrix4x4 WorldObject::applyTransformations(const Matrix4x4& global, Vector3D scale, Vector3D rot, Vector3D translate)
+Matrix4x4 WorldObject::applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate)
 {
 	Matrix4x4 out = global;
 	Matrix4x4 temp;
@@ -126,13 +126,13 @@ Matrix4x4 WorldObject::applyTransformations(const Matrix4x4& global, Vector3D sc
 
 	//Rotation
 	temp.setIdentity();
-	temp.setRotationZ(rot.m_z);
+	temp.setRotationZ(rot.z);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationX(rot.m_x);
+	temp.setRotationX(rot.x);
 	out *= temp;
 	temp.setIdentity();
-	temp.setRotationY(rot.m_y);
+	temp.setRotationY(rot.y);
 	out *= temp;
 
 	//Translation

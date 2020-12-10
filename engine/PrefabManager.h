@@ -14,8 +14,8 @@ struct PrefabMesh
 	SkinnedMeshPtr mesh;
 	Collider* collider = nullptr;
 
-	Vector3D default_scale = Vector3D(1, 1, 1);
-	Vector3D default_rot =   Vector3D(0, 3.1415f, 0);
+	Vec3 default_scale = Vec3(1, 1, 1);
+	Vec3 default_rot =   Vec3(0, 3.1415f, 0);
 	int default_shader = Shaders::LAMBERT_RIMLIGHT;
 };
 
@@ -56,7 +56,7 @@ private: //ModifyPrefabségópÇÃïœêî
 	int m_focused_prefab = -1;
 	char m_name[128] = {};
 
-	Vector3D m_focused_scale;
+	Vec3 m_focused_scale;
 	Material_Obj m_focused_material;
 	bool m_show_collider = false;
 };

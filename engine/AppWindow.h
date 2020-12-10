@@ -60,11 +60,11 @@ public:
 	static bool getKeyTrigger(int i);
 	static bool getKeyRelease(int i);
 	//mouse data retrieval
-	static Vector2D getMouseDelta();
+	static Vec2 getMouseDelta();
 	static bool getMouseState(bool rightbutton);
 	static bool getMouseTrigger(bool rightbutton);
 	static bool getMouseRelease(bool rightbutton);
-	static Vector2D getScreenSize();
+	static Vec2 getScreenSize();
 
 	static void toggleMouse();
 	static void toggleDeferredPipeline(bool type) { m_is_deferred_pipeline = type; }
@@ -84,11 +84,11 @@ private:
 	static bool m_mouse;
 	static bool m_keys_state[256];
 	static bool m_old_keys_state[256];
-	static Vector2D m_delta_rot;
+	static Vec2 m_delta_rot;
 	static bool m_mouse_state[2];
 	static bool m_old_mouse_state[2];
 private:
-	static Vector2D m_screen_size;
+	static Vec2 m_screen_size;
 
 private:
 	high_resolution_timer m_delta_time;

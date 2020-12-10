@@ -24,9 +24,9 @@ StaticMesh::StaticMesh(const wchar_t* full_path, bool is_flipped) : Mesh(full_pa
 
 	u_int current_index = 0;
 
-	std::vector<Vector3D> positions;
-	std::vector<Vector3D> normals;
-	std::vector<Vector2D> texcoords;
+	std::vector<Vec3> positions;
+	std::vector<Vec3> normals;
+	std::vector<Vec2> texcoords;
 
 	std::wifstream fin(m_full_path);  
 	_ASSERT_EXPR(fin, L"'OBJ file not found.");
@@ -57,7 +57,7 @@ StaticMesh::StaticMesh(const wchar_t* full_path, bool is_flipped) : Mesh(full_pa
 		{
 			float x, y, z;
 			fin >> x >> y >> z;
-			positions.push_back(Vector3D(x, y, z));
+			positions.push_back(Vec3(x, y, z));
 			fin.ignore(1024, L'\n');
 		}
 		else if (0 == wcscmp(command, L"vt")) //texcoords
@@ -66,13 +66,13 @@ StaticMesh::StaticMesh(const wchar_t* full_path, bool is_flipped) : Mesh(full_pa
 			fin >> u >> v;
 
 			if (is_flipped) v = 1.0f - v;
-			texcoords.push_back(Vector2D(u, v));
+			texcoords.push_back(Vec2(u, v));
 		}
 		else if (0 == wcscmp(command, L"vn")) //normal vectors
 		{
 			FLOAT i, j, k;
 			fin >> i >> j >> k;
-			normals.push_back(Vector3D(i, j, k));
+			normals.push_back(Vec3(i, j, k));
 			fin.ignore(1024, L'\n');
 		}
 		else if (0 == wcscmp(command, L"f")) 
@@ -126,7 +126,7 @@ StaticMesh::~StaticMesh()
 {
 }
 
-void StaticMesh::renderMesh(float elapsed_time/*dummy value*/, Vector3D scale, Vector3D position, Vector3D rotation, int shader, bool is_textured, float animation_speed)
+void StaticMesh::renderMesh(float elapsed_time/*dummy value*/, Vec3 scale, Vec3 position, Vec3 rotation, int shader, bool is_textured, float animation_speed)
 {
 	//set the mesh's buffers into the device context for rendering
 	//set the vertices which will be drawn
