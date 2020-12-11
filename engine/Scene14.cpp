@@ -37,11 +37,12 @@ Scene14::Scene14(SceneManager* sm) : Scene(sm)
 	m_ambient_light_color = Vec3(0.4, 0.3, 0.4);
 
 
-	obj1 = new CubeCollider(Vec3(1, 1, 1));
-	obj2 = new CubeCollider(Vec3(2.0, 2.0, 2.0));
+	obj1 = new SphereCollider(0.5f);
+	obj2 = new SphereCollider(1.0f);
 	marker = PrimitiveGenerator::get()->createUnitSphere(nullptr, nullptr, nullptr, nullptr);
 	pos1 = Vec3(3, 0, 3);
 	prevpos1 = pos1;
+
 }
 
 Scene14::~Scene14()
@@ -81,6 +82,23 @@ void Scene14::imGuiRender()
 	ImGui::DragFloat3("Pos1", v.setArray(), 0.01f);
 	v = VectorToArray(&pos2);
 	ImGui::DragFloat3("Pos2", v.setArray(), 0.01f);
+
+	ImGui::SliderFloat("Mass Balance", &mass, 0, 1.0f);
+
+	if (ImGui::Button("Reset Collision"))
+	{
+		pos1 = Vec3(0, 1.0f, 0);
+		pos2 = Vec3(5, 0, 0);
+	}
+
+	if (ImGui::Button("Reset Camera"))
+	{
+		CameraManager::get()->setCamPos(Vec3(0, 0, -5));
+		CameraManager::get()->setCamRot(Vec2(0, 0));
+	}
+
+	if (ImGui::Button("Toggle Collision Test")) is_simulate = !is_simulate;
+
 	ImGui::End();
 }
 
@@ -127,13 +145,15 @@ void Scene14::mainRenderPass(float delta)
 	//{
 	//	col = Vec3(0.75, 0.5, 0.5);
 	//}
-	if (Collision::ResolveCollision(obj1, pos1, prevpos1, obj2, pos2, 1.0f))
+
+	if (is_simulate) pos1.x += 0.04f;
+	if (Collision::ResolveCollision(obj1, pos1, prevpos1, obj2, pos2, mass))
 	{
 		col = Vec3(0.75, 0.5, 0.5);
 	}
 
-	renderCollider(pos1, obj1, col, ColliderTypes::Cube);
-	renderCollider(pos2, obj2, col, ColliderTypes::Cube);
+	renderCollider(pos1, obj1, col, ColliderTypes::Sphere);
+	renderCollider(pos2, obj2, col, ColliderTypes::Sphere);
 
 	marker->setColor(Vec3(1.0, 1.0, 0.2));
 	marker->setTransparency(0.3f);

@@ -33,6 +33,9 @@ private:
     Vec3 pos2 = {};
     Vec3 markerpos = {};
     PrimitivePtr marker = nullptr;
+    float mass = 1.0f;
+
+    bool is_simulate = false;
 
 public:
     Scene14(SceneManager*);

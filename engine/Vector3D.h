@@ -30,6 +30,14 @@ public:
 		return temp;
 	}
 
+	static Vec3 reflect(Vec3& v1, Vec3& v2)
+	{
+		//v1 - 2(v2)(Vec3::Dot(v1, v2))
+		return (v1 - v2 * dot(v1, v2) * 2.0f);
+	}
+
+	//TODO : add refraction function
+
 	static Vec3 lerp(const Vec3& start, const Vec3& end, float delta)
 	{
 		Vec3 v;
@@ -64,6 +72,13 @@ public:
 		x /= l;
 		y /= l;
 		z /= l;
+	}
+
+	//used for debugging.  checks to see if vector contains a Nan value
+	bool containsNan()
+	{
+		if (x != x || y != y || z != z) return true;
+		return false;
 	}
 
 	//float operators

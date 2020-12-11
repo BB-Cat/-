@@ -70,7 +70,7 @@ public:
 	~SphereCollider() {}
 
 	float getRadius() { return m_radius; }
-	Vec3 getBoundingBox() override { return Vec3(m_radius); }
+	Vec3 getBoundingBox() override { return Vec3(m_radius * 2.0f); }
 	//! Please note that only the X component of the box is actually being read to decide the radius!
 	void setBoundingBox(Vec3 box) override;
 

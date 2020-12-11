@@ -1,4 +1,5 @@
 #include "Collision.h"
+#include <string>
 
 bool Collision::DetectCollision(Collider* col1, Vec3 pos1, Collider* col2, Vec3 pos2)
 {
@@ -208,9 +209,120 @@ bool Collision::ResolveSphereCube(Vec3& s_pos, float radius, Vec3 prevpos, CubeC
     return false;
 }
 
-bool Collision::ResolveSphereSphere(Vec3& pos1, float r, Vec3 prevpos, Vec3& pos2, float r2, float mass)
+bool Collision::ResolveSphereSphere(Vec3& endpos, float r, Vec3 prevpos, Vec3& pos2, float r2, float mass)
 {
-    return false;
+    Vec3 dif = pos2 - endpos;
+    float lensq = dif.x * dif.x + dif.y * dif.y + dif.z * dif.z;
+    float rsq = (r + r2) * (r + r2);
+
+    //no collision
+    if (!(lensq < rsq)) return false;
+
+    //in the event that the two spheres were already overlapping before the movement, adjust their positions first
+    /* This can happen when another collision pushes two spheres together between collision updates */
+    Vec3 initial_check = (prevpos - pos2);
+    float initial_len = initial_check.length();
+    float overlap = (r + r2) - initial_len;
+
+    if (initial_len < r + r2)
+    {
+        initial_check.normalize();
+        prevpos += initial_check * overlap * mass;
+        //move the endpos as well so the movement vector is unaffected
+        endpos += initial_check * overlap * mass;
+        pos2 -= initial_check * overlap *  (1.0f - mass);
+    }
+
+
+    Vec3 move = endpos - prevpos;
+    float move_len = move.length();
+    if (move_len < 0.00001f)
+    {
+        float diflen = sqrt(lensq);
+        dif.normalize();
+        pos2 += dif * (1.0f - mass) * (r + r2 - diflen);
+        endpos += dif * (mass) * (r + r2 - diflen) * -1;
+        return true;
+    }
+    
+    //find the time of collision
+    float dot = Vec3::dot(dif, move);
+    //projection vector from sphere2 to sphere1's movement vector
+    Vec3 proj_vec = move * (dot / (move_len * move_len));
+    //get the projected position
+    Vec3 proj_pos = endpos + proj_vec;
+
+    //use the length between the projected position and sphere 2 
+    //with the length of the radii of two spheres to find point of collision with Pythagorean's Theorum
+    Vec3 pos2_to_proj_pos = proj_pos - pos2;
+
+    //if the collision is direct, simply solve collision
+    if (pos2_to_proj_pos.length() < 0.00001f)
+    {
+        float len_to_collision_from_proj = (r + r2);
+        Vec3 collision_pos = pos2 + (move / move_len) * -1 * len_to_collision_from_proj;
+        Vec3 col_to_prevpos = prevpos - collision_pos;
+        float remaining_movement = (move_len - col_to_prevpos.length()) * (1.0f - mass);
+        
+        pos2 = pos2 + (move / move_len) * remaining_movement;
+        endpos = pos2 + (move / move_len) * (r + r2) * -1;
+
+        return true;
+    }
+
+    float pos2_to_proj_pos_len = (pos2_to_proj_pos).length();
+    //in the event that the spheres are on a tangent course, it is a false positive
+    float len_to_collision_from_proj_sq = (r + r2) - (pos2_to_proj_pos_len);
+    if (len_to_collision_from_proj_sq < 0.00001f) return false;
+
+    float len_to_collision_from_proj = sqrt(len_to_collision_from_proj_sq);
+    
+    //find the exact point of collision
+    float prev_to_proj_pos_len = (proj_pos - prevpos).length();
+    Vec3 collision_pos = prevpos + move * ((prev_to_proj_pos_len - len_to_collision_from_proj) / prev_to_proj_pos_len);
+    //Vec3 collision_pos = prevpos + (move / move_len) * (prev_to_proj_pos_len - len_to_collision_from_proj);
+    //find the vector between point of collision and sphere2
+    Vec3 col_to_pos2 = pos2 - collision_pos;
+    Vec3 col_to_prevpos = prevpos - collision_pos;
+
+
+
+
+    //take a proportion of the reflection vector and a proportion of the original vector based on mass
+    float remaining_movement = move_len - col_to_prevpos.length();
+
+    //calculate how much to offset the second sphere.
+    //since this function is not physics based and is for colliders, we are "shoving" not "rolling" the spheres.
+    //find how close to the projection point sphere1 will actually come, then find the "true" intersection amount.
+    float collision_reference_point_dist = max(min(1.0f, remaining_movement / len_to_collision_from_proj), 0);
+    float collision_amount = collision_reference_point_dist * len_to_collision_from_proj_sq;
+    Vec3 final_ref_pos = collision_pos + (move / move_len) * collision_amount;
+    Vec3 sphere2_move = pos2 - final_ref_pos;
+
+    //find the tangent vector to the direction the second ball moved
+    Vec3 collision_binormal = Vec3::cross(move, sphere2_move);
+    Vec3 collision_tangent = Vec3::cross(sphere2_move, collision_binormal);
+
+    Vec3 p1_adjusted_move = collision_tangent * mass + move * (1.0f - mass);
+    p1_adjusted_move.normalize();
+
+    endpos = collision_pos + p1_adjusted_move * remaining_movement;
+    
+
+
+    float adjustment_length_p2 = ((r + r2) - sphere2_move.length());
+    sphere2_move.normalize();
+    pos2 += sphere2_move * adjustment_length_p2 * (1.0f - mass);
+
+    
+
+
+    //pos2 = pos2 + sphere2_move * adjustment_length_p2 * (1.0f - mass);
+
+
+    float finallen = (endpos - pos2).length();
+    OutputDebugString((L"Final Length :" + std::to_wstring(finallen) + L"\n").c_str());
+    return true;
 }
 
 bool Collision::interpretCubeDetection(Vec3 min, Vec3 max, Collider* col2, Vec3 pos2)
