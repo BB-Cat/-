@@ -37,12 +37,26 @@ Scene14::Scene14(SceneManager* sm) : Scene(sm)
 	m_ambient_light_color = Vec3(0.4, 0.3, 0.4);
 
 
-	obj1 = new SphereCollider(0.5f);
-	obj2 = new SphereCollider(1.0f);
+
+	//testing capsules
+	r1 = 0.25f;
+	r2 = 0.25f;
+	len1 = 0.5f;
+	len2 = 0.5f;
+	rot1 = Vec2(0.0f, 0.0f);
+	rot2 = Vec2(0.0f, 0.0f);
+
+	obj1 = new CapsuleCollider(r1, len1, rot1);
+	obj2 = new CapsuleCollider(r2, len2, rot2);
+
+
+
 	marker = PrimitiveGenerator::get()->createUnitSphere(nullptr, nullptr, nullptr, nullptr);
 	pos1 = Vec3(3, 0, 3);
 	prevpos1 = pos1;
 
+	start1 = Vec3(0, 0.0f, -5);
+	start2 = Vec3(4.15f, 0, 0);
 }
 
 Scene14::~Scene14()
@@ -85,10 +99,13 @@ void Scene14::imGuiRender()
 
 	ImGui::SliderFloat("Mass Balance", &mass, 0, 1.0f);
 
+	v = VectorToArray(&movement);
+	ImGui::DragFloat3("Obj1 Move Direction", v.setArray(), 0.001f, -1.0f, 1.0f);
+
 	if (ImGui::Button("Reset Collision"))
 	{
-		pos1 = Vec3(0, 1.0f, 0);
-		pos2 = Vec3(5, 0, 0);
+		pos1 = start1;
+		pos2 = start2;
 	}
 
 	if (ImGui::Button("Reset Camera"))
@@ -99,19 +116,73 @@ void Scene14::imGuiRender()
 
 	if (ImGui::Button("Toggle Collision Test")) is_simulate = !is_simulate;
 
+	v = VectorToArray(&start1);
+	ImGui::DragFloat3("Start1", v.setArray(), 0.01f);
+	v = VectorToArray(&start2);
+	ImGui::DragFloat3("Start2", v.setArray(), 0.01f);
+
+	if (ImGui::CollapsingHeader("Capsule Settings"))
+	{
+		v = VectorToArray(&rot1);
+		if (ImGui::DragFloat3("rot1", v.setArray(), 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj1);
+			temp->setRotation(rot1);
+		}
+		v = VectorToArray(&rot2);
+		if (ImGui::DragFloat3("rot2", v.setArray(), 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj2);
+			temp->setRotation(rot2);
+		}
+		if(ImGui::DragFloat("len1", &len1, 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj1);
+			temp->setCoreLength(len1);
+		}
+		if (ImGui::DragFloat("len2", &len2, 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj2);
+			temp->setCoreLength(len2);
+		}
+		if (ImGui::DragFloat("r1", &r1, 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj1);
+			temp->setRadius(r1);
+		}
+		if(ImGui::DragFloat("r2", &r2, 0.01f))
+		{
+			CapsuleCollider* temp = reinterpret_cast<CapsuleCollider*>(obj2);
+			temp->setRadius(r2);
+		}
+
+		if (ImGui::Button("Show Bounding Box")) show_bbs = !show_bbs;
+	}
+
 	ImGui::End();
 }
 
-void Scene14::renderCollider(Vec3 pos, Collider* c, Vec3 col, int type)
+void Scene14::renderCollider(Vec3 pos, Collider* c, Vec3 col, int type, float radius, float len)
 {
 	PrimitivePtr shape;
+	Vec3 s;
+	Vec3 p;
+	Vec3 r = {};
+	CapsuleCollider* c1 = nullptr;
+
 	switch (type)
 	{
 	case ColliderTypes::Cube: shape = PrimitiveGenerator::get()->createUnitCube(nullptr, nullptr, nullptr, nullptr);
+		s = c->getBoundingBox();
 		break;
 	case ColliderTypes::Sphere: shape = PrimitiveGenerator::get()->createUnitSphere(nullptr, nullptr, nullptr, nullptr);
+		s = c->getBoundingBox();
 		break;
-	case ColliderTypes::Capsule: shape = PrimitiveGenerator::get()->createUnitCapsule(nullptr, nullptr, nullptr, nullptr);
+	case ColliderTypes::Capsule: 
+		shape = PrimitiveGenerator::get()->createCustomCapsule(radius, len, 30, 30,  nullptr, nullptr, nullptr, nullptr);
+		c1 = reinterpret_cast<CapsuleCollider*>(c);
+		r = c1->getRotation();
+		s = Vec3(1,1,1);
 		break;
 	}
 
@@ -123,11 +194,9 @@ void Scene14::renderCollider(Vec3 pos, Collider* c, Vec3 col, int type)
 	m.m_transparency = 0.3f;
 	shape->setMaterial(m);
 
-	Vec3 s;
-	Vec3 p;
-	Vec3 r = {};
 
-	s = c->getBoundingBox() + 0.02f;
+
+
 	p = pos + c->getOffset();
 
 	shape->render(s, p, r, Shaders::LAMBERT_RIMLIGHT);
@@ -146,16 +215,38 @@ void Scene14::mainRenderPass(float delta)
 	//	col = Vec3(0.75, 0.5, 0.5);
 	//}
 
-	if (is_simulate) pos1.x += 0.04f;
+	if (is_simulate)
+	{
+		pos1 += movement;
+	}
 	if (Collision::ResolveCollision(obj1, pos1, prevpos1, obj2, pos2, mass))
 	{
 		col = Vec3(0.75, 0.5, 0.5);
 	}
 
-	renderCollider(pos1, obj1, col, ColliderTypes::Sphere);
-	renderCollider(pos2, obj2, col, ColliderTypes::Sphere);
+	//if (Collision::DetectCollision(obj1, pos1, obj2, pos2))
+	//{
+	//	col = Vec3(0.75, 0.5, 0.5);
+	//}
+
+	//if (Collision::DetectCapsuleCapsule(reinterpret_cast<CapsuleCollider*>(obj1), pos1, reinterpret_cast<CapsuleCollider*>(obj2), pos2, &markerpos, &marker2pos))
+	//{
+	//	col = Vec3(0.75, 0.5, 0.5);
+	//}
+
+	renderCollider(pos1, obj1, col, ColliderTypes::Capsule, r1, len1);
+	renderCollider(pos2, obj2, col, ColliderTypes::Capsule, r2, len2);
+
+	if (show_bbs)
+	{
+		renderCollider(pos1, obj1, col, ColliderTypes::Cube, r1, len1);
+		renderCollider(pos2, obj2, col, ColliderTypes::Cube, r2, len2);
+	}
+
+	//reinterpret_cast<CapsuleCollider*>(obj1)->getCaps(markerpos, marker2pos);
 
 	marker->setColor(Vec3(1.0, 1.0, 0.2));
 	marker->setTransparency(0.3f);
-	marker->render(Vec3(0.2, 0.2, 0.2), markerpos, Vec3(), LAMBERT, false);
+	marker->render(Vec3(0.1), markerpos, Vec3(), LAMBERT, false);
+	marker->render(Vec3(0.1), marker2pos, Vec3(), LAMBERT, false);
 }

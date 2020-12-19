@@ -32,8 +32,18 @@ private:
     Vec3 prevpos1 = {};
     Vec3 pos2 = {};
     Vec3 markerpos = {};
+    Vec3 marker2pos = {};
     PrimitivePtr marker = nullptr;
     float mass = 1.0f;
+    Vec3 movement = Vec3(0.04, 0, 0.04);
+
+    Vec3 rot1;
+    Vec3 rot2;
+    float r1, r2;
+    float len1, len2;
+    bool show_bbs = false;
+
+    Vec3 start1, start2;
 
     bool is_simulate = false;
 
@@ -47,7 +57,7 @@ public:
     //virtual void outputSceneData(std::string filename);
     //virtual void loadSceneData(std::string filename);
 
-    void renderCollider(Vec3 pos, Collider* c, Vec3 col, int type);
+    void renderCollider(Vec3 pos, Collider* c, Vec3 col, int type, float r, float len);
 
 private:
     virtual void shadowRenderPass(float delta) override;

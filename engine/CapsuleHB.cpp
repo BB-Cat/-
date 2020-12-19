@@ -66,22 +66,24 @@ bool Capsule::checkCollisionCapsule(Vec3 cap1, Vec3 cap2, float radius)
 
 float Capsule::calculateLineLineDistance(Vec3 p1, Vec3 e1, Vec3 p2, Vec3 e2, float& dist_from_l1, float& dist_from_l2)
 {
-	
-
 	//calculate to see if parallel or not
 	Vec3 v1 = e1 - p1;
-	v1.normalize();
 	Vec3 v2 = e2 - p2;
-	v2.normalize();
 
-	float dot1 = Vec3::dot(p2 - p1, v1);
-	float dot2 = Vec3::dot(p2 - p1, v2);
+	//v1.normalize();
+	//v2.normalize();
 
-	Vec3 cross = Vec3::cross(v1, v2);
-	float dV = cross.length();
+	Vec3 v1n = v1.getNormalized();
+	Vec3 v2n = v2.getNormalized();
+
+	float dot1 = Vec3::dot(p2 - p1, v1n);
+	float dot2 = Vec3::dot(p2 - p1, v2n);
+
+	Vec3 cross_n = Vec3::cross(v1n, v2n);
+	float cross_len = cross_n.length();
 
 	//if the lines are parallel, return their distance
-	if (dV < 0.000001f)
+	if (cross_len < 0.000001f)
 	{
 		float len = calculatePointLineDistance(p1, p2, e2, dist_from_l2);
 		dist_from_l1 = 0.0f;
@@ -90,10 +92,10 @@ float Capsule::calculateLineLineDistance(Vec3 p1, Vec3 e1, Vec3 p2, Vec3 e2, flo
 	}
 
 
-	v1 = e1 - p1;
-	v2 = e2 - p2;
+	//v1 = e1 - p1;
+	//v2 = e2 - p2;
 
-	float DV1V2 = Vec3::dot(v1, v2); //l1.v.dot(l2.v);
+	float DV1V2 = Vec3::dot(v1, v2);
 	float DV1V1 = v1.length() * v1.length();
 	float DV2V2 = v2.length() * v2.length();
 	Vec3 P21P11 = p1 - p2;

@@ -74,6 +74,18 @@ public:
 		z /= l;
 	}
 
+	Vec3 getNormalized()
+	{
+		float l = sqrt(x * x + y * y + z * z);
+		Vec3 output;
+		
+		output.x = x / l;
+		output.y = y / l;
+		output.z = z / l;
+
+		return output;
+	}
+
 	//used for debugging.  checks to see if vector contains a Nan value
 	bool containsNan()
 	{

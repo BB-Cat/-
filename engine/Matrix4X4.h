@@ -271,6 +271,21 @@ public:
 		::memcpy(m_mat, matrix.m_mat, sizeof(float) * 16);
 	}
 
+	void setMatrix(const Vec3& x, const Vec3& y, const Vec3& z)
+	{
+		m_mat[0][0] = x.x; 
+		m_mat[0][1] = x.y;
+		m_mat[0][2] = x.z;
+
+		m_mat[1][0] = y.x;
+		m_mat[1][1] = y.y;
+		m_mat[1][2] = y.z;
+
+		m_mat[2][0] = z.x;
+		m_mat[2][1] = z.y;
+		m_mat[2][2] = z.z;
+	}
+
 	Vec3 getZDirection()
 	{
 		return Vec3(m_mat[2][0], m_mat[2][1], m_mat[2][2]);

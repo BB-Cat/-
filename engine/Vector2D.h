@@ -62,6 +62,11 @@ public:
 		return Vec2(x / a, y / a);
 	}
 
+	bool operator ==(Vec2 vec)
+	{
+		return (this->x == vec.x && this->y == vec.y);
+	}
+
 	bool operator !=(Vec2 vec)
 	{
 		return (this->x != vec.x || this->y != vec.y);

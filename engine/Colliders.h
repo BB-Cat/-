@@ -18,6 +18,7 @@ namespace ColliderTypes
 //forward declarations
 class CubeCollider;
 class SphereCollider;
+class CapsuleCollider;
 
 
 class Collider
@@ -76,4 +77,70 @@ public:
 
 private:
 	float m_radius;
+};
+
+class CapsuleCollider : public Collider
+{
+public:
+	CapsuleCollider(float radius, float core_length, Vec3 rot = Vec3(0)) : Collider(ColliderTypes::Capsule), 
+		m_radius(radius), m_core_length(core_length), m_rotation(rot), m_was_updated(false)
+	{
+		calcCapPositions();
+	}
+	~CapsuleCollider() {}
+
+
+	Vec3 getBoundingBox() override;
+	//! For capsules this function is NOT IMPLEMENTED!! 
+	//! Please use the other setters for capsule colliders after using reinterpret_cast<>()
+	void setBoundingBox(Vec3 box) {}
+
+	// Capsule Specific Functions -- these are very important for changing collider settings //
+
+	float getRadius()		{ return m_radius; }
+	float getCoreLength()	{ return m_core_length; }
+	Vec3  getRotation()		{ return m_rotation; }
+	void  getCaps(Vec3& cap1, Vec3& cap2);
+
+
+	//NOTE - these setter functions will check to see if the new value is equal 
+	//to the old value in order to avoid recalculating cap positions when possible
+	void setRadius(float r) 
+	{
+		if (r == m_radius) return;
+		m_radius = r; 
+		m_was_updated = true;
+	}
+	void setCoreLength(float len) 
+	{
+		if (len == m_core_length) return;
+		m_core_length = len; 
+		m_was_updated = true;
+	}
+	void setRotation(Vec3 rot) 
+	{
+		if (rot == m_rotation) return;
+		m_rotation = rot; 
+		m_was_updated = true;
+
+		//TODO: Fix the gimbal lock and coordinate system problem in the capsule collider!
+		//
+		m_rotation.x = 0;
+		//
+	}
+
+
+private:
+	//update the cap position data of the capsules, called automatically whenever data has been updated
+	void calcCapPositions();
+
+private:
+	float m_radius;
+	float m_core_length;
+	Vec3  m_rotation;
+
+	//saved cap location values.  updated whenever the other variables are changed;
+	Vec3 m_cap1; 
+	Vec3 m_cap2;
+	bool m_was_updated;
 };

@@ -1115,7 +1115,7 @@ Vec3 WorldObjectManager::BBoxCollisionResolveCont(Vec3 old_pos, Vec3 new_pos, Ve
 		{
 			Vec3 min1 = old_pos + move * time_x * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_x * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				adjusted_pos.x = pos2.x - (halfsize2.x + halfsize.x + 0.01f) * ((move.x > 0) * 2 - 1);
 				hit = true;
@@ -1127,7 +1127,7 @@ Vec3 WorldObjectManager::BBoxCollisionResolveCont(Vec3 old_pos, Vec3 new_pos, Ve
 		{
 			Vec3 min1 = old_pos + move * time_y * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_y * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				adjusted_pos.y = pos2.y - (halfsize2.y + halfsize.y + 0.01f) * ((move.y > 0) * 2 - 1);
 				hit = true;
@@ -1138,7 +1138,7 @@ Vec3 WorldObjectManager::BBoxCollisionResolveCont(Vec3 old_pos, Vec3 new_pos, Ve
 		{
 			Vec3 min1 = old_pos + move * time_z * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_z * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				adjusted_pos.z = pos2.z - (halfsize2.z + halfsize.z + 0.01f) * ((move.z > 0) * 2 - 1);
 				hit = true;
@@ -1233,7 +1233,7 @@ bool WorldObjectManager::BBoxCollisionCheckCont(Vec3 old_pos, Vec3 new_pos, Vec3
 		{
 			Vec3 min1 = old_pos + move * time_x * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_x * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				return true;
 			}
@@ -1244,7 +1244,7 @@ bool WorldObjectManager::BBoxCollisionCheckCont(Vec3 old_pos, Vec3 new_pos, Vec3
 		{
 			Vec3 min1 = old_pos + move * time_y * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_y * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				return true;
 			}
@@ -1254,7 +1254,7 @@ bool WorldObjectManager::BBoxCollisionCheckCont(Vec3 old_pos, Vec3 new_pos, Vec3
 		{
 			Vec3 min1 = old_pos + move * time_z * 1.01f - halfsize;
 			Vec3 max1 = old_pos + move * time_z * 1.01f + halfsize;
-			if (Collision::DetectAABB(min1, max1, min2, max2))
+			if (Collision::DetectAABBDiscrete(min1, max1, min2, max2))
 			{
 				return true;
 			}
