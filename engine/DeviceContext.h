@@ -10,6 +10,7 @@ public:
 
 
 	void clearRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
+	void clearState();
 	void clearGBufferRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha);
 
 	void setRenderTargetDirect(const SwapChainPtr& swap_chain);
@@ -40,9 +41,12 @@ public:
 	void setComputeShader(ID3D11ComputeShader* compute_shader, ID3D11ShaderResourceView* srv, ID3D11UnorderedAccessView* uav);
 	void dispatchComputeShader(UINT x_dispatch_count, UINT y_dispatch_count, UINT z_dispatch_count);
 	void copyResource(ID3D11Buffer* source, ID3D11Buffer* target);
+	void copyResource(ID3D11Buffer* source, ID3D11Texture2D* target);
 	HRESULT mapResourceRead(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
 	HRESULT mapResourceWriteDiscard(ID3D11Buffer* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
+	HRESULT mapResourceWriteDiscard(ID3D11Texture2D* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource);
 	void unmapResource(ID3D11Buffer* resource);
+	void unmapResource(ID3D11Texture2D* resource);
 	void updateResource(ID3D11Resource* dest, void* data);
 	//void retrieveComputeShaderOutput();
 
@@ -53,6 +57,7 @@ public:
 
 public:
 	void setTextureVS(const TexturePtr& texture);
+	void setTextureCS(const TexturePtr& texture);
 	//set the diffuse texture using a texture class pointer
 	void setDiffuseTexPS(const TexturePtr& texture);
 	//set the diffuse texture using a shaderresourceview directly
@@ -64,7 +69,7 @@ public:
 	//set the diffuse and normal map textures simultaneously with two texture class pointers
 	void setDiffuseNormalGlossTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, const TexturePtr& glossmap);
 	//set the diffuse and normal map textures simultaneously with two texture class pointers
-	void setDiffuseNormalGlossEnvironTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap, 
+	void setDiffuseNormalGlossEnvironTexPS(const TexturePtr& diffusetex, const TexturePtr& normalmap,
 		const TexturePtr& glossmap, const TexturePtr& environmap);
 	//set the displacement map for use in the domain shader with a texture class pointer
 	void setDisplacementTexDS(const TexturePtr& texture, const TexturePtr& texture2 = nullptr);
@@ -91,6 +96,8 @@ public:
 
 	void setConstantWVPBufferPS(const MyConstantBufferPtr& buffer);
 
+	void setConstantWVPBufferCS(const MyConstantBufferPtr& buffer);
+
 	void setConstantWVPLightBufferVS(const MyConstantBufferPtr& buffer);
 
 	void setConstantWVPLightBufferGS(const MyConstantBufferPtr& buffer);
@@ -100,6 +107,8 @@ public:
 	void setConstantWVPLightBufferPS(const MyConstantBufferPtr& buffer);
 
 	void setConstantBufferSceneLightingVS(const MyConstantBufferPtr& buffer);
+
+	void setConstantBufferSceneLightingCS(const MyConstantBufferPtr& buffer);
 
 	void setConstantBufferSceneLightingPS(const MyConstantBufferPtr& buffer);
 
@@ -129,6 +138,8 @@ public:
 
 	void setCloudBufferPS(const MyConstantBufferPtr& buffer);
 
+	void setRaymarchBufferCS(const MyConstantBufferPtr& buffer);
+
 	//////////////////////////////////
 
 public:
@@ -143,6 +154,13 @@ private:
 	ID3D11DeviceContext* m_device_context;
 	RenderSystem* m_system = nullptr;
 	SwapChainPtr p_swapchain;
+
+	//pointers which track the location of the currently bound vertex buffer and index buffer
+	ID3D11Buffer* m_current_vb = nullptr;
+	ID3D11Buffer* m_current_ib = nullptr;
+	ID3D11DepthStencilState* m_current_dss = nullptr;
+	ID3D11RasterizerState* m_current_rs = nullptr;
+
 
 private:
 	friend class MyConstantBuffer;

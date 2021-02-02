@@ -3,7 +3,7 @@
 #include "ConstantBufferSystem.h"
 #include "AppWindow.h"
 
-Lighting* Lighting::l = nullptr;
+Lighting* Lighting::instance = nullptr;
 int Lighting::m_next_light_id = 0;
 
 Lighting::Lighting()
@@ -12,6 +12,15 @@ Lighting::Lighting()
 	m_sl.m_global_light_dir = Vec3(0.05f, 1.0f, 0.05f);
 	m_sl.m_global_light_strength = 1.0f;
 	m_sl.m_ambient_light_color = Vec3(0, 0, 0);
+}
+
+void Lighting::release()
+{
+	if (instance)
+	{
+		delete instance;
+		instance = nullptr;
+	}
 }
 
 Lighting::~Lighting()

@@ -73,8 +73,14 @@ Window::Window()
 		throw std::exception("Registration of the windows class has failed");
 
 	//Creation of the window
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW, 
-		CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, NULL);
+	//m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW, 
+	//	CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, NULL, NULL, NULL, NULL);
+
+	LONG border_width = 20;
+	LONG border_height = 43;
+
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, SCREEN_WIDTH + border_width, SCREEN_HEIGHT + border_height, NULL, NULL, NULL, NULL);
 
 	//if the creation of the window fails throw an exception
 	if (!m_hwnd)

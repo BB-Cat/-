@@ -14,6 +14,8 @@
 #include "Scene12.h"
 #include "Scene13.h"
 #include "Scene14.h"
+#include "Scene15.h"
+#include "Scene16.h"
 
 SceneManager::SceneManager() :m_next_scene(0), m_clear_flag()
 {
@@ -45,7 +47,7 @@ void SceneManager::imGui()
 }
 
 
-void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
+void SceneManager::changeScene(int next_scene, bool clear_current_scene)
 {
     if (clear_current_scene == true)
     {
@@ -100,6 +102,13 @@ void SceneManager::changeScene(const SCENE next_scene, bool clear_current_scene)
     case SCENE14:
         m_scene_stack.emplace(std::make_unique<Scene14>(this));
         break;
+    case SCENE15:
+        m_scene_stack.emplace(std::make_unique<Scene15>(this));
+        break;
+    case SCENE16:
+        m_scene_stack.emplace(std::make_unique<Scene16>(this));
+        break;
     }
    
 }
+

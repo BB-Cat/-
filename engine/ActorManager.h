@@ -11,6 +11,10 @@ class Faction
 {
 public:
 	Faction(std::wstring name) : m_name(name) {}
+	~Faction() 
+	{ 
+		m_actors.clear();
+	}
 private:
 	std::wstring m_name;
 	std::vector<std::shared_ptr<Actor>> m_actors;
@@ -34,6 +38,8 @@ private:
 public:
 	static ActorManager* get();
 	~ActorManager();
+
+	static void release();
 
 	//全てのアクターの更新関数を行う
 	void updateAll(float delta);

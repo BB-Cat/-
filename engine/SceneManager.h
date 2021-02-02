@@ -39,7 +39,9 @@ public:
         SCENE12,  //game style scene select
         SCENE13,  //compute shader practice
         SCENE14,  //collision testing
+        SCENE15,  //animation hitbox modifier
+        SCENE16,  //ray marching spheres test scene
     };
 
-    void changeScene(const SCENE, bool clear_current_scene = false);
+    void changeScene(int next_scene, bool clear_current_scene = false);
 };

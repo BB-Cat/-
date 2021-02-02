@@ -7,11 +7,12 @@ class Texture: public Resource
 {
 public:
 	Texture(const wchar_t* full_path);
+	Texture(ID3D11ShaderResourceView* srv, int width, int height);
 	~Texture();
 
 	void InitGeneratedTexture(ID3D11ShaderResourceView* srv, int width, int height);
 
-	Vec2 getSize() { return Vec2(m_height, m_width); }
+	Vec2 getSize() { return Vec2(m_width, m_height); }
 	ID3D11ShaderResourceView* getSRV() { return m_shader_res_view; }
 private:
 	ID3D11Resource* m_texture = nullptr;

@@ -109,5 +109,5 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	}
 
 
-	return float4(Kd * shadow, d);
+	return float4(Kd * shadow, 1);
 }

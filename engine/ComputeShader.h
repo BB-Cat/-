@@ -18,7 +18,7 @@ public:
 	/*! CAUTION ! This Compute Shader class will not clear it's output data 
 	automatically. you must call getOutputData, cast it to the correct type
 	and then delete it otherwise this function will simply return on call*/
-	void runComputeShader();
+	virtual void runComputeShader();
 	//call this after retrieving data from the compute shader.
 	void unmapCPUReadable();
 
@@ -33,13 +33,14 @@ public:
 public: //!! This needs to be switched to private from public, but I'm still not sure how to handle releasing data after use from inside the class...
 	//void pointer to the output data which can be used for things like creating an SRV for image data
 	void* m_output_data = nullptr;
-private:
+protected:
 	UINT m_x_dispatch_count = 1;
 	UINT m_y_dispatch_count = 1;
 
 	ID3D11ComputeShader* m_compute_shader;
 	RenderSystem* m_system = nullptr;
-private:
+	DeviceContextPtr m_context = nullptr;
+protected:
 	//buffer pointer to the data which the compute shader uses to calculate output
 	ID3D11Buffer* m_input;
 	//shader resource view created from the input buffer

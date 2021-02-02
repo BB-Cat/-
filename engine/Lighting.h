@@ -43,9 +43,11 @@ class Lighting
 public:
 	static Lighting* Lighting::get()
 	{
-		if (l == nullptr) l = new Lighting();
-		return l;
+		if (instance == nullptr) instance = new Lighting();
+		return instance;
 	}
+
+	static void release();
 
 	~Lighting();
 public:
@@ -65,7 +67,7 @@ public:
 	void sceneLightingInput(float delta);
 
 private:
-	static Lighting* l;
+	static Lighting* instance;
 	static int m_next_light_id;
 	Lighting();
 

@@ -62,6 +62,7 @@ std::vector<Mesh_Data> MyFbxManager::loadFbxMesh(const wchar_t* filename, float*
             //exit(-1);
             throw (int)BB_ERROR::FBX_IMPORTER_UNINITIALIZED;
         }
+        
     }
     catch (int error)
     {

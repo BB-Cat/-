@@ -33,6 +33,6 @@ void SpriteParticle::render(const Vec3& camera_dir, Vec2 tex_pos, Vec2 tex_size,
 	float angle_to_cameraX = atan2(dir_to_camera.y, dir_to_camera.z);
 	float angle_to_cameraY = atan2(dir_to_camera.x, dir_to_camera.z);
 
-	m_sprite->renderSprite(m_scale, m_pos, Vec3(angle_to_cameraX, angle_to_cameraY, 0),
+	m_sprite->renderWorldSpaceSprite(m_scale, m_pos, Vec3(angle_to_cameraX, angle_to_cameraY, 0),
 		tex_pos, tex_size, tex_origin);
 }

@@ -35,6 +35,9 @@ namespace Animation
 			DodgeBack,
 			Attack1,
 			Attack2,
+			Attack3,
+			Attack4,
+			Attack5,
 			MAX
 		};
 	}

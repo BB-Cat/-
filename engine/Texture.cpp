@@ -26,13 +26,10 @@ Texture::Texture(const wchar_t* full_path): Resource(full_path)
 
 }
 
-
-//Texture::InitGeneratedTexture(ID3D11ShaderResourceView* srv, int width, int height)
-//{
-//	m_shader_res_view = srv;
-//	m_height = height;
-//	m_width = width;
-//}
+Texture::Texture(ID3D11ShaderResourceView* srv, int width, int height) : Resource(L"")
+{
+	InitGeneratedTexture(srv, width, height);
+}
 
 Texture::~Texture()
 {
@@ -42,6 +39,9 @@ Texture::~Texture()
 
 void Texture::InitGeneratedTexture(ID3D11ShaderResourceView* srv, int width, int height)
 {
+
+	if (m_shader_res_view != nullptr) m_shader_res_view->Release();
+
 	m_shader_res_view = srv;
 	m_height = height;
 	m_width = width;

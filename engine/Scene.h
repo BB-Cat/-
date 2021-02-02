@@ -8,7 +8,7 @@ class Scene
 {
 protected:
     SceneManager* p_manager;
-    int m_timer;
+    float m_timer = 0;
     int m_state;
 
     Vec3 m_scene_light_dir;

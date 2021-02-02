@@ -7,6 +7,7 @@
 ComputeShader::ComputeShader(const void* shader_byte_code, size_t byte_code_size, RenderSystem* system,
 							size_t input_structure_size, size_t output_structure_size, void* data, UINT input_count): m_system(system)
 {
+	m_context = m_system->getImmediateDeviceContext();
 
 	if (!SUCCEEDED(m_system->m_d3d_device->CreateComputeShader(shader_byte_code, byte_code_size, nullptr, &m_compute_shader)))
 	{
@@ -120,22 +121,42 @@ void ComputeShader::updateInputData(void* newdata, UINT data_size_in_bytes)
 	//m_system->getImmediateDeviceContext()->updateResource(m_input, newdata);
 }
 
+//void ComputeShader::runComputeShader()
+//{
+//	//Enable Compute Shader
+//	m_context->setComputeShader(m_compute_shader, m_input_srv, m_output_uav);
+//
+//	//Dispatch
+//	m_context->dispatchComputeShader(m_x_dispatch_count, m_y_dispatch_count, 1);
+//
+//	// Disable Compute Shader
+//	m_context->removeComputeShader();
+//
+//	//Copy result
+//	m_context->copyResource(m_output, m_output_cpu_readable);
+//
+//	//save a pointer to the copied data for later use
+//	D3D11_MAPPED_SUBRESOURCE mapped_resource;
+//	HRESULT hr = m_system->getImmediateDeviceContext()->mapResourceRead(m_output_cpu_readable, &mapped_resource);
+//	m_output_data = mapped_resource.pData;
+//	m_system->getImmediateDeviceContext()->unmapResource(m_output_cpu_readable);
+//}
+
+//TEST
 void ComputeShader::runComputeShader()
 {
-	////Make sure all previous data has been released properly, otherwise we will leak
-	//if (m_output_cpu_readable != nullptr) m_output_cpu_readable->Release();
 
 	//Enable Compute Shader
-	m_system->getImmediateDeviceContext()->setComputeShader(m_compute_shader, m_input_srv, m_output_uav);
+	m_context->setComputeShader(m_compute_shader, m_input_srv, m_output_uav);
 
 	//Dispatch
-	m_system->getImmediateDeviceContext()->dispatchComputeShader(m_x_dispatch_count, m_y_dispatch_count, 1);
+	m_context->dispatchComputeShader(m_x_dispatch_count, m_y_dispatch_count, 1);
 
 	// Disable Compute Shader
-	m_system->getImmediateDeviceContext()->removeComputeShader();
+	m_context->removeComputeShader();
 
 	//Copy result
-	m_system->getImmediateDeviceContext()->copyResource(m_output, m_output_cpu_readable);
+	m_context->copyResource(m_output, m_output_cpu_readable);
 
 	//save a pointer to the copied data for later use
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;

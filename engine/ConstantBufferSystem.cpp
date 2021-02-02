@@ -30,6 +30,7 @@ void ConstantBufferSystem::initializeConstantBuffers()
 	createTessBuffer();
 	createNoiseBuffer();
 	createCloudBuffer();
+	createRaymarchBuffer();
 }
 
 void ConstantBufferSystem::createGlobalBuffer()
@@ -171,6 +172,13 @@ void ConstantBufferSystem::createCloudBuffer()
 
 }
 
+void ConstantBufferSystem::createRaymarchBuffer()
+{
+	cb_compute_raymarch r;
+	r.m_screensize;
+	m_raymarch_cb = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&r, sizeof(cb_compute_raymarch));
+}
+
 void ConstantBufferSystem::updateLocalLightPropertyBuffer(Vec3 pos, Vec3 color, float strength)
 {
 	if (m_lights_set < NUM_LIGHTS) 
@@ -222,8 +230,11 @@ void ConstantBufferSystem::setLocalLightPropertyBuffer()
 
 void ConstantBufferSystem::setGlobalLightPropertyBuffer()
 {
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBufferSceneLightingPS(m_global_light_cb);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantBufferSceneLightingVS(m_global_light_cb);
+	DeviceContextPtr device = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
+
+	device->setConstantBufferSceneLightingPS(m_global_light_cb);
+	device->setConstantBufferSceneLightingVS(m_global_light_cb);
+	device->setConstantBufferSceneLightingCS(m_global_light_cb);
 }
 
 void ConstantBufferSystem::setHullShaderBuffer()
@@ -354,4 +365,15 @@ void ConstantBufferSystem::updateAndSetPSCloudBuffer(const cb_cloud& c)
 
 	//send the updated buffer to the pixel shader
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setCloudBufferPS(m_cloud_cb);
+}
+
+void ConstantBufferSystem::updateAndSetCSRaymarchBuffer(const cb_compute_raymarch& r)
+{
+	cb_compute_raymarch temp = r;
+
+	//update the noise buffer
+	m_raymarch_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &temp);
+
+	//send the updated buffer to the pixel shader
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRaymarchBufferCS(m_raymarch_cb);
 }

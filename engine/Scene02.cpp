@@ -56,13 +56,15 @@ void Scene02::update(float delta, const float& width, const float& height)
 	CameraManager::get()->update(delta, width, height);
 	CameraManager::get()->beginLookAt(Vec3(0, 0, 0), 0);
 
-	Lighting::get()->updateSceneLight(Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x)), Vec3(1.0f, 1.0f, 1.0f), 0.85f, Vec3(0.2, 0.3, 0.4));
 
-	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
+	m_scene_light_dir = Vec3(sinf(m_timer) * 3, abs(sinf(m_timer * 0.8f)), cosf(m_timer) * 3);
+	//Lighting::get()->updateSceneLight(rot, Vec3(1.0f, 1.0f, 1.0f), 0.85f, Vec3(0.2, 0.3, 0.4));
+
+	//m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, Vec3(1,1,1), 1.0f, Vec3(1,1,1));
 
-	m_timer++;
+	m_timer += delta;
 }
 
 void Scene02::imGuiRender()
@@ -86,13 +88,15 @@ void Scene02::imGuiRender()
 	//if (m_global_light_rotation.m_y < 0) m_global_light_rotation.m_y = 0;
 
 
-	ImGui::SetNextWindowPos(ImVec2(0, 680));
-	ImGui::SetNextWindowBgAlpha(0.6f);
-	ImGui::Begin("ShadowMapping", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
-	
-	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
-	if (m_global_light_rotation.y < 0) m_global_light_rotation.y = 0;
+	//ImGui::SetNextWindowPos(ImVec2(0, 680));
+	//ImGui::SetNextWindowBgAlpha(0.6f);
+	//ImGui::Begin("ShadowMapping", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	//
+	//VectorToArray v(&m_global_light_rotation);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f);
+	//if (m_global_light_rotation.y < 0) m_global_light_rotation.y = 0;
+	//
+	//ImGui::End();
 
 	if (m_first_time)
 	{
@@ -112,7 +116,7 @@ void Scene02::imGuiRender()
 		ImGui::EndPopup();
 	}
 
-	ImGui::End();
+
 }
 
 void Scene02::shadowRenderPass(float delta)
@@ -124,6 +128,8 @@ void Scene02::shadowRenderPass(float delta)
 	m_mesh2->renderMesh(delta, Vec3(1, 1, 1), Vec3(2.0f, 0.51f, -1.0f), Vec3(0 * 0.01745f, 0 * 0.01745f, 0), SHADOWMAP);
 
 	m_mesh3->renderMesh(delta, Vec3(2.5f, 2.5f, 2.5f), Vec3(0.5f, 1, 0.0), Vec3(75 * 0.01745f, 0 * 0.01745f, 30 * 0.01745f), SHADOWMAP);
+
+	m_mesh3->renderMesh(delta, Vec3(2.5f, 4.5f, 2.5f), Vec3(-4.5f, 1, -10.0), Vec3(75 * 0.01745f, 130 * 0.01745f, 30 * 0.01745f), SHADOWMAP);
 
 }
 
@@ -141,5 +147,8 @@ void Scene02::mainRenderPass(float delta)
 	m_mesh2->renderMesh(delta, Vec3(1, 1, 1), Vec3(2.0f, 0.03f, -1.0f), Vec3(0 * 0.01745f, 0 * 0.01745f, 0), FLAT);
 
 	m_mesh3->renderMesh(delta, Vec3(2.5f, 2.5f, 2.5f), Vec3(0.5f, 1, 0.0), Vec3(75 * 0.01745f, 0 * 0.01745f, 30 * 0.01745f), FLAT);
+
+	m_mesh3->renderMesh(delta, Vec3(2.5f, 5.5f, 2.5f), Vec3(-4.5f, 1, -10.0), Vec3(75 * 0.01745f, 130 * 0.01745f, 30 * 0.01745f), FLAT);
+
 }
 

@@ -72,9 +72,13 @@ GraphicsEngine::GraphicsEngine()
 
 GraphicsEngine::~GraphicsEngine()
 {
-	m_engine = nullptr;
-	delete m_static_mesh_manager;
+	delete m_constant_buffer_system;
 	delete m_texture_manager;
+	delete m_sprite_manager;
+	delete m_static_mesh_manager;
+	delete m_skinned_mesh_manager;
+	delete m_shader_manager;
+	delete m_text;
 	delete m_render_system;
 }
 

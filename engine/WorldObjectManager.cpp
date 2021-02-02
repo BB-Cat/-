@@ -30,6 +30,10 @@ WorldObjectManager* WorldObjectManager::get()
 
 void WorldObjectManager::outputSceneData(std::string filename)
 {
+
+	if (current_file == filename) return;
+	else current_file = filename;
+
 	std::string folder = "..\\Assets\\SceneData\\";
 
 	//====================================================================================

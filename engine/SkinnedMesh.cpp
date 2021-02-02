@@ -78,6 +78,12 @@ SkinnedMesh::SkinnedMesh(const wchar_t* full_path, bool is_flipped, MyFbxManager
 
 SkinnedMesh::~SkinnedMesh()
 {
+	m_animation.clear();
+
+	for (int i = 0; i < m_meshdata.size(); i++) m_meshdata[i].m_subs.clear();
+	m_meshdata.clear();
+
+	OutputDebugString(L"Skinned Mesh was deleted");
 }
 
 void SkinnedMesh::setAnimationCategory(int type)
@@ -125,6 +131,12 @@ void SkinnedMesh::setAnimation(int type)
 	else m_queued_animation = type;
 }
 
+void SkinnedMesh::setAnimationFrame(int frame)
+{
+	if (m_active_animation < 0) return;
+	else m_animation[m_active_animation].setFrame(frame);
+}
+
 void SkinnedMesh::resetAnimation()
 {
 	if (m_active_animation < 0) return;
@@ -167,6 +179,13 @@ bool SkinnedMesh::getIfAnimFinished()
 	else return m_animation[m_active_animation].getIfFinished();
 }
 
+Fbx_Anm * SkinnedMesh::getActiveAnimation()
+{
+	if(m_active_animation < 0) return nullptr;
+
+	return &m_animation[m_active_animation];
+}
+
 float SkinnedMesh::getActiveAnmPercent()
 {
 	if (m_active_animation < 0) return 0;
@@ -187,6 +206,12 @@ bool SkinnedMesh::getAnimationLengths(float& active_length, float& blend_length)
 	blend_length = m_animation[m_blended_animation].getTotalTime();
 	return true;
 
+}
+
+int SkinnedMesh::getAnimationFrameCount()
+{
+	if (m_active_animation < 0) return -1;
+	else return m_animation[m_active_animation].getTotalFrames();
 }
 
 void SkinnedMesh::triggerAnimationFinish(bool trigger)
@@ -227,8 +252,11 @@ void SkinnedMesh::renderMesh(float elapsed_time, Vec3 scale, Vec3 position, Vec3
 	{
 		//update the animation data. if a percent tick was sent to the render function, 
 		//use the update by percent function. otherwise use delta time.
-		if (m_percent_tick >= 0)m_animation[m_active_animation].updatedByPercentage(m_percent_tick * animation_speed);
-		else m_animation[m_active_animation].update(elapsed_time * animation_speed);
+		if (animation_speed)
+		{
+			if (m_percent_tick >= 0)m_animation[m_active_animation].updatedByPercentage(m_percent_tick * animation_speed);
+			else m_animation[m_active_animation].update(elapsed_time * animation_speed);
+		}
 
 		//this is a quick fix because we are calling the render function in the shadow mapping function AND the normal render function,
 		//which is causing problems for animation blending.  we need a better solution later.

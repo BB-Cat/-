@@ -1,5 +1,10 @@
 #include "AppWindow.h"
 #include <Windows.h>
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+
 #include "Vector3D.h"
 #include "Vector2D.h"
 #include "Matrix4X4.h"
@@ -15,6 +20,8 @@
 #include "InputListener.h"
 #include "CameraManager.h"
 //#include "SceneManager.h"
+#include "ActorManager.h"
+#include "WorldObjectManager.h"
 
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_dx11.h"
@@ -55,6 +62,13 @@ AppWindow::~AppWindow()
 		m_compute_thread->join();
 		m_compute_thread.reset();
 	}
+
+	GraphicsEngine::get()->getRenderSystem()->releaseImGui();
+
+	CameraManager::release();
+	Lighting::release();
+	ActorManager::release();
+	WorldObjectManager::release();
 }
 
 void AppWindow::resetInput()
@@ -168,6 +182,7 @@ void AppWindow::initiateComputeThreads()
 
 void AppWindow::onCreate()
 {
+
 	Window::onCreate();
 
 	//set input listeners
@@ -185,7 +200,7 @@ void AppWindow::onCreate()
 	GraphicsEngine::get()->getRenderSystem()->createGBuffer(m_screen_size.x, m_screen_size.y);
 
 	//initialize the text rendering system
-	GraphicsEngine::get()->createTextRenderer(&m_hwnd, m_swap_chain);
+	//GraphicsEngine::get()->createTextRenderer(&m_hwnd, m_swap_chain);
 
 	//create the scene manager
 	m_scene_manager = std::make_unique<SceneManager>();
@@ -214,18 +229,20 @@ void AppWindow::onUpdate()
 	Window::onUpdate();
 	InputSystem::get()->update();
 
+	DeviceContextPtr context = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
+
 	//clear render targets
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearRenderTargetColor(this->m_swap_chain, 0.3f, 0.3f, 0.4f, 1);
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->clearGBufferRenderTargetColor(this->m_swap_chain, 0.6f, 0.6f, 0.5f, 1);
+	context->clearRenderTargetColor(this->m_swap_chain, 0.3f, 0.3f, 0.4f, 1);
+	context->clearGBufferRenderTargetColor(this->m_swap_chain, 0.6f, 0.6f, 0.5f, 1);
 
 	//set the size of the viewport for this frame
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setViewportSize(m_screen_size.x, m_screen_size.y);
+	context->setViewportSize(m_screen_size.x, m_screen_size.y);
 
 	//set the scene lighting buffer
 	GraphicsEngine::get()->getConstantBufferSystem()->setGlobalLightPropertyBuffer();
 
 	//set the default sampler
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setSamplerState(m_sampler);
+	context->setSamplerState(m_sampler);
 
 	//update and render the current scene
 	m_scene_manager->execute(m_delta_time.time_interval(), m_screen_size.x, m_screen_size.y);

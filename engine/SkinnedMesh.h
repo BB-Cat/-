@@ -28,14 +28,19 @@ public:
 		bool interruptable = true, float interruptable_percent = 0, bool idles = false, float idle_percent = 0);
 
 	void setAnimation(int type);
+	void setAnimationFrame(int frame);
 	void resetAnimation();
 	bool getIfAnimInterruptable();
 	bool getIfAnimFinished();
-	int getAnimation() { return m_active_animation; }
+	int getAnimationID() { return m_active_animation; }
+	Fbx_Anm* getActiveAnimation();
+
 	//returns 0 if there is no active animation, or the percentage of completion in the animation
 	float getActiveAnmPercent();
 	//sends the total lengths of the active and blend animations for use in percent tick calculation.  returns false if there is no blend animation.
 	bool getAnimationLengths(float& active_length, float& blend_length);
+	//returns the number of total frames in the active animation
+	int getAnimationFrameCount();
 	Material_Obj getMaterial() { return m_mat; }
 
 	void setBlendAnimation(int type);

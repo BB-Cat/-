@@ -10,6 +10,7 @@
 #include "DomainShader.h"
 #include "PixelShader.h"
 #include "ComputeShader.h"
+#include "TextureComputeShader.h"
 #include "Sampler.h"
 #include "GBuffer.h"
 
@@ -88,7 +89,17 @@ void RenderSystem::initializeImGui(HWND hwnd)
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(m_d3d_device, m_imm_device_context->m_device_context);
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsClassic();
+}
+
+void RenderSystem::releaseImGui()
+{
+	//ImGui_ImplOpenGL3_Shutdown();
+	//ImGui_ImplGlfw_Shutdown();
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 
@@ -218,6 +229,20 @@ ComputeShaderPtr RenderSystem::createComputeShader(const void* shader_byte_code,
 	{
 		cs = std::make_shared <ComputeShader>(shader_byte_code, byte_code_size, this,
 			input_structure_size, output_structure_size, data, input_count);
+	}
+	catch (...) {}
+
+	return cs;
+}
+
+TextureComputeShaderPtr RenderSystem::createTextureComputeShader(const void* shader_byte_code, 
+	size_t byte_code_size, Vec2 dimensions)
+{
+	TextureComputeShaderPtr cs = nullptr;
+	try
+	{
+		cs = std::make_shared <TextureComputeShader>(shader_byte_code, byte_code_size, this,
+			dimensions);
 	}
 	catch (...) {}
 

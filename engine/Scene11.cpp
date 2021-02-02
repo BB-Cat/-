@@ -37,6 +37,8 @@ Scene11::Scene11(SceneManager* sm) : Scene(sm)
 	m_ambient_light_color = Vec3(1.0, 1.0, 0.8);
 
 	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
+
+	WorldObjectManager::get()->loadSceneData("backup2.txt");
 }
 
 Scene11::~Scene11()
@@ -104,6 +106,8 @@ void Scene11::imGuiRender()
 		ImGui::OpenPopup("Level Creator Popup");
 		ImGui::BeginPopupModal("Level Creator Popup");
 		ImGui::TextWrapped("This scene is for creating scenes out of primitives. You can change shaders, size, material and other things.  You can save a scene and load it later too.");
+		//ImGui::NewLine();
+		//ImGui::TextWrapped("I am still building an AABB heirarchy system, so the collisions in the scene are not correct yet.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

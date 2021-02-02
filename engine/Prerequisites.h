@@ -18,6 +18,7 @@ class HullShader;
 class DomainShader;
 class PixelShader;
 class ComputeShader;
+class TextureComputeShader;
 class Sampler;
 class MyConstantBuffer;
 class MyGeometricPrimitive;
@@ -64,6 +65,7 @@ typedef std::shared_ptr<HullShader> HullShaderPtr;
 typedef std::shared_ptr<DomainShader> DomainShaderPtr;
 typedef std::shared_ptr<PixelShader> PixelShaderPtr;
 typedef std::shared_ptr<ComputeShader> ComputeShaderPtr;
+typedef std::shared_ptr<TextureComputeShader> TextureComputeShaderPtr;
 typedef std::shared_ptr<Sampler> SamplerPtr;
 typedef std::shared_ptr<Resource> ResourcePtr;
 typedef std::shared_ptr<Texture> TexturePtr;
@@ -124,6 +126,8 @@ enum PS
 	TRIPLANAR_TEXTURE_PS,
 	TOON_MODEL_PS,
 	TOON_MODEL_TEX_PS,
+	DEBUG_GRID_PS,
+	SCREENSPACE_TEXTURE_PS,
 };
 //vertex shader enumeration for setting shaders in the pipeline
 enum VS
@@ -166,6 +170,8 @@ enum VS
 	TRIPLANAR_TEXTURE_VS,
 	TOON_MODEL_VS,
 	TOON_MODEL_TEX_VS,
+	DEBUG_GRID_VS,
+	SCREENSPACE_TEXTURE_VS,
 };
 
 enum GS
@@ -240,6 +246,8 @@ enum Shaders
 	TRIPLANAR_TEXTURE,
 	TOON_MODEL,
 	TOON_TEX_MODEL,
+	DEBUG_GRID,
+	SCREENSPACE_TEXTURE,
 	SHADERMAX
 };
 

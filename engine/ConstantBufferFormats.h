@@ -167,3 +167,24 @@ struct cb_cloud
 	float		m_light_absorption_towards_sun;
 	float		m_light_absorption_through_cloud;
 };
+
+__declspec(align(16))
+struct cb_compute_raymarch
+{
+	//system data for UV calculation
+	Vector4D		m_screensize;
+	Vector4D		m_params = {0, 6, 0, 0 }; //x = number of traces, y = number of spheres
+
+	//ground data
+	Vector4D		m_ground_color = { 0.8, 0.7, 0.4, 1 };
+
+	//lighting data
+	Vector4D		m_pointlight_pos = { 2, 5, 0, 0 };
+	Vector4D		m_light_color = { 1, 1, 1, 0 };
+	Vector4D		m_light_dir = { 0.25, -0.5, 0.25, 1 };
+
+	//sphere data 
+	Vector4D		m_sphere_pos_and_radius[12] = { 0 };
+	Vector4D		m_local_colors[12] = { 0.7 };
+	Vector4D		m_local_speculars[12] = { 0.6 };
+};

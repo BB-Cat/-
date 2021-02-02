@@ -46,6 +46,8 @@ public:
 
 	void updateAndSetPSCloudBuffer(const cb_cloud& c);
 
+	void updateAndSetCSRaymarchBuffer(const cb_compute_raymarch& r);
+
 
 private:
 	//create the constant buffer for rotation properties 
@@ -72,6 +74,8 @@ private:
 	void createNoiseBuffer();
 	//create the constant buffer for cloud properties
 	void createCloudBuffer();
+	//create the constant buffer for the raymarch compute shader
+	void createRaymarchBuffer();
 
 private:
 	//this buffer holds the lighting properties for meshes and is overwritten every time a mesh's render function is called.
@@ -96,6 +100,9 @@ private:
 	MyConstantBufferPtr m_noise_cb;
 	//constant buffer for cloud properties
 	MyConstantBufferPtr m_cloud_cb;
+
+	//constant buffer for the ray march compute shader
+	MyConstantBufferPtr m_raymarch_cb;
 
 private:
 	//constant buffer information for lights.  this should be moved to a proper lighting class later on

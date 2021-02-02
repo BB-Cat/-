@@ -4,17 +4,26 @@
 #include "AppWindow.h"
 #include "ActorManager.h"
 
-CameraManager* CameraManager::cm = nullptr;
+CameraManager* CameraManager::instance = nullptr;
 
 CameraManager* CameraManager::get()
 {
-	if (cm == nullptr) cm = new CameraManager();
-	return cm;
+	if (instance == nullptr) instance = new CameraManager();
+	return instance;
 }
 
 CameraManager::~CameraManager()
 {
 
+}
+
+void CameraManager::release()
+{
+	if (instance)
+	{
+		delete instance;
+		instance = nullptr;
+	}
 }
 
 void CameraManager::update(const float& delta, const int& width, const int& height, bool exclude_Y_movement)
@@ -194,6 +203,7 @@ void CameraManager::setWorldBuffer()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantWVPBufferGS(m_world_constant_buffer);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantWVPBufferDS(m_world_constant_buffer);
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantWVPBufferPS(m_world_constant_buffer);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantWVPBufferCS(m_world_constant_buffer);
 }
 
 void CameraManager::setDirectionalLightWVPBuffer(Vec3 light_dir, const int& width, const int& height, const int& orthoID)

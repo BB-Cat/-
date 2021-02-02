@@ -31,6 +31,11 @@ void DeviceContext::clearRenderTargetColor(const SwapChainPtr& swap_chain,  floa
 	m_device_context->ClearDepthStencilView(swap_chain->m_dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 }
 
+void DeviceContext::clearState()
+{
+	m_device_context->ClearState();
+}
+
 void DeviceContext::clearGBufferRenderTargetColor(const SwapChainPtr& swap_chain, float red, float green, float blue, float alpha)
 {
 	FLOAT clear_color[] = { red,green,blue,alpha };
@@ -96,27 +101,39 @@ void DeviceContext::setRenderTargetShadowMap(const int& map_num)
 
 void DeviceContext::setVertexBuffer(const VertexBufferPtr& vertex_buffer)
 {
+	//if the same vertex buffer is attempting to be set again, return
+	if (m_current_vb == vertex_buffer->m_buffer) return;
 
 	UINT stride = vertex_buffer->m_size_vertex;
 	UINT offset = 0;
 	m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer->m_buffer, &stride, &offset);
 
 	m_device_context->IASetInputLayout(vertex_buffer->m_layout);
+	m_current_vb = vertex_buffer->m_buffer;
 }
 
 void DeviceContext::setVertexBuffer(UINT size_vertex, ID3D11Buffer* buffer, ID3D11InputLayout* layout)
 {
+	//if the same vertex buffer is attempting to be set again, return
+	if (m_current_vb == buffer) return;
 
 	UINT stride = size_vertex;
 	UINT offset = 0;
 	m_device_context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
 	m_device_context->IASetInputLayout(layout);
+
+	m_current_vb = buffer;
 }
 
 void DeviceContext::setIndexBuffer(const IndexBufferPtr& index_buffer)
 {
+	//if the same index buffer is attempting to be set again, return
+	if (m_current_ib == index_buffer->m_buffer) return;
+
 	m_device_context->IASetIndexBuffer(index_buffer->m_buffer, DXGI_FORMAT_R32_UINT, 0);
+
+	m_current_ib = index_buffer->m_buffer;
 }
 
 void DeviceContext::drawTriangleList(UINT vertex_count, UINT start_vertex_index)
@@ -193,17 +210,14 @@ void DeviceContext::setComputeShader(ID3D11ComputeShader* compute_shader, ID3D11
 void DeviceContext::dispatchComputeShader(UINT x_dispatch_count, UINT y_dispatch_count, UINT z_dispatch_count)
 {
 	m_device_context->Dispatch(x_dispatch_count, y_dispatch_count, z_dispatch_count);
-
-	//unbind the compute shader srv and uav after dispatching for safety
-	ID3D11ShaderResourceView* null_srv[] = { NULL };
-	m_device_context->CSSetShaderResources(0, 1, null_srv);
-
-	ID3D11UnorderedAccessView* null_uav[] = { NULL };
-	m_device_context->CSSetUnorderedAccessViews(0, 1, null_uav, 0);
-
 }
 
 void DeviceContext::copyResource(ID3D11Buffer* source, ID3D11Buffer* target)
+{
+	m_device_context->CopyResource(target, source);
+}
+
+void DeviceContext::copyResource(ID3D11Buffer* source, ID3D11Texture2D* target)
 {
 	m_device_context->CopyResource(target, source);
 }
@@ -220,7 +234,18 @@ HRESULT DeviceContext::mapResourceWriteDiscard(ID3D11Buffer* source, D3D11_MAPPE
 	return hr;
 }
 
+HRESULT DeviceContext::mapResourceWriteDiscard(ID3D11Texture2D* source, D3D11_MAPPED_SUBRESOURCE* mapped_resource)
+{
+	HRESULT hr = m_device_context->Map(source, 0, D3D11_MAP_WRITE_DISCARD, 0, mapped_resource);
+	return hr;
+}
+
 void DeviceContext::unmapResource(ID3D11Buffer* resource)
+{
+	m_device_context->Unmap(resource, 0);
+}
+
+void DeviceContext::unmapResource(ID3D11Texture2D* resource)
 {
 	m_device_context->Unmap(resource, 0);
 }
@@ -255,6 +280,11 @@ void DeviceContext::removeComputeShader()
 void DeviceContext::setTextureVS(const TexturePtr& texture)
 {
 	m_device_context->VSSetShaderResources(0, 1, &texture->m_shader_res_view);
+}
+
+void DeviceContext::setTextureCS(const TexturePtr& texture)
+{
+	m_device_context->CSSetShaderResources(0, 1, &texture->m_shader_res_view);
 }
 
 void DeviceContext::setDiffuseTexPS(const TexturePtr& texture)
@@ -382,6 +412,11 @@ void DeviceContext::setConstantWVPBufferPS(const MyConstantBufferPtr& buffer)
 	m_device_context->PSSetConstantBuffers(0, 1, &buffer->m_buffer);
 }
 
+void DeviceContext::setConstantWVPBufferCS(const MyConstantBufferPtr& buffer)
+{
+	m_device_context->CSSetConstantBuffers(0, 1, &buffer->m_buffer);
+}
+
 void DeviceContext::setConstantWVPLightBufferVS(const MyConstantBufferPtr& buffer)
 {
 	m_device_context->VSSetConstantBuffers(3, 1, &buffer->m_buffer);
@@ -458,6 +493,11 @@ void DeviceContext::setCloudBufferPS(const MyConstantBufferPtr& buffer)
 	m_device_context->PSSetConstantBuffers(6, 1, &buffer->m_buffer);
 }
 
+void DeviceContext::setRaymarchBufferCS(const MyConstantBufferPtr& buffer)
+{
+	m_device_context->CSSetConstantBuffers(7, 1, &buffer->m_buffer);
+}
+
 void DeviceContext::setGBufferSRVs()
 {
 	ID3D11ShaderResourceView* resources[] =
@@ -486,6 +526,12 @@ void DeviceContext::setConstantBufferSceneLightingVS(const MyConstantBufferPtr& 
 {
 	m_device_context->VSSetConstantBuffers(2, 1, &buffer->m_buffer);
 }
+
+void DeviceContext::setConstantBufferSceneLightingCS(const MyConstantBufferPtr& buffer)
+{
+	m_device_context->CSSetConstantBuffers(2, 1, &buffer->m_buffer);
+}
+
 
 void DeviceContext::setConstantBufferLightingPS(const MyConstantBufferPtr& buffer)
 {
@@ -523,7 +569,10 @@ void DeviceContext::setBlendState(ID3D11BlendState* state)
 
 void DeviceContext::setDepthStencilState(ID3D11DepthStencilState* state)
 {
+	if (m_current_dss == state) return;
+
 	m_device_context->OMSetDepthStencilState(state, 0);
+	m_current_dss = state;
 }
 
 void DeviceContext::saveSwapChain(SwapChainPtr swap_chain)

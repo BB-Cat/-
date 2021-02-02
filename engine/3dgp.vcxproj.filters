@@ -167,41 +167,8 @@
     <Filter Include="Sources\Scenes\01">
       <UniqueIdentifier>{53f54ba5-dacf-48e4-9e3b-fea2b5373c67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\ConstantBufferIncludes">
-      <UniqueIdentifier>{2d4175cc-fbba-4641-89b5-873b9052d8cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\1 Flat">
-      <UniqueIdentifier>{2e1614f6-e09f-436f-96d5-cd6a0dda8dc5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\2 Lambert">
-      <UniqueIdentifier>{d746681a-d363-434c-af5e-5e58b8232497}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\3 Specular">
-      <UniqueIdentifier>{31a54dd0-5dd9-4462-b665-22a387d2badd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\4 Rimlight">
-      <UniqueIdentifier>{c48c1ee1-d4eb-43af-b49c-7336d455e503}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\5 TexturedRimlight">
-      <UniqueIdentifier>{ec6c975a-cfdc-465d-97a2-7a431b18b801}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\6 TexturedNormalMap">
-      <UniqueIdentifier>{db200355-ee69-4d44-ae9f-cedfbd56d325}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\7 TexNormSpecMap">
-      <UniqueIdentifier>{f2400ccd-e34e-457b-86d9-af227cb6454d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\8 EnvironTexMap">
-      <UniqueIdentifier>{c798e7e8-1e42-460e-94a7-fc4ef240028c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\GeometryShader">
       <UniqueIdentifier>{72b5e460-729a-4e86-8631-50dbb63c674c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\GeometryTest1">
-      <UniqueIdentifier>{f2a4df60-e236-4c08-966c-f44461168644}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\GeometryTest2">
-      <UniqueIdentifier>{a4002fdf-fb09-4696-8994-3b6fe1470f82}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\HullShader">
       <UniqueIdentifier>{b38f705e-6c28-447d-a54f-cd8ded35e1d6}</UniqueIdentifier>
@@ -209,35 +176,8 @@
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\DomainShader">
       <UniqueIdentifier>{1955d6c4-91f6-47f9-b1b3-5d5d078da7cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\9 AutoTess TexDisplacementMap">
-      <UniqueIdentifier>{456b0246-104a-4c3c-a7ab-11995f750e59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain">
-      <UniqueIdentifier>{df5e6df5-5f0a-4fa9-ac1f-0aaa1ffdf1f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\10 GrassShader">
-      <UniqueIdentifier>{b6d93b60-22e1-4a34-8310-141f645b9949}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\DeferredRenderer">
       <UniqueIdentifier>{d0bdd895-841a-4e6c-ad8f-7c03d8428892}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\11 DeferredRendering">
-      <UniqueIdentifier>{22ff15be-65d5-4790-a060-de44890bc485}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\11 DeferredRendering\Final passes">
-      <UniqueIdentifier>{004f54b9-a4f3-4dd2-ae6e-416dab629b72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\12 ShadowMapping">
-      <UniqueIdentifier>{73495f83-7a39-48cb-8086-3e791b13e656}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\12 ShadowMapping\DirectionalShadowMapTess">
-      <UniqueIdentifier>{ae35da60-e88b-4848-b4e1-e417dd9e9afb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\12 ShadowMapping\DirectionalShadowMap">
-      <UniqueIdentifier>{13621619-a20d-4f13-a4b1-f893cd6e8c67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\13 TerrainSplatting">
-      <UniqueIdentifier>{df7a45fc-cc2f-41a5-b21a-5b414266de10}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameWorld\Foliage">
       <UniqueIdentifier>{f48e57c4-41b2-48b7-bc13-82474a69454e}</UniqueIdentifier>
@@ -254,9 +194,6 @@
     <Filter Include="Sources\Scenes\SceneSelect">
       <UniqueIdentifier>{e6de6a8b-af49-46dd-ae66-295bfbea7e6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\TerrainTest">
-      <UniqueIdentifier>{7401133d-4611-46ac-8277-a3aeffa13ab8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\GameWorld\Terrain Manager">
       <UniqueIdentifier>{d015e3da-19bc-4e36-b7aa-62e2d9ab2c70}</UniqueIdentifier>
     </Filter>
@@ -266,29 +203,11 @@
     <Filter Include="Sources\Scenes\04">
       <UniqueIdentifier>{096d5bca-d6fd-4c10-bbe2-36bc707e2490}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\14 LOD Terrain">
-      <UniqueIdentifier>{2cda0d24-ad3c-4e62-b831-5345e3a83b24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\14 LOD Terrain\LD Terrain">
-      <UniqueIdentifier>{d340e8f6-fc41-41bf-9ee4-e14e1be5d49e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\14 LOD Terrain\MD Terrain">
-      <UniqueIdentifier>{66052b5b-b040-40f2-99d8-af1cfe3efed5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\15 LOD Terrain Toon">
-      <UniqueIdentifier>{55e26e5c-286f-48fa-a25c-652167bfbd3c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\16 Sky">
-      <UniqueIdentifier>{1d7acc9a-240a-4b39-94d0-150f0846dc2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scenes\05">
       <UniqueIdentifier>{51962fb6-ffd3-4247-b91c-1b748cc95324}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scenes\06">
       <UniqueIdentifier>{ebb0fbb0-7640-49ee-b07f-f5a2f96166cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\17 Instanced Flat">
-      <UniqueIdentifier>{005c557a-39d6-44e2-a7f6-df3f60f3e3d8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation">
       <UniqueIdentifier>{2dbc9b30-d367-4305-a932-505c567151e3}</UniqueIdentifier>
@@ -296,47 +215,11 @@
     <Filter Include="Sources\Scenes\07">
       <UniqueIdentifier>{97860048-0280-4255-88e7-8ccbbe2ceaaa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\18 Noise">
-      <UniqueIdentifier>{5a4ec570-0e17-47c6-9b8e-e23d9f6e48e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\18 Noise\White">
-      <UniqueIdentifier>{f47e6748-6834-4ee9-994d-34f07b85f8c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\18 Noise\Value">
-      <UniqueIdentifier>{9d736dda-bc38-4ab1-9ac5-44498a926928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\18 Noise\Perlin">
-      <UniqueIdentifier>{f002094e-0f96-45de-abb8-6fd729d9d16c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\18 Noise\PerlinVoronoi">
-      <UniqueIdentifier>{7db7a264-a0d1-4ad1-af82-55850f1ecd7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds">
-      <UniqueIdentifier>{9c19ae2d-d9d5-455e-9ada-10df8b38a4d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scenes\08">
       <UniqueIdentifier>{747635d1-a8f2-4d90-a0c7-23e2449d7f3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\ResourceManager\Texture3D">
       <UniqueIdentifier>{68d2914f-b76b-49ec-a237-af44746d5149}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\20 3DTexTest">
-      <UniqueIdentifier>{95a7d044-01f0-4d2b-9d32-c384c852112e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\CubeClouds">
-      <UniqueIdentifier>{1f6a50b9-4efc-483e-8cad-edf25e4a356a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap">
-      <UniqueIdentifier>{6efc0a6a-f1ea-41a2-b980-0d925e994a8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky">
-      <UniqueIdentifier>{4666aa79-48e7-47cd-845e-3a7bf2b3e459}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat">
-      <UniqueIdentifier>{3a0edb4e-ba2d-4c6b-b93c-04b22d10afc9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\18 Noise\Dynamic">
-      <UniqueIdentifier>{43a4b30b-3fc8-496d-904f-38e20541ba51}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scenes\09">
       <UniqueIdentifier>{7513d340-4082-43a6-8233-848b02e26a17}</UniqueIdentifier>
@@ -344,17 +227,8 @@
     <Filter Include="Sources\Scenes\10">
       <UniqueIdentifier>{e5924a3d-8d47-4986-8b4d-47ed3fc2c6ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\21 SimpleStage">
-      <UniqueIdentifier>{7ca18538-023a-4f71-9e4a-c7e5b0ea4b8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\0 Error">
-      <UniqueIdentifier>{f7c51883-34fd-4000-91ab-1ca4ea473ca6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Scenes\11">
       <UniqueIdentifier>{a4ed439a-64e7-46a5-b4c0-8db22c406cbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\22 Triplanar Sampling">
-      <UniqueIdentifier>{8baf8f49-8513-4341-a456-c7a0161474a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\Scenes\12">
       <UniqueIdentifier>{6d346e15-29d8-4a61-a33a-a92a17a6e853}</UniqueIdentifier>
@@ -364,9 +238,6 @@
     </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ShaderInclude">
       <UniqueIdentifier>{14d0204b-c798-4ff0-a705-41be572140e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\CubeCloudsNew">
-      <UniqueIdentifier>{2f3d47ca-4bfd-4d03-9476-0477c17b63c3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader">
       <UniqueIdentifier>{8148abbb-f4dc-46e8-ba8c-766508c78801}</UniqueIdentifier>
@@ -379,12 +250,6 @@
     </Filter>
     <Filter Include="Shaders\Includes">
       <UniqueIdentifier>{bd10681e-e107-4316-9a7b-c2beed835b74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\23 Toon">
-      <UniqueIdentifier>{97a54d2f-28d7-4003-91f5-b35d675e8981}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old">
-      <UniqueIdentifier>{aac69f19-3788-4149-96d7-eaabefb18b2d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameWorld\WorldObjectManager\WorldObject">
       <UniqueIdentifier>{7c403410-b8c2-436f-be35-de9f60195c5e}</UniqueIdentifier>
@@ -406,6 +271,153 @@
     </Filter>
     <Filter Include="Sources\Scenes\14">
       <UniqueIdentifier>{b722e029-8d73-4c05-8c40-3eeab4d425f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\15">
+      <UniqueIdentifier>{b2b15ad5-9ece-4c06-a38b-480ff050ba4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\16">
+      <UniqueIdentifier>{986e1d1d-9a86-4d72-b25e-a291463648e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files">
+      <UniqueIdentifier>{72f5540d-30d8-4a31-81ef-1537435e86ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\0 Error">
+      <UniqueIdentifier>{f7c51883-34fd-4000-91ab-1ca4ea473ca6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\1 Flat">
+      <UniqueIdentifier>{2e1614f6-e09f-436f-96d5-cd6a0dda8dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\2 Lambert">
+      <UniqueIdentifier>{d746681a-d363-434c-af5e-5e58b8232497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\3 Specular">
+      <UniqueIdentifier>{31a54dd0-5dd9-4462-b665-22a387d2badd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\4 Rimlight">
+      <UniqueIdentifier>{c48c1ee1-d4eb-43af-b49c-7336d455e503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\5 TexturedRimlight">
+      <UniqueIdentifier>{ec6c975a-cfdc-465d-97a2-7a431b18b801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\6 TexturedNormalMap">
+      <UniqueIdentifier>{db200355-ee69-4d44-ae9f-cedfbd56d325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\7 TexNormSpecMap">
+      <UniqueIdentifier>{f2400ccd-e34e-457b-86d9-af227cb6454d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\8 EnvironTexMap">
+      <UniqueIdentifier>{c798e7e8-1e42-460e-94a7-fc4ef240028c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\9 AutoTess TexDisplacementMap">
+      <UniqueIdentifier>{456b0246-104a-4c3c-a7ab-11995f750e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain">
+      <UniqueIdentifier>{df5e6df5-5f0a-4fa9-ac1f-0aaa1ffdf1f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\10 GrassShader">
+      <UniqueIdentifier>{b6d93b60-22e1-4a34-8310-141f645b9949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\11 DeferredRendering">
+      <UniqueIdentifier>{22ff15be-65d5-4790-a060-de44890bc485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\11 DeferredRendering\Final passes">
+      <UniqueIdentifier>{004f54b9-a4f3-4dd2-ae6e-416dab629b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\12 ShadowMapping">
+      <UniqueIdentifier>{73495f83-7a39-48cb-8086-3e791b13e656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMapTess">
+      <UniqueIdentifier>{ae35da60-e88b-4848-b4e1-e417dd9e9afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMap">
+      <UniqueIdentifier>{13621619-a20d-4f13-a4b1-f893cd6e8c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\13 TerrainSplatting">
+      <UniqueIdentifier>{df7a45fc-cc2f-41a5-b21a-5b414266de10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\14 LOD Terrain">
+      <UniqueIdentifier>{2cda0d24-ad3c-4e62-b831-5345e3a83b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\14 LOD Terrain\LD Terrain">
+      <UniqueIdentifier>{d340e8f6-fc41-41bf-9ee4-e14e1be5d49e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\14 LOD Terrain\MD Terrain">
+      <UniqueIdentifier>{66052b5b-b040-40f2-99d8-af1cfe3efed5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\15 LOD Terrain Toon">
+      <UniqueIdentifier>{55e26e5c-286f-48fa-a25c-652167bfbd3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\16 Sky">
+      <UniqueIdentifier>{1d7acc9a-240a-4b39-94d0-150f0846dc2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\17 Instanced Flat">
+      <UniqueIdentifier>{005c557a-39d6-44e2-a7f6-df3f60f3e3d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise">
+      <UniqueIdentifier>{5a4ec570-0e17-47c6-9b8e-e23d9f6e48e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise\White">
+      <UniqueIdentifier>{f47e6748-6834-4ee9-994d-34f07b85f8c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise\Value">
+      <UniqueIdentifier>{9d736dda-bc38-4ab1-9ac5-44498a926928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise\Perlin">
+      <UniqueIdentifier>{f002094e-0f96-45de-abb8-6fd729d9d16c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise\PerlinVoronoi">
+      <UniqueIdentifier>{7db7a264-a0d1-4ad1-af82-55850f1ecd7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\18 Noise\Dynamic">
+      <UniqueIdentifier>{43a4b30b-3fc8-496d-904f-38e20541ba51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds">
+      <UniqueIdentifier>{9c19ae2d-d9d5-455e-9ada-10df8b38a4d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\CubeClouds">
+      <UniqueIdentifier>{1f6a50b9-4efc-483e-8cad-edf25e4a356a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\WeatherMap">
+      <UniqueIdentifier>{6efc0a6a-f1ea-41a2-b980-0d925e994a8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky">
+      <UniqueIdentifier>{4666aa79-48e7-47cd-845e-3a7bf2b3e459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old">
+      <UniqueIdentifier>{aac69f19-3788-4149-96d7-eaabefb18b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapFlat">
+      <UniqueIdentifier>{3a0edb4e-ba2d-4c6b-b93c-04b22d10afc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\CubeCloudsNew">
+      <UniqueIdentifier>{2f3d47ca-4bfd-4d03-9476-0477c17b63c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\20 3DTexTest">
+      <UniqueIdentifier>{95a7d044-01f0-4d2b-9d32-c384c852112e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\21 SimpleStage">
+      <UniqueIdentifier>{7ca18538-023a-4f71-9e4a-c7e5b0ea4b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\22 Triplanar Sampling">
+      <UniqueIdentifier>{8baf8f49-8513-4341-a456-c7a0161474a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\23 Toon">
+      <UniqueIdentifier>{97a54d2f-28d7-4003-91f5-b35d675e8981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\24 Debug Grid">
+      <UniqueIdentifier>{e1c2705e-e98c-469d-a56f-a9d849cbd282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\25 ScreenSpace Sprite">
+      <UniqueIdentifier>{5f7b3429-362b-438c-9bf4-1dcf25cdbae2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\TerrainTest">
+      <UniqueIdentifier>{7401133d-4611-46ac-8277-a3aeffa13ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\GeometryTest2">
+      <UniqueIdentifier>{a4002fdf-fb09-4696-8994-3b6fe1470f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\GeometryTest1">
+      <UniqueIdentifier>{f2a4df60-e236-4c08-966c-f44461168644}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -679,6 +691,15 @@
     <ClCompile Include="Colliders.cpp">
       <Filter>Sources\GameEngine\Collision\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="Scene15.cpp">
+      <Filter>Sources\Scenes\15</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene16.cpp">
+      <Filter>Sources\Scenes\16</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComputeShader.cpp">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="high_resolution_timer.h">
@@ -891,15 +912,6 @@
     <ClInclude Include="Scene03.h">
       <Filter>Sources\Scenes\03</Filter>
     </ClInclude>
-    <ClInclude Include="functions.fx">
-      <Filter>Shaders\ConstantBufferIncludes</Filter>
-    </ClInclude>
-    <ClInclude Include="StandardPixelCB.fx">
-      <Filter>Shaders\ConstantBufferIncludes</Filter>
-    </ClInclude>
-    <ClInclude Include="StandardVertexCB.fx">
-      <Filter>Shaders\ConstantBufferIncludes</Filter>
-    </ClInclude>
     <ClInclude Include="GeometryShader.h">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\GeometryShader</Filter>
     </ClInclude>
@@ -1038,271 +1050,283 @@
     <ClInclude Include="Scene14.h">
       <Filter>Sources\Scenes\14</Filter>
     </ClInclude>
+    <ClInclude Include="Scene15.h">
+      <Filter>Sources\Scenes\15</Filter>
+    </ClInclude>
+    <ClInclude Include="AnmHitbox.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\ResourceManager\MeshManager\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene16.h">
+      <Filter>Sources\Scenes\16</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComputeShader.h">
+      <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FlatShaderVS.hlsl">
-      <Filter>Shaders\1 Flat</Filter>
+      <Filter>Shaders\Shader Files\1 Flat</Filter>
     </FxCompile>
     <FxCompile Include="FlatShaderPS.hlsl">
-      <Filter>Shaders\1 Flat</Filter>
+      <Filter>Shaders\Shader Files\1 Flat</Filter>
     </FxCompile>
     <FxCompile Include="LambertVS.hlsl">
-      <Filter>Shaders\2 Lambert</Filter>
+      <Filter>Shaders\Shader Files\2 Lambert</Filter>
     </FxCompile>
     <FxCompile Include="LambertPS.hlsl">
-      <Filter>Shaders\2 Lambert</Filter>
+      <Filter>Shaders\Shader Files\2 Lambert</Filter>
     </FxCompile>
     <FxCompile Include="SpecularPS.hlsl">
-      <Filter>Shaders\3 Specular</Filter>
+      <Filter>Shaders\Shader Files\3 Specular</Filter>
     </FxCompile>
     <FxCompile Include="SpecularVS.hlsl">
-      <Filter>Shaders\3 Specular</Filter>
+      <Filter>Shaders\Shader Files\3 Specular</Filter>
     </FxCompile>
     <FxCompile Include="RimlightPS.hlsl">
-      <Filter>Shaders\4 Rimlight</Filter>
+      <Filter>Shaders\Shader Files\4 Rimlight</Filter>
     </FxCompile>
     <FxCompile Include="RimlightVS.hlsl">
-      <Filter>Shaders\4 Rimlight</Filter>
+      <Filter>Shaders\Shader Files\4 Rimlight</Filter>
     </FxCompile>
     <FxCompile Include="TexturedRimlightPS.hlsl">
-      <Filter>Shaders\5 TexturedRimlight</Filter>
+      <Filter>Shaders\Shader Files\5 TexturedRimlight</Filter>
     </FxCompile>
     <FxCompile Include="TexturedRimlightVS.hlsl">
-      <Filter>Shaders\5 TexturedRimlight</Filter>
+      <Filter>Shaders\Shader Files\5 TexturedRimlight</Filter>
     </FxCompile>
     <FxCompile Include="TexturedNormalMapPS.hlsl">
-      <Filter>Shaders\6 TexturedNormalMap</Filter>
+      <Filter>Shaders\Shader Files\6 TexturedNormalMap</Filter>
     </FxCompile>
     <FxCompile Include="TexturedNormalMapVS.hlsl">
-      <Filter>Shaders\6 TexturedNormalMap</Filter>
+      <Filter>Shaders\Shader Files\6 TexturedNormalMap</Filter>
     </FxCompile>
     <FxCompile Include="GlossPS.hlsl">
-      <Filter>Shaders\7 TexNormSpecMap</Filter>
+      <Filter>Shaders\Shader Files\7 TexNormSpecMap</Filter>
     </FxCompile>
     <FxCompile Include="GlossVS.hlsl">
-      <Filter>Shaders\7 TexNormSpecMap</Filter>
+      <Filter>Shaders\Shader Files\7 TexNormSpecMap</Filter>
     </FxCompile>
     <FxCompile Include="EnvironmentTexMapPS.hlsl">
-      <Filter>Shaders\8 EnvironTexMap</Filter>
+      <Filter>Shaders\Shader Files\8 EnvironTexMap</Filter>
     </FxCompile>
     <FxCompile Include="EnvironmentTexMapVS.hlsl">
-      <Filter>Shaders\8 EnvironTexMap</Filter>
+      <Filter>Shaders\Shader Files\8 EnvironTexMap</Filter>
     </FxCompile>
     <FxCompile Include="GeometryShader.hlsl">
-      <Filter>Shaders\GeometryTest1</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest1</Filter>
     </FxCompile>
     <FxCompile Include="GeometryTestPS.hlsl">
-      <Filter>Shaders\GeometryTest1</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest1</Filter>
     </FxCompile>
     <FxCompile Include="GeometryTestVS.hlsl">
-      <Filter>Shaders\GeometryTest1</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest1</Filter>
     </FxCompile>
     <FxCompile Include="GeometryTestPS2.hlsl">
-      <Filter>Shaders\GeometryTest2</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest2</Filter>
     </FxCompile>
     <FxCompile Include="GeometryTestVS2.hlsl">
-      <Filter>Shaders\GeometryTest2</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest2</Filter>
     </FxCompile>
     <FxCompile Include="GeometryShader2.hlsl">
-      <Filter>Shaders\GeometryTest2</Filter>
+      <Filter>Shaders\Shader Files\GeometryTest2</Filter>
     </FxCompile>
     <FxCompile Include="DefaultDS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap</Filter>
     </FxCompile>
     <FxCompile Include="DefaultHS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap</Filter>
     </FxCompile>
     <FxCompile Include="TessModelVS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap</Filter>
     </FxCompile>
     <FxCompile Include="TessModelPS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap</Filter>
     </FxCompile>
     <FxCompile Include="TessTerrainPS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
     </FxCompile>
     <FxCompile Include="TessTerrainVS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
     </FxCompile>
     <FxCompile Include="TessFluidTerrainVS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
     </FxCompile>
     <FxCompile Include="2DisplacementDS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
     </FxCompile>
     <FxCompile Include="2DisplacementHS.hlsl">
-      <Filter>Shaders\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
+      <Filter>Shaders\Shader Files\9 AutoTess TexDisplacementMap\9b AutoTess for Terrain</Filter>
     </FxCompile>
     <FxCompile Include="GrassShaderGS.hlsl">
-      <Filter>Shaders\10 GrassShader</Filter>
+      <Filter>Shaders\Shader Files\10 GrassShader</Filter>
     </FxCompile>
     <FxCompile Include="FlatTexShaderPS.hlsl">
-      <Filter>Shaders\1 Flat</Filter>
+      <Filter>Shaders\Shader Files\1 Flat</Filter>
     </FxCompile>
     <FxCompile Include="DeferredVS.hlsl">
-      <Filter>Shaders\11 DeferredRendering</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering</Filter>
     </FxCompile>
     <FxCompile Include="DeferredPS.hlsl">
-      <Filter>Shaders\11 DeferredRendering</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering</Filter>
     </FxCompile>
     <FxCompile Include="DeferredDS.hlsl">
-      <Filter>Shaders\11 DeferredRendering</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering</Filter>
     </FxCompile>
     <FxCompile Include="DeferredHS.hlsl">
-      <Filter>Shaders\11 DeferredRendering</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering</Filter>
     </FxCompile>
     <FxCompile Include="FinalPassBasicVS.hlsl">
-      <Filter>Shaders\11 DeferredRendering\Final passes</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering\Final passes</Filter>
     </FxCompile>
     <FxCompile Include="FinalPassBasicPS.hlsl">
-      <Filter>Shaders\11 DeferredRendering\Final passes</Filter>
+      <Filter>Shaders\Shader Files\11 DeferredRendering\Final passes</Filter>
     </FxCompile>
     <FxCompile Include="DirLightShadowMapVS.hlsl">
-      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMap</Filter>
+      <Filter>Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMap</Filter>
     </FxCompile>
     <FxCompile Include="DirLightShadowMapPS.hlsl">
-      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMap</Filter>
+      <Filter>Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMap</Filter>
     </FxCompile>
     <FxCompile Include="DirLightShadowMapTessVS.hlsl">
-      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+      <Filter>Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMapTess</Filter>
     </FxCompile>
     <FxCompile Include="DirLightShadowMapTessDS.hlsl">
-      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+      <Filter>Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMapTess</Filter>
     </FxCompile>
     <FxCompile Include="DirLightShadowMapTessHS.hlsl">
-      <Filter>Shaders\12 ShadowMapping\DirectionalShadowMapTess</Filter>
+      <Filter>Shaders\Shader Files\12 ShadowMapping\DirectionalShadowMapTess</Filter>
     </FxCompile>
     <FxCompile Include="Terrain3SplatDS.hlsl">
-      <Filter>Shaders\13 TerrainSplatting</Filter>
+      <Filter>Shaders\Shader Files\13 TerrainSplatting</Filter>
     </FxCompile>
     <FxCompile Include="Terrain3SplatPS.hlsl">
-      <Filter>Shaders\13 TerrainSplatting</Filter>
+      <Filter>Shaders\Shader Files\13 TerrainSplatting</Filter>
     </FxCompile>
     <FxCompile Include="Terrain3SplatHS.hlsl">
-      <Filter>Shaders\13 TerrainSplatting</Filter>
+      <Filter>Shaders\Shader Files\13 TerrainSplatting</Filter>
     </FxCompile>
     <FxCompile Include="Terrain3SplatVS.hlsl">
-      <Filter>Shaders\13 TerrainSplatting</Filter>
+      <Filter>Shaders\Shader Files\13 TerrainSplatting</Filter>
     </FxCompile>
     <FxCompile Include="TerrainTestVS.hlsl">
-      <Filter>Shaders\TerrainTest</Filter>
+      <Filter>Shaders\Shader Files\TerrainTest</Filter>
     </FxCompile>
     <FxCompile Include="TerrainTestPS.hlsl">
-      <Filter>Shaders\TerrainTest</Filter>
+      <Filter>Shaders\Shader Files\TerrainTest</Filter>
     </FxCompile>
     <FxCompile Include="LDTerrainPS.hlsl">
-      <Filter>Shaders\14 LOD Terrain\LD Terrain</Filter>
+      <Filter>Shaders\Shader Files\14 LOD Terrain\LD Terrain</Filter>
     </FxCompile>
     <FxCompile Include="LDTerrainVS.hlsl">
-      <Filter>Shaders\14 LOD Terrain\LD Terrain</Filter>
+      <Filter>Shaders\Shader Files\14 LOD Terrain\LD Terrain</Filter>
     </FxCompile>
     <FxCompile Include="MDTerrainPS.hlsl">
-      <Filter>Shaders\14 LOD Terrain\MD Terrain</Filter>
+      <Filter>Shaders\Shader Files\14 LOD Terrain\MD Terrain</Filter>
     </FxCompile>
     <FxCompile Include="MDTerrainVS.hlsl">
-      <Filter>Shaders\14 LOD Terrain\MD Terrain</Filter>
+      <Filter>Shaders\Shader Files\14 LOD Terrain\MD Terrain</Filter>
     </FxCompile>
     <FxCompile Include="HDTerrainPSToon.hlsl">
-      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+      <Filter>Shaders\Shader Files\15 LOD Terrain Toon</Filter>
     </FxCompile>
     <FxCompile Include="MDTerrainPSToon.hlsl">
-      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+      <Filter>Shaders\Shader Files\15 LOD Terrain Toon</Filter>
     </FxCompile>
     <FxCompile Include="LDTerrainVSToon.hlsl">
-      <Filter>Shaders\15 LOD Terrain Toon</Filter>
+      <Filter>Shaders\Shader Files\15 LOD Terrain Toon</Filter>
     </FxCompile>
     <FxCompile Include="AtmosphericShaderPS.hlsl">
-      <Filter>Shaders\16 Sky</Filter>
+      <Filter>Shaders\Shader Files\16 Sky</Filter>
     </FxCompile>
     <FxCompile Include="AtmosphericShaderVS.hlsl">
-      <Filter>Shaders\16 Sky</Filter>
+      <Filter>Shaders\Shader Files\16 Sky</Filter>
     </FxCompile>
     <FxCompile Include="Terrain3SplatDemoVS.hlsl">
-      <Filter>Shaders\13 TerrainSplatting</Filter>
+      <Filter>Shaders\Shader Files\13 TerrainSplatting</Filter>
     </FxCompile>
     <FxCompile Include="InstancedFlatPS.hlsl">
-      <Filter>Shaders\17 Instanced Flat</Filter>
+      <Filter>Shaders\Shader Files\17 Instanced Flat</Filter>
     </FxCompile>
     <FxCompile Include="InstancedFlatVS.hlsl">
-      <Filter>Shaders\17 Instanced Flat</Filter>
+      <Filter>Shaders\Shader Files\17 Instanced Flat</Filter>
     </FxCompile>
     <FxCompile Include="WhiteNoisePS.hlsl">
-      <Filter>Shaders\18 Noise\White</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\White</Filter>
     </FxCompile>
     <FxCompile Include="WhiteNoiseVS.hlsl">
-      <Filter>Shaders\18 Noise\White</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\White</Filter>
     </FxCompile>
     <FxCompile Include="ValueNoisePS.hlsl">
-      <Filter>Shaders\18 Noise\Value</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Value</Filter>
     </FxCompile>
     <FxCompile Include="ValueNoiseVS.hlsl">
-      <Filter>Shaders\18 Noise\Value</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Value</Filter>
     </FxCompile>
     <FxCompile Include="PerlinNoisePS.hlsl">
-      <Filter>Shaders\18 Noise\Perlin</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Perlin</Filter>
     </FxCompile>
     <FxCompile Include="PerlinNoiseVS.hlsl">
-      <Filter>Shaders\18 Noise\Perlin</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Perlin</Filter>
     </FxCompile>
     <FxCompile Include="PerlinVoronoiNoisePS.hlsl">
-      <Filter>Shaders\18 Noise\PerlinVoronoi</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\PerlinVoronoi</Filter>
     </FxCompile>
     <FxCompile Include="PerlinVoronoiNoiseVS.hlsl">
-      <Filter>Shaders\18 Noise\PerlinVoronoi</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\PerlinVoronoi</Filter>
     </FxCompile>
     <FxCompile Include="3DTexTestPS.hlsl">
-      <Filter>Shaders\20 3DTexTest</Filter>
+      <Filter>Shaders\Shader Files\20 3DTexTest</Filter>
     </FxCompile>
     <FxCompile Include="3DTexTestVS.hlsl">
-      <Filter>Shaders\20 3DTexTest</Filter>
+      <Filter>Shaders\Shader Files\20 3DTexTest</Filter>
     </FxCompile>
     <FxCompile Include="CloudPS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\CubeClouds</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\CubeClouds</Filter>
     </FxCompile>
     <FxCompile Include="CloudVS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\CubeClouds</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\CubeClouds</Filter>
     </FxCompile>
     <FxCompile Include="WeatherMapPS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
     </FxCompile>
     <FxCompile Include="WeatherMapVS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapFlat</Filter>
     </FxCompile>
     <FxCompile Include="DynamicNoisePS.hlsl">
-      <Filter>Shaders\18 Noise\Dynamic</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Dynamic</Filter>
     </FxCompile>
     <FxCompile Include="DynamicNoiseVS.hlsl">
-      <Filter>Shaders\18 Noise\Dynamic</Filter>
+      <Filter>Shaders\Shader Files\18 Noise\Dynamic</Filter>
     </FxCompile>
     <FxCompile Include="WeatherAtmospherePS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
     </FxCompile>
     <FxCompile Include="WeatherAtmosphereVS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky</Filter>
     </FxCompile>
     <FxCompile Include="SimpleStagePS.hlsl">
-      <Filter>Shaders\21 SimpleStage</Filter>
+      <Filter>Shaders\Shader Files\21 SimpleStage</Filter>
     </FxCompile>
     <FxCompile Include="SimpleStageVS.hlsl">
-      <Filter>Shaders\21 SimpleStage</Filter>
+      <Filter>Shaders\Shader Files\21 SimpleStage</Filter>
     </FxCompile>
     <FxCompile Include="ErrorPS.hlsl">
-      <Filter>Shaders\0 Error</Filter>
+      <Filter>Shaders\Shader Files\0 Error</Filter>
     </FxCompile>
     <FxCompile Include="ErrorVS.hlsl">
-      <Filter>Shaders\0 Error</Filter>
+      <Filter>Shaders\Shader Files\0 Error</Filter>
     </FxCompile>
     <FxCompile Include="TriplanarTexturePS.hlsl">
-      <Filter>Shaders\22 Triplanar Sampling</Filter>
+      <Filter>Shaders\Shader Files\22 Triplanar Sampling</Filter>
     </FxCompile>
     <FxCompile Include="TriplanarTextureVS.hlsl">
-      <Filter>Shaders\22 Triplanar Sampling</Filter>
+      <Filter>Shaders\Shader Files\22 Triplanar Sampling</Filter>
     </FxCompile>
     <FxCompile Include="NewCloudPS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\CubeCloudsNew</Filter>
     </FxCompile>
     <FxCompile Include="NewCloudVS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\CubeCloudsNew</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\CubeCloudsNew</Filter>
     </FxCompile>
     <FxCompile Include="ComputeHeightmap.hlsl">
       <Filter>ComputeShaders</Filter>
@@ -1314,22 +1338,31 @@
       <Filter>Shaders\Includes</Filter>
     </FxCompile>
     <FxCompile Include="ToonVS.hlsl">
-      <Filter>Shaders\23 Toon</Filter>
+      <Filter>Shaders\Shader Files\23 Toon</Filter>
     </FxCompile>
     <FxCompile Include="ToonPS.hlsl">
-      <Filter>Shaders\23 Toon</Filter>
+      <Filter>Shaders\Shader Files\23 Toon</Filter>
     </FxCompile>
     <FxCompile Include="ToonTexPS.hlsl">
-      <Filter>Shaders\23 Toon</Filter>
+      <Filter>Shaders\Shader Files\23 Toon</Filter>
     </FxCompile>
     <FxCompile Include="ToonTexVS.hlsl">
-      <Filter>Shaders\23 Toon</Filter>
+      <Filter>Shaders\Shader Files\23 Toon</Filter>
     </FxCompile>
     <FxCompile Include="WeatherAtmosphereOldPS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
     </FxCompile>
     <FxCompile Include="WeatherAtmosphereOldVS.hlsl">
-      <Filter>Shaders\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\WeatherMap\WeatherMapSky\Old</Filter>
+    </FxCompile>
+    <FxCompile Include="ScreenSpaceTexturePS.hlsl">
+      <Filter>Shaders\Shader Files\25 ScreenSpace Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="ScreenSpaceTextureVS.hlsl">
+      <Filter>Shaders\Shader Files\25 ScreenSpace Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="ComputeRayMarchSpheres.hlsl">
+      <Filter>ComputeShaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1349,6 +1382,15 @@
       <Filter>Shaders\Includes</Filter>
     </None>
     <None Include="cloud.fx">
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="DebugGridPS.hlsl">
+      <Filter>Shaders\Shader Files\24 Debug Grid</Filter>
+    </None>
+    <None Include="DebugGridVS.hlsl">
+      <Filter>Shaders\Shader Files\24 Debug Grid</Filter>
+    </None>
+    <None Include="raymarch.fx">
       <Filter>Shaders\Includes</Filter>
     </None>
   </ItemGroup>

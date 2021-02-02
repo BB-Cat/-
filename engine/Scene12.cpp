@@ -132,6 +132,36 @@ void Scene12::imGuiRender()
 	if (ImGui::Button("Show Hitboxes", ImVec2(200, 20))) m_show_hitboxes = !m_show_hitboxes;
 	ImGui::End();
 
+	if (m_first_time)
+	{
+		ImGui::SetNextWindowSize(ImVec2(400, 400));
+		Vec2 size = AppWindow::getScreenSize();
+
+		ImGui::SetNextWindowPos(ImVec2(size.x / 2, size.y / 2), 0, ImVec2(0.5f, 0.5f));
+		//ImTextureID t = m_tex1->getSRV();
+
+		ImGui::OpenPopup("Level Creator Popup");
+		ImGui::BeginPopupModal("Level Creator Popup");
+		ImGui::TextWrapped("Here you can test the scene you made in the scene creator.");
+		ImGui::NewLine();
+		ImGui::TextWrapped("I am still building an AABB heirarchy system, so the collisions in the scene are not correct yet.");
+
+		//ImGui::Image(t, ImVec2(300, 300));
+		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
+		ImGui::EndPopup();
+	}
+
+	ImGui::SetNextWindowPos(ImVec2(0, 107));
+	//ImGui::SetNextWindowSize(ImVec2(370, 220));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Controls", 0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Text("Mouse : Camera");
+	ImGui::Text("WASD : Move");
+	ImGui::Text("Shift : Run");
+	ImGui::Text("Space : Jump");
+	ImGui::Text("Right Click While Moving : Roll / Backstep");
+	ImGui::End();
+
 }
 
 void Scene12::shadowRenderPass(float delta)

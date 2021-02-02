@@ -4,11 +4,14 @@
 #include <assert.h>
 #include <tchar.h>
 
+#include "Vector2D.h"
+
 class Window
 {
 public:
-	static const LONG SCREEN_WIDTH = 1280;
-	static const LONG SCREEN_HEIGHT = 720;
+
+
+
 
 	//initialize the window
 	Window();
@@ -21,6 +24,8 @@ public:
 	bool isRun();
 
 	RECT getClientWindowRect();
+
+	Vec2 getScreenSize() { return Vec2(SCREEN_WIDTH, SCREEN_HEIGHT); }
 
 	//events
 	virtual void onCreate()=0;
@@ -35,6 +40,11 @@ protected:
 	HWND  m_hwnd;
 	bool m_is_run;
 	bool m_is_init = false;
+
+	static const LONG SCREEN_WIDTH = 1024;
+	static const LONG SCREEN_HEIGHT = 760;
+
+
 protected:
 	friend class TextRenderer;
 };

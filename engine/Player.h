@@ -82,7 +82,7 @@ private:
 
 	//プレイヤー性質関連
 	float P_WACCEL = 10.0f;
-	float P_RACCEL = 25.0f;
+	float P_RACCEL = 15.0f;
 	float P_WSPEED = 6.0f;
 	float P_RSPEED = 20.0f;
 	float P_ROT_SPEED = 0.4f;

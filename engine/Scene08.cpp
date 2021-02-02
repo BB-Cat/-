@@ -15,8 +15,7 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vec3(950.7f, 333.62f, 407.45f));
-	CameraManager::get()->setCamRot(Vec2(6.7f, 42.0f));
+
 
 	m_light = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_BACK);
 	m_light->setColor(Vec3(1, 1, 1));
@@ -185,6 +184,9 @@ Scene08::Scene08(SceneManager* sm) : Scene(sm)
 	m_blue_noise = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\Noise\\bluenoise1.png");
 
 	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
+
+	CameraManager::get()->setCamPos(Vec3(907.7f, 532, 487));
+	CameraManager::get()->setCamRot(Vec2(6.7f, 42.0f));
 }
 
 Scene08::~Scene08()
@@ -197,7 +199,9 @@ void Scene08::update(float delta, const float& width, const float& height)
 	CameraManager::get()->setSpeed(m_speed);
 	CameraManager::get()->update(delta, width, height);
 
-	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
+	//m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
+
+	m_scene_light_dir = Vec3(sinf(m_timer) * 3, abs(sinf(m_timer * 0.8f)), cosf(m_timer) * 3);
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
@@ -205,7 +209,7 @@ void Scene08::update(float delta, const float& width, const float& height)
 	m_cloud_props.m_time += delta;
 	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSCloudBuffer(m_cloud_props);
 
-	m_timer++;
+	m_timer += delta;
 }
 
 void Scene08::imGuiRender()

@@ -22,6 +22,7 @@ class CameraManager
 public:
 	static CameraManager* get();
 	~CameraManager();
+	static void release();
 	
 	void update(const float& delta, const int& width, const int& height, bool exclude_Y_movement = false);
 	void beginLookAt(const Vec3& target, float seconds);
@@ -50,7 +51,7 @@ public:
 	bool isInFrustum_Sphere(Vec3 center, float radius);
 
 private:
-	static CameraManager* cm;
+	static CameraManager* instance;
 	CameraManager();
 	void updateInput();
 

@@ -36,6 +36,10 @@ Scene13::Scene13(SceneManager* sm) : Scene(sm)
 	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.1, 0.1, 0.4));
 
 
+
+
+
+
 	//UINT pixelcount = 512 * 512 * 4;
 	//std::vector<Vector4D> listpixels;
 	//listpixels.resize(pixelcount);
@@ -254,34 +258,6 @@ void Scene13::mainRenderPass(float delta)
 		//m_tman->update();
 		m_tman->render(m_active_shader, 1.0, m_show_wire, 0);
 	}
-
-	//GraphicsEngine::get()->getShaderManager()->setPipeline(m_active_shader);
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_hd);
-
-	////set all textures for the terrain
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setTexture3SplatTex(
-	//	m_tex1, m_displace1_1, m_norm1, m_rough1, m_ambient_occ1,
-	//	m_tex2, m_displace2_1, m_norm2, m_rough2, m_ambient_occ2,
-	//	m_tex3, m_displace3_1, m_norm3, m_rough3, m_ambient_occ3,
-	//	m_tex4, m_displace4_1, m_norm4, m_rough4, m_ambient_occ4);
-
-
-	//if(!m_show_wire) GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs);
-	//else GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRasterState(m_rs2);
-	////m_terrain->render(0, 0, 0);
-	//for (int i = 0; i < 1024; i++)
-	//{
-	//	m_terrain[i]->render(0, 0, 0);
-	//}
-
-	//GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setIndexBuffer(m_LOD_seam_high);
-	////for (int i = 0; i < forward.high.size(); i++) forward.high[i]->render(0, 1, SeamLOD::HIGH);
-	////for (int i = 0; i < right.high.size(); i++) right.high[i]->render(0, 2, SeamLOD::HIGH);
-	//for (int i = 0; i < 1024; i++)
-	//{
-	//	m_terrain[i]->render(0, 1, SeamLOD::HIGH);
-	//	m_terrain[i]->render(0, 2, SeamLOD::HIGH);
-	//}
 }
 
 void Scene13::makeComputeShaderTexture()
@@ -310,7 +286,6 @@ void Scene13::runTerrainComputeShader()
 	t.start();
 
 	m_compute_terrain->runComputeShader();
-
 
 
 	
@@ -776,30 +751,32 @@ void Scene13::initRasterizers()
 
 void Scene13::initTextures()
 {
-	m_tex1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Basecolor_A.png");
-	m_displace1_1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Height.png");
-	m_norm1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Normal.png");
-	m_rough1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Metallic.png");
-	m_ambient_occ1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_AO.png");
+
+	TextureManager* tm = GraphicsEngine::get()->getTextureManager();
+	m_tex1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Basecolor_A.png");
+	m_displace1_1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Height.png");
+	m_norm1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Normal.png");
+	m_rough1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_Metallic.png");
+	m_ambient_occ1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Grass\\Dense2\\Grass_Dense_Tint_02_Base_AO.png");
 
 
-	m_tex2 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Basecolor.png");
-	m_displace2_1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Height.png");
-	m_norm2 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Normal.png");
-	m_rough2 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Metallic.png");
-	m_ambient_occ2 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_AO.png");
+	m_tex2 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Basecolor.png");
+	m_displace2_1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Height.png");
+	m_norm2 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Normal.png");
+	m_rough2 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_Metallic.png");
+	m_ambient_occ2 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Dirt\\Dirt_Path_AO.png");
 
-	m_tex3 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Basecolor.png");
-	m_displace3_1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Height.png");
-	m_norm3 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Normal.png");
-	m_rough3 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Metallic.png");
-	m_ambient_occ3 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_AO.png");
+	m_tex3 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Basecolor.png");
+	m_displace3_1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Height.png");
+	m_norm3 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Normal.png");
+	m_rough3 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_Metallic.png");
+	m_ambient_occ3 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Rocks\\Rock_Volcanic_B_AO.png");
 
-	m_tex4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Basecolor_A.png");
-	m_displace4_1 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Height.png");
-	m_norm4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Normal.png");
-	m_rough4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Metallic.png");
-	m_ambient_occ4 = GraphicsEngine::get()->getTextureManager()->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_AO.png");
+	m_tex4 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Basecolor_A.png");
+	m_displace4_1 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Height.png");
+	m_norm4 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Normal.png");
+	m_rough4 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_Metallic.png");
+	m_ambient_occ4 = tm->createTextureFromFile(L"..\\Assets\\AssetPack\\Cliff\\Rocks_Cliff_B_AO.png");
 
 }
 

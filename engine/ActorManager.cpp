@@ -24,6 +24,15 @@ ActorManager* ActorManager::get()
 
 ActorManager::~ActorManager()
 {
+	m_actor_lists.clear();
+}
+
+void ActorManager::release()
+{
+	if (instance == nullptr) return;
+
+	delete instance; 
+	instance = nullptr;
 }
 
 void ActorManager::updateAll(float delta)

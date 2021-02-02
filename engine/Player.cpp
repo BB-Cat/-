@@ -21,14 +21,14 @@ Player::Player(bool has_shadow) : Actor(has_shadow)
 	m_model->loadAnimation(nullptr, Animation::Player::Idle2, L"..\\Assets\\CharacterRough\\lp_idle2.fbx", true, true, 0, false, false);
 	m_model->loadAnimation(nullptr, Animation::Player::Idle3, L"..\\Assets\\CharacterRough\\lp_idle3.fbx", true, true, 0, false, false);
 
-	m_model->loadAnimation(nullptr, Animation::Player::Walk,		L"..\\Assets\\CharacterRough\\lp_walk.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::WalkBackward,L"..\\Assets\\CharacterRough\\lp_walkback.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::Run,			L"..\\Assets\\CharacterRough\\lp_run.fbx");
+	m_model->loadAnimation(nullptr, Animation::Player::Walk,			L"..\\Assets\\CharacterRough\\lp_walk.fbx");
+	m_model->loadAnimation(nullptr, Animation::Player::WalkBackward,	L"..\\Assets\\CharacterRough\\lp_walkback.fbx");
+	m_model->loadAnimation(nullptr, Animation::Player::Run,				L"..\\Assets\\CharacterRough\\lp_run.fbx");
 	
 	m_model->loadAnimation(nullptr, Animation::Player::StrafeRight, L"..\\Assets\\CharacterRough\\lp_strafe_right.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::StrafeLeft, L"..\\Assets\\CharacterRough\\lp_strafe_left.fbx");
+	m_model->loadAnimation(nullptr, Animation::Player::StrafeLeft,	L"..\\Assets\\CharacterRough\\lp_strafe_left.fbx");
 
-	m_model->loadAnimation(nullptr, Animation::Player::Stop,		L"..\\Assets\\CharacterRough\\lp_stop.fbx");
+	//m_model->loadAnimation(nullptr, Animation::Player::Stop,		L"..\\Assets\\CharacterRough\\lp_stop.fbx");
 	m_model->loadAnimation(nullptr, Animation::Player::Jump,		L"..\\Assets\\CharacterRough\\lp_jump.fbx", false, true, 0, true, 0.99f);
 	m_model->loadAnimation(nullptr, Animation::Player::LandToIdle,	L"..\\Assets\\CharacterRough\\lp_land.fbx", false, false);
 	//m_model->loadAnimation(nullptr, Animation::Player::LandHard,	L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, false);
@@ -136,7 +136,7 @@ void Player::idle(float delta)
 	if (m_state != m_previous_state)
 	{
 		m_previous_state = m_state;
-		int anm = m_model->getAnimation();
+		int anm = m_model->getAnimationID();
 		float anm_percent = m_model->getActiveAnmPercent();
 		m_model->setAnimation(Animation::Player::Idle);
 		m_model->setBlendAnimation(anm);
@@ -576,7 +576,7 @@ void Player::land(float delta, int landing_type)
 		m_previous_state = m_state;
 	}
 
-	int land_state = m_model->getAnimation();
+	int land_state = m_model->getAnimationID();
 
 	if (land_state == Animation::Player::LandToRun)
 	{

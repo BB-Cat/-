@@ -2,7 +2,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include "Prerequisites.h"
-
+#include "Vector2D.h"
 
 //singleton class which handles all graphics resources
 class RenderSystem
@@ -14,6 +14,8 @@ public:
 	~RenderSystem();
 	//initialize ImGui Assets (this needs to be moved somewhere better but for now its here)
 	void initializeImGui(HWND hwnd);
+	//release imgui at the end of the program
+	void releaseImGui();
 
 public:
 	DeviceContextPtr getImmediateDeviceContext();
@@ -31,6 +33,8 @@ public:
 	PixelShaderPtr createPixelShader(const void* shader_byte_code, size_t byte_code_size);
 	ComputeShaderPtr createComputeShader(const void* shader_byte_code, size_t byte_code_size,
 		size_t input_structure_size, size_t output_structure_size, void* data, UINT input_count);
+	TextureComputeShaderPtr createTextureComputeShader(const void* shader_byte_code,
+		size_t byte_code_size, Vec2 dimensions);
 	SamplerPtr createSamplerState();
 	void createGBuffer(UINT width, UINT height);
 
@@ -80,6 +84,7 @@ private:
 	friend class HullShader;
 	friend class DomainShader;
 	friend class ComputeShader;
+	friend class TextureComputeShader;
 	friend class Sampler;
 	friend class MyConstantBuffer;
 	friend class Texture;
@@ -93,7 +98,8 @@ private:
 	friend class TerrainManager;
 	friend class Primitive;
 
-	//temp - for testing scene 13 
+	//temp - for testing scene 13 and 16 
 	friend class Scene13;
+	friend class Scene16;
 };
 

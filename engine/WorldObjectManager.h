@@ -23,7 +23,18 @@ private:
 
 public:
 	static WorldObjectManager* get();
-	~WorldObjectManager() {}
+	~WorldObjectManager() 
+    {
+        m_objects.clear();
+    }
+
+    static void release()
+    {
+        if (instance == nullptr) return;
+
+        delete instance; 
+        instance = nullptr;
+    }
 
 	void outputSceneData(std::string filename);
 	bool loadSceneData(std::string filename);
@@ -65,5 +76,7 @@ private:
     Vec3 m_focused_scale;
     Vec3 m_focused_rot;
     Material_Obj m_focused_material;
+
+    std::string current_file = {};
 };
 

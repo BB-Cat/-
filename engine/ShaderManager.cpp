@@ -51,6 +51,8 @@ int shader_settings[][5] =
 	{TRIPLANAR_TEXTURE_VS,			TRIPLANAR_TEXTURE_PS,			HSNONE,					DSNONE,					GSNONE},		//SHADER FOR 3D TEXTURE MAPPING
 	{TOON_MODEL_VS,					TOON_MODEL_PS,					HSNONE,					DSNONE,					GSNONE},		//TOON SHADER FOR MODELS
 	{TOON_MODEL_TEX_VS,				TOON_MODEL_TEX_PS,				HSNONE,					DSNONE,					GSNONE},		//TOON SHADER FOR MODELS WITH TEXTURING
+	{DEBUG_GRID_VS,					DEBUG_GRID_PS,					HSNONE,					DSNONE,					GSNONE},		//shader for debugging grid plane
+	{SCREENSPACE_TEXTURE_VS,		SCREENSPACE_TEXTURE_PS,			HSNONE,					DSNONE,					GSNONE},		//shader for rendering directly to screenspace
 
 };
 
@@ -242,6 +244,15 @@ void ShaderManager::compileShaders()
 	m_hatch->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
 	//***************************************************************************//
 
+	m_debug_grid = std::shared_ptr<Shader>(new Shader(L"DebugGridVS.hlsl", L"DebugGridPS.hlsl", shader_byte_code, size_shader));
+	m_debug_grid->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_screenspace = std::shared_ptr<Shader>(new Shader(L"ScreenSpaceTextureVS.hlsl", L"ScreenSpaceTexturePS.hlsl", shader_byte_code, size_shader));
+	m_screenspace->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+
 	//***************************************************************************//
 	//   GEOMETRY SHADERS							                             //
 	//***************************************************************************//
@@ -357,6 +368,8 @@ void ShaderManager::recompileErrorShaders()
 	m_triplanar_texture->ifErrorRecompile(m_error);
 	m_toon_model->ifErrorRecompile(m_error);
 	m_toon_tex_model->ifErrorRecompile(m_error);
+	m_debug_grid->ifErrorRecompile(m_error);
+	m_screenspace->ifErrorRecompile(m_error);
 }
 
 void ShaderManager::recompileShader(int shader)
@@ -402,6 +415,8 @@ void ShaderManager::recompileShader(int shader)
 	case Shaders::TRIPLANAR_TEXTURE:			m_triplanar_texture->recompile(m_error); break;
 	case Shaders::TOON_MODEL:					m_toon_model->recompile(m_error); break;
 	case Shaders::TOON_TEX_MODEL:				m_toon_tex_model->recompile(m_error); break;
+	case Shaders::DEBUG_GRID:					m_debug_grid->recompile(m_error); break;
+	case Shaders::SCREENSPACE_TEXTURE:			m_screenspace->recompile(m_error); break;
 	}
 }
 
@@ -410,54 +425,61 @@ void ShaderManager::imGuiMenuShaderCompile()
 	if (ImGui::BeginMenu("Recompile"))
 	{
 		ImVec2 size = ImVec2(200, 20);
-		if (ImGui::Button("Flat", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::FLAT);
-		if (ImGui::Button("Flat Tex", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::FLAT_TEX);
-		if (ImGui::Button("Lambert", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::LAMBERT);
-		if (ImGui::Button("Lambert Specular", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::LAMBERT_SPECULAR);
-		if (ImGui::Button("Lambert Rimlight", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::LAMBERT_RIMLIGHT);
-		if (ImGui::Button("Texture", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE);
-		if (ImGui::Button("Texture Normal", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_NORMAL);
-		if (ImGui::Button("Texture Normal Gloss", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_NORMAL_GLOSS);
-		if (ImGui::Button("Texture Environment", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_ENVIRONMENT);
-		if (ImGui::Button("Geo Test", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::GEO_TEST);
-		if (ImGui::Button("Tesselation Model", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_TESS_MODEL);
-		if (ImGui::Button("Tesselation Terrain", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_TESS_TERRAIN);
-		if (ImGui::Button("Deferred1", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::DEFERRED1);
-		if (ImGui::Button("Shadowmap Model", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::SHADOWMAP);
-		if (ImGui::Button("Shadowmap Terrain", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::SHADOWMAP_TERRAIN);
-		if (ImGui::Button("Terrain Test", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_TEST);
-		if (ImGui::Button("Terrain LD", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_LD);
-		if (ImGui::Button("Terrain MD", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_MD);
-		if (ImGui::Button("Terrain HD", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TEXTURE_TESS_3SPLAT);
-		if (ImGui::Button("Terrain LD Toon", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_LD_TOON);
-		if (ImGui::Button("Terrain MD Toon", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_MD_TOON);
-		if (ImGui::Button("Terrain HD Toon", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TERRAIN_HD_TOON);
-		if (ImGui::Button("Atmosphere", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::ATMOSPHERE);
-		if (ImGui::Button("Terrain Tesselation Demo", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TESSDEMO);
-		if (ImGui::Button("White Noise", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::WHITE_NOISE);
-		if (ImGui::Button("Value Noise", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::VALUE_NOISE);
-		if (ImGui::Button("Perlin Noise", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::PERLIN_NOISE);
-		if (ImGui::Button("Dynamic Noise", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::DYNAMIC_NOISE);
-		if (ImGui::Button("Perlin Voronoi Noise", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::PERLIN_VORONOI_NOISE);
-		if (ImGui::Button("Volume Cloud", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::VOLUME_CLOUD);
-		if (ImGui::Button("3D Texture", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::_3DTEX);
-		if (ImGui::Button("Weather Map", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::WEATHER_MAP);
-		if (ImGui::Button("Weather Atmosphere", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::WEATHER_ATMOSPHERE);
-		if (ImGui::Button("Simple Stage", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::SIMPLE_STAGE);
-		if (ImGui::Button("Triplanar Texture", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TRIPLANAR_TEXTURE);
-		if (ImGui::Button("Toon Model", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TOON_MODEL);
-		if (ImGui::Button("Toon Model Textured", size)) GraphicsEngine::get()->getShaderManager()->recompileShader(Shaders::TOON_TEX_MODEL);
+		if (ImGui::Button("Flat", size)) recompileShader(Shaders::FLAT);
+		if (ImGui::Button("Flat Tex", size)) recompileShader(Shaders::FLAT_TEX);
+		if (ImGui::Button("Lambert", size)) recompileShader(Shaders::LAMBERT);
+		if (ImGui::Button("Lambert Specular", size)) recompileShader(Shaders::LAMBERT_SPECULAR);
+		if (ImGui::Button("Lambert Rimlight", size)) recompileShader(Shaders::LAMBERT_RIMLIGHT);
+		if (ImGui::Button("Texture", size)) recompileShader(Shaders::TEXTURE);
+		if (ImGui::Button("Texture Normal", size)) recompileShader(Shaders::TEXTURE_NORMAL);
+		if (ImGui::Button("Texture Normal Gloss", size)) recompileShader(Shaders::TEXTURE_NORMAL_GLOSS);
+		if (ImGui::Button("Texture Environment", size)) recompileShader(Shaders::TEXTURE_ENVIRONMENT);
+		if (ImGui::Button("Geo Test", size)) recompileShader(Shaders::GEO_TEST);
+		if (ImGui::Button("Tesselation Model", size)) recompileShader(Shaders::TEXTURE_TESS_MODEL);
+		if (ImGui::Button("Tesselation Terrain", size)) recompileShader(Shaders::TEXTURE_TESS_TERRAIN);
+		if (ImGui::Button("Deferred1", size)) recompileShader(Shaders::DEFERRED1);
+		if (ImGui::Button("Shadowmap Model", size)) recompileShader(Shaders::SHADOWMAP);
+		if (ImGui::Button("Shadowmap Terrain", size)) recompileShader(Shaders::SHADOWMAP_TERRAIN);
+		if (ImGui::Button("Terrain Test", size)) recompileShader(Shaders::TERRAIN_TEST);
+		if (ImGui::Button("Terrain LD", size)) recompileShader(Shaders::TERRAIN_LD);
+		if (ImGui::Button("Terrain MD", size)) recompileShader(Shaders::TERRAIN_MD);
+		if (ImGui::Button("Terrain HD", size)) recompileShader(Shaders::TEXTURE_TESS_3SPLAT);
+		if (ImGui::Button("Terrain LD Toon", size)) recompileShader(Shaders::TERRAIN_LD_TOON);
+		if (ImGui::Button("Terrain MD Toon", size)) recompileShader(Shaders::TERRAIN_MD_TOON);
+		if (ImGui::Button("Terrain HD Toon", size)) recompileShader(Shaders::TERRAIN_HD_TOON);
+		if (ImGui::Button("Atmosphere", size)) recompileShader(Shaders::ATMOSPHERE);
+		if (ImGui::Button("Terrain Tesselation Demo", size)) recompileShader(Shaders::TESSDEMO);
+		if (ImGui::Button("White Noise", size)) recompileShader(Shaders::WHITE_NOISE);
+		if (ImGui::Button("Value Noise", size)) recompileShader(Shaders::VALUE_NOISE);
+		if (ImGui::Button("Perlin Noise", size)) recompileShader(Shaders::PERLIN_NOISE);
+		if (ImGui::Button("Dynamic Noise", size)) recompileShader(Shaders::DYNAMIC_NOISE);
+		if (ImGui::Button("Perlin Voronoi Noise", size)) recompileShader(Shaders::PERLIN_VORONOI_NOISE);
+		if (ImGui::Button("Volume Cloud", size)) recompileShader(Shaders::VOLUME_CLOUD);
+		if (ImGui::Button("3D Texture", size)) recompileShader(Shaders::_3DTEX);
+		if (ImGui::Button("Weather Map", size)) recompileShader(Shaders::WEATHER_MAP);
+		if (ImGui::Button("Weather Atmosphere", size)) recompileShader(Shaders::WEATHER_ATMOSPHERE);
+		if (ImGui::Button("Simple Stage", size)) recompileShader(Shaders::SIMPLE_STAGE);
+		if (ImGui::Button("Triplanar Texture", size)) recompileShader(Shaders::TRIPLANAR_TEXTURE);
+		if (ImGui::Button("Toon Model", size)) recompileShader(Shaders::TOON_MODEL);
+		if (ImGui::Button("Toon Model Textured", size)) recompileShader(Shaders::TOON_TEX_MODEL);
+		if (ImGui::Button("Debugging Grid", size)) recompileShader(Shaders::DEBUG_GRID);
+		if (ImGui::Button("Screen Space", size)) recompileShader(Shaders::SCREENSPACE_TEXTURE);
+
 		ImGui::EndMenu();
 	}
 }
 
 void ShaderManager::setPipeline(int shader_type)
 {
+	if (m_active_shader == shader_type) return;
+
 	setVertexShader(shader_settings[shader_type][0]);
 	setPixelShader(shader_settings[shader_type][1]);
 	setHullShader(shader_settings[shader_type][2]);
 	setDomainShader(shader_settings[shader_type][3]);
 	setGeometryShader(shader_settings[shader_type][4]);
+
+	m_active_shader = shader_type;
 }
 
 void ShaderManager::setFinalPassShader(int final_pass_type)
@@ -585,6 +607,12 @@ void ShaderManager::setPixelShader(int type)
 	case TOON_MODEL_TEX_PS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_toon_tex_model->m_ps);
 		break;
+	case DEBUG_GRID_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_debug_grid->m_ps);
+		break;
+	case SCREENSPACE_TEXTURE_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_screenspace->m_ps);
+		break;
 	}
 }
 
@@ -693,6 +721,12 @@ void ShaderManager::setVertexShader(int type)
 		break;
 	case TOON_MODEL_TEX_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_toon_tex_model->m_vs);
+		break;
+	case DEBUG_GRID_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_debug_grid->m_vs);
+		break;
+	case SCREENSPACE_TEXTURE_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_screenspace->m_vs);
 		break;
 	}
 }
