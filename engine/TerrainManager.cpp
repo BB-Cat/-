@@ -160,6 +160,7 @@ TerrainManager::TerrainManager(const char* filename_heightmap, const char* filen
 
 TerrainManager::~TerrainManager()
 {
+    for (int i = 0; i < m_map.size(); i++)m_map[i].clear();
 	m_map.clear();
 
     for (int i = 0; i < THREADCOUNT; i++)

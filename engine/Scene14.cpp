@@ -65,10 +65,10 @@ Scene14::~Scene14()
 	delete obj2;
 }
 
-void Scene14::update(float delta, const float& width, const float& height)
+void Scene14::update(float delta)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
@@ -87,6 +87,7 @@ void Scene14::imGuiRender()
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
 	ImGui::SetNextWindowPos(ImVec2(0, 65));

@@ -20,6 +20,7 @@ IndexBuffer::IndexBuffer(void* list_indices, UINT size_list, RenderSystem* syste
 	{
 		throw std::exception("IndexBuffer not created successfully");
 	}
+
 }
 
 IndexBuffer::~IndexBuffer()

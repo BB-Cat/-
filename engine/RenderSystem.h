@@ -49,6 +49,8 @@ public:
 
 	bool compileVSIncludeFile(const wchar_t* filename, void** include_byte_code, size_t* include_byte_code_size);
 
+public:
+	CRITICAL_SECTION m_critical_section;
 private:
 	DeviceContextPtr m_imm_device_context; //immediate device context
 	GBufferPtr m_gbuffer; //deferred rendering class for shadow mapping and other deferred rendering features

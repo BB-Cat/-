@@ -42,9 +42,9 @@ Scene01::~Scene01()
 
 }
 
-void Scene01::update(float delta, const float& width, const float& height)
+void Scene01::update(float delta)
 {
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	//m_global_light_rotation += 0.01f;
 	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
@@ -65,19 +65,20 @@ void Scene01::imGuiRender()
 //=====================================================
 //  Create the scene interface window
 //-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(215, 45));
+	//ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
-	ImGui::SetNextWindowSize(ImVec2(1004, 205));
-	ImGui::SetNextWindowPos(ImVec2(0, 520));
-	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::SetNextWindowSize(ImVec2(1024, 280));
+	ImGui::SetNextWindowPos(ImVec2(0, 480));
+	ImGui::SetNextWindowBgAlpha(0.8f);
 
 	//create the test window
-	ImGui::Begin("Lighting Options");
+	ImGui::Begin("Lighting Options", 0, ImGuiWindowFlags_NoDecoration);
 
 	//if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
 
@@ -122,7 +123,7 @@ void Scene01::imGuiRender()
 		ImGui::OpenPopup("Shader Popup");
 		ImGui::BeginPopupModal("Shader Popup");
 
-		ImGui::TextWrapped("You can see my custom shaders in this scene. Use the color pickers at the bottom to change them.");
+		ImGui::TextWrapped("You can see my custom shaders in this scene. Use the color pickers at the bottom to change them. I learned all shaders out of class, before we had shader lessons.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

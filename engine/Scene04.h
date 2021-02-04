@@ -39,7 +39,7 @@ public:
     Scene04(SceneManager*);
     ~Scene04();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 
 private:

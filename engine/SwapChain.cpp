@@ -1,6 +1,7 @@
 #include "SwapChain.h"
 #include "RenderSystem.h"
 #include <exception>
+#include <comdef.h>
 
 SwapChain::SwapChain(HWND hwnd, UINT width, UINT height, RenderSystem* system) : m_system(system)
 {
@@ -103,7 +104,14 @@ SwapChain::~SwapChain()
 
 bool SwapChain::present(bool vsync)
 {
-	m_swap_chain->Present(vsync, NULL);
+	HRESULT hr = m_swap_chain->Present(vsync, NULL);
+	if (FAILED(hr))
+	{
+		hr = m_system->m_d3d_device->GetDeviceRemovedReason();
+		_com_error err(hr);
+		OutputDebugString(err.ErrorMessage());
 
+		throw std::exception("There was an error when presenting the swap chain!\n");
+	}
 	return true;
 }

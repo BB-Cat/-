@@ -14,16 +14,21 @@ public:
 	Sprite(const wchar_t* full_path);
 	//create a sprite object from a preexisting texture
 	Sprite(TexturePtr tex);
+	//this constructor is for textureless screenspace effects.  right now it is only used in the loading screen scene
+	Sprite(Shaders shader);
 	~Sprite();
 public:
 	void renderWorldSpaceSprite(Vec3 scale, Vec3 position, Vec3 rotation, 
 		Vec2 sprite_pos, Vec2 sprite_size, Vec2 origin);
 
 	void renderScreenSpaceSprite(Vec2 scale, Vec2 screen_position, float rotation,
-		Vec2 sprite_pos, Vec2 sprite_size, Vec2 origin);
+		Vec2 sprite_pos, Vec2 sprite_size, Vec2 origin, float transparency);
+
+	void renderScreenSpaceShader(bool use_tex = false);
 
 	Matrix4x4 applyTransformations(const Matrix4x4& global, Vec3 scale, Vec3 rot, Vec3 translate);
 
+	void setTexture(TexturePtr tex) { m_tex = tex; }
 	TexturePtr getTexture() { return m_tex; }
 
 
@@ -36,6 +41,8 @@ protected:
 	ID3D11InputLayout* m_layout;
 	ID3D11DepthStencilState* m_dss;
 	ID3D11RasterizerState* m_rs;
+
+	int m_shader;
 
 protected:
 	friend class DeviceContext;

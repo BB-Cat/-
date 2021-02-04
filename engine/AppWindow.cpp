@@ -107,8 +107,11 @@ void AppWindow::mainMenu()
 
 		ImGui::OpenPopup("Welcome");
 		ImGui::BeginPopupModal("Welcome");
-		ImGui::Text("ESC: Toggle Mouse Display");
+		ImGui::TextWrapped("ESC: Toggle Mouse Display   -   Please use (ESC) key to turn on/off camera controls!");
 
+		ImGui::NewLine();
+		ImGui::TextWrapped("Welcome to my project!  I'm sorry, since ImGui doesn't support Japanese I am writing comments in English.  My project is still simple, but I want to keep improving it and become a great programmer.  Thank you for looking!");
+		ImGui::NewLine();
 		ImGui::TextWrapped("This program uses many text files for terrain. Please do not move or replace them or the program will crash.");
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_show_popup = false;
@@ -265,8 +268,12 @@ void AppWindow::onUpdate()
 	//if there is a compute shader that ran since the last frame, we need to join it now
 	handleActiveComputeThreads();
 
+	EnterCriticalSection(&GraphicsEngine::get()->getRenderSystem()->m_critical_section);
+
 	//present the rendered chain
 	m_swap_chain->present(true);
+
+	LeaveCriticalSection(&GraphicsEngine::get()->getRenderSystem()->m_critical_section);
 
 	//if there is a compute shader waiting to be queued, begin it now
 	initiateComputeThreads();

@@ -70,11 +70,18 @@ RenderSystem::RenderSystem()
 
 	createSamplerState();
 
+	// Initialize the critical section one time only.
+	if (!InitializeCriticalSectionAndSpinCount(&m_critical_section,
+		400)) throw std::exception("UNABLE TO INITIALIZE THE CRITICAL SECTION AND SPIN COUNT");
+
 
 }
 
 RenderSystem::~RenderSystem()
 {
+	//Release resources used by the critical section object.
+	DeleteCriticalSection(&m_critical_section);
+
 	m_d3d_device->Release();
 	m_dxgi_device->Release();
 	m_dxgi_adapter->Release();
@@ -89,7 +96,7 @@ void RenderSystem::initializeImGui(HWND hwnd)
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(m_d3d_device, m_imm_device_context->m_device_context);
-	ImGui::StyleColorsClassic();
+	ImGui::StyleColorsDark();
 }
 
 void RenderSystem::releaseImGui()

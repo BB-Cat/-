@@ -20,6 +20,7 @@ public:
 
 
     void execute(const float& delta, const float& width, const float& height);
+    void endLoad(std::unique_ptr<Scene>& next_scene);
     void imGui();
 
     enum SCENE
@@ -41,6 +42,8 @@ public:
         SCENE14,  //collision testing
         SCENE15,  //animation hitbox modifier
         SCENE16,  //ray marching spheres test scene
+        SCENE17,  //raycast sphere based cloud simulation
+        SCENELOAD,//loading screen scene
     };
 
     void changeScene(int next_scene, bool clear_current_scene = false);

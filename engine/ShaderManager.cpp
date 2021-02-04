@@ -53,6 +53,10 @@ int shader_settings[][5] =
 	{TOON_MODEL_TEX_VS,				TOON_MODEL_TEX_PS,				HSNONE,					DSNONE,					GSNONE},		//TOON SHADER FOR MODELS WITH TEXTURING
 	{DEBUG_GRID_VS,					DEBUG_GRID_PS,					HSNONE,					DSNONE,					GSNONE},		//shader for debugging grid plane
 	{SCREENSPACE_TEXTURE_VS,		SCREENSPACE_TEXTURE_PS,			HSNONE,					DSNONE,					GSNONE},		//shader for rendering directly to screenspace
+	{SCREENSPACE_LOADSCREEN_VS,		SCREENSPACE_LOADSCREEN_PS,		HSNONE,					DSNONE,					GSNONE},		//shader for loading scene
+	{SCREENSPACE_SELECTSCREEN_VS,	SCREENSPACE_SELECTSCREEN_PS,	HSNONE,					DSNONE,					GSNONE},		//shader for scene select
+	{RT_SPHERE_VS,					RT_SPHERE_PS,					HSNONE,					DSNONE,					GSNONE},		//ray tracing sphere shader, PS version
+	{RT_SPHERE_CLOUDS_VS,			RT_SPHERE_CLOUDS_PS,			HSNONE,					DSNONE,					GSNONE},		//another attempt at a more efficient cloud shader
 
 };
 
@@ -252,6 +256,21 @@ void ShaderManager::compileShaders()
 	m_screenspace->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
 	//***************************************************************************//
 
+	m_screenspace_loadscreen = std::shared_ptr<Shader>(new Shader(L"ScreenSpaceTextureVS.hlsl", L"LoadScreenPS.hlsl", shader_byte_code, size_shader));
+	m_screenspace_loadscreen->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_screenspace_selectscreen = std::shared_ptr<Shader>(new Shader(L"ScreenSpaceTextureVS.hlsl", L"SceneSelectPS.hlsl", shader_byte_code, size_shader));
+	m_screenspace_selectscreen->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_rt_sphere = std::shared_ptr<Shader>(new Shader(L"ScreenSpaceTextureVS.hlsl", L"RTSpheresPS.hlsl", shader_byte_code, size_shader));
+	m_rt_sphere->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
+
+	m_rt_sphere_clouds = std::shared_ptr<Shader>(new Shader(L"RTSphereCloudsVS.hlsl", L"RTSphereCloudsPS.hlsl", shader_byte_code, size_shader));
+	m_rt_sphere_clouds->ifErrorReplaceShaders(m_error->m_vs, m_error->m_ps);
+	//***************************************************************************//
 
 	//***************************************************************************//
 	//   GEOMETRY SHADERS							                             //
@@ -370,6 +389,10 @@ void ShaderManager::recompileErrorShaders()
 	m_toon_tex_model->ifErrorRecompile(m_error);
 	m_debug_grid->ifErrorRecompile(m_error);
 	m_screenspace->ifErrorRecompile(m_error);
+	m_screenspace_loadscreen->ifErrorRecompile(m_error);
+	m_screenspace_selectscreen->ifErrorRecompile(m_error);
+	m_rt_sphere->ifErrorRecompile(m_error);
+	m_rt_sphere_clouds->ifErrorRecompile(m_error);
 }
 
 void ShaderManager::recompileShader(int shader)
@@ -417,7 +440,13 @@ void ShaderManager::recompileShader(int shader)
 	case Shaders::TOON_TEX_MODEL:				m_toon_tex_model->recompile(m_error); break;
 	case Shaders::DEBUG_GRID:					m_debug_grid->recompile(m_error); break;
 	case Shaders::SCREENSPACE_TEXTURE:			m_screenspace->recompile(m_error); break;
+	case Shaders::SCREENSPACE_LOADSCREEN:		m_screenspace_loadscreen->recompile(m_error); break;
+	case Shaders::SCREENSPACE_SELECTSCREEN:		m_screenspace_selectscreen->recompile(m_error); break;
+	case Shaders::RT_SPHERE:				    m_rt_sphere->recompile(m_error); break;
+	case Shaders::RT_SPHERE_CLOUDS:				m_rt_sphere_clouds->recompile(m_error); break;
 	}
+
+	m_active_shader = -1; //reset the active shader so that any updates to the shader are reflected 
 }
 
 void ShaderManager::imGuiMenuShaderCompile()
@@ -463,7 +492,11 @@ void ShaderManager::imGuiMenuShaderCompile()
 		if (ImGui::Button("Toon Model", size)) recompileShader(Shaders::TOON_MODEL);
 		if (ImGui::Button("Toon Model Textured", size)) recompileShader(Shaders::TOON_TEX_MODEL);
 		if (ImGui::Button("Debugging Grid", size)) recompileShader(Shaders::DEBUG_GRID);
-		if (ImGui::Button("Screen Space", size)) recompileShader(Shaders::SCREENSPACE_TEXTURE);
+		if (ImGui::Button("Screen Space Texture", size)) recompileShader(Shaders::SCREENSPACE_TEXTURE);
+		if (ImGui::Button("Load Screen", size)) recompileShader(Shaders::SCREENSPACE_LOADSCREEN);
+		if (ImGui::Button("Select Screen", size)) recompileShader(Shaders::SCREENSPACE_SELECTSCREEN);
+		if (ImGui::Button("RTSphere", size)) recompileShader(Shaders::RT_SPHERE);
+		if (ImGui::Button("RTSphere Clouds", size)) recompileShader(Shaders::RT_SPHERE_CLOUDS);
 
 		ImGui::EndMenu();
 	}
@@ -613,6 +646,18 @@ void ShaderManager::setPixelShader(int type)
 	case SCREENSPACE_TEXTURE_PS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_screenspace->m_ps);
 		break;
+	case SCREENSPACE_LOADSCREEN_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_screenspace_loadscreen->m_ps);
+		break;
+	case SCREENSPACE_SELECTSCREEN_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_screenspace_selectscreen->m_ps);
+		break;
+	case RT_SPHERE_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_rt_sphere->m_ps);
+		break;
+	case RT_SPHERE_CLOUDS_PS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setPixelShader(m_rt_sphere_clouds->m_ps);
+		break;
 	}
 }
 
@@ -727,6 +772,18 @@ void ShaderManager::setVertexShader(int type)
 		break;
 	case SCREENSPACE_TEXTURE_VS:
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_screenspace->m_vs);
+		break;
+	case SCREENSPACE_LOADSCREEN_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_screenspace_loadscreen->m_vs);
+		break;
+	case SCREENSPACE_SELECTSCREEN_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_screenspace_selectscreen->m_vs);
+		break;
+	case RT_SPHERE_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_rt_sphere->m_vs);
+		break;
+	case RT_SPHERE_CLOUDS_VS:
+		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setVertexShader(m_rt_sphere_clouds->m_vs);
 		break;
 	}
 }

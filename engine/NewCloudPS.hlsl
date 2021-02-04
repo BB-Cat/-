@@ -97,8 +97,6 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 				break;
 			}
 		}
-		//dist_frac = dist_travelled;
-		//dist_frac = frac(dist_frac);
 		random_offset = BlueNoise.SampleLevel(TextureSampler, (input.world_pos.xz * input.world_pos.y * (m_time % 1000) / 1024.0 * 3) +
 			frac(float2(dist_travelled * 12.358, dist_travelled * 34.123) / random_offset), 0);
 		random_offset = max(random_offset * offset_strength, 0.5);
@@ -111,13 +109,4 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float3 cloud_color = light_energy * m_global_light_color;
 	float3 col = background_color * transmittance + cloud_color;
 	return float4(col, 1 - transmittance);
-	//return random_offset;
-
-	//return light_energy;
-	//return float4(light_energy, 1);
-
-
-	//float noise = raymarchCloud(pos, dir);
-	//return float4(1, 1, 1, noise);
-	//return float4(1, 1, 1, 1);
 }

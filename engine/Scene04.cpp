@@ -30,7 +30,7 @@ Scene04::Scene04(SceneManager* sm) : Scene(sm)
 	m_global_light_rotation = Vec2(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
 	m_light_color = Vec3(1.0, 1.0, 1.0);
-	m_ambient_light_color = Vec3(0.6f, 0.62f, 0.48f);
+	m_ambient_light_color = Vec3(0.1f, 0.1f, 0.1f);
 
 
 	m_noise.m_noise_type = Vector4D(0, 0, 0, 1);
@@ -64,29 +64,30 @@ Scene04::~Scene04()
 
 }
 
-void Scene04::update(float delta, const float& width, const float& height)
+void Scene04::update(float delta)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	//m_global_light_rotation += 0.01f;
-	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
+	m_scene_light_dir = Vec3(sinf(m_timer / 3.0f), sinf(m_timer / 4.0f + 0.5f) / 2.0f + 0.5f, cosf(m_timer / 3.0f));
 	m_scene_light_dir.normalize();
 	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
 
 	m_cloud_props.m_time += delta;
 	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetPSCloudBuffer(m_cloud_props);
 
-	m_timer++;
+	m_timer+= delta;
 }
 
 void Scene04::imGuiRender()
 {
-	ImGui::SetNextWindowSize(ImVec2(215, 45));
+	//ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
 	//=====================================================
@@ -94,7 +95,7 @@ void Scene04::imGuiRender()
 	//-----------------------------------------------------
 	//ImGui::SetNextWindowSize(ImVec2(250, 400));
 	ImGui::SetNextWindowBgAlpha(0.6f);
-	ImGui::SetNextWindowPos(ImVec2(0, 70));
+	ImGui::SetNextWindowPos(ImVec2(0, 105));
 
 	//create the test window
 	ImGui::Begin("Scene Interface", 0, ImGuiWindowFlags_AlwaysAutoResize);
@@ -107,11 +108,11 @@ void Scene04::imGuiRender()
 	//if (ImGui::Button("Toggle Normal", ImVec2(200, 30))) m_toggle_norm = !m_toggle_norm;
 
 	VectorToArray v(&m_global_light_rotation);
-	ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
+	//ImGui::DragFloat2("Light Direction", v.setArray(), 0.01f, -6.283f, 6.283f);
 
 	v = VectorToArray(&m_light_color);
 	ImGui::DragFloat3("Light Color", v.setArray(), 0.01f, 0, 1.0);
-	ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
+	//ImGui::DragFloat("Light Strength", &m_global_light_strength, 0.01f, 0, 1.0);
 
 	v = VectorToArray(&m_ambient_light_color);
 	ImGui::DragFloat3("Ambient Color", v.setArray(), 0.01f, 0, 1.0);
@@ -130,7 +131,8 @@ void Scene04::imGuiRender()
 		ImGui::OpenPopup("Dynamic Terrain Popup");
 		ImGui::BeginPopupModal("Dynamic Terrain Popup");
 
-		ImGui::TextWrapped("This scene uses LOD and tesselation to render large amounts of terrain. The empty spaces are NOT a bug, they are because of missing files.  I will fix them later.");
+		ImGui::TextWrapped("This scene loads terrain by reading text files on multiple threads.  It is old code, but I am remaking the whole system to be faster so I am leaving it for now.");
+		ImGui::TextWrapped("This scene also uses LOD and tesselation to render large amounts of terrain. The empty spaces are not a bug, I accidentally deleted some data.  I will remake it later.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

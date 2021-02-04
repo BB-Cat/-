@@ -1,8 +1,12 @@
+#ifndef _RTCLOUDS
 
 Texture3D Texture: register(t0);
 Texture3D DetailTexture: register(t1);
+
 Texture2D BlueNoise: register(t2);
 SamplerState TextureSampler: register(s0);
+
+#endif
 
 //cloud property settings
 cbuffer constant: register(b6)
@@ -37,21 +41,6 @@ cbuffer constant: register(b6)
     float  m_light_absorption_towards_sun;
     float  m_light_absorption_through_cloud;
 }
-
-/* NEED TO ADD TO CONSTANT BUFFER
-
-float  m_ray_offset_strength
-float4 m_phase_parameters
-float  m_density_offset
-float  m_detail_noise_scale
-float  m_detail_speed
-float4 m_detail_sampling_weight
-float  m_detail_noise_weight
-float  m_light_stepcount (11)
-float  m_darkness_threshold
-float  m_light_absorption_towards_sun
-float  m_light_absorption_through_cloud
-*/
 
 float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
     return minNew + (v - minOld) * (maxNew - minNew) / (maxOld - minOld);
@@ -106,7 +95,7 @@ float remap01(float v, float low, float high)
     return (v - low) / (high - low);
 }
 
-
+#ifndef _RTCLOUDS
 
 float sampleDensity(float3 ray_pos, float3 size, float3 bounds_min, float3 bounds_max) 
 {
@@ -199,7 +188,7 @@ float lightmarch(float3 position, float3 inverse_light_dir, float3 bounds_min, f
     return m_darkness_threshold + transmittance * (1 - m_darkness_threshold);
 }
 
-
+#endif
 
 
 

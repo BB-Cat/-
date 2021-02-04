@@ -35,7 +35,7 @@ public:
     Scene01(SceneManager*);
     ~Scene01();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 private:
     virtual void shadowRenderPass(float delta) override;

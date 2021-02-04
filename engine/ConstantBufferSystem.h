@@ -46,7 +46,7 @@ public:
 
 	void updateAndSetPSCloudBuffer(const cb_cloud& c);
 
-	void updateAndSetCSRaymarchBuffer(const cb_compute_raymarch& r);
+	void updateAndSetPSCSRaymarchBuffer(const cb_compute_raymarch& r);
 
 
 private:

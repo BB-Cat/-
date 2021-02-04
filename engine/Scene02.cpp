@@ -45,7 +45,7 @@ Scene02::~Scene02()
 	if (m_terrain != nullptr) delete m_terrain;
 }
 
-void Scene02::update(float delta, const float& width, const float& height)
+void Scene02::update(float delta)
 {
 	
 
@@ -53,7 +53,7 @@ void Scene02::update(float delta, const float& width, const float& height)
 	Vec3 right = cam.getXDirection();
 	//CameraManager::get()->setCamPos(cam.getTranslation() + right * 0.05f);
 
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 	CameraManager::get()->beginLookAt(Vec3(0, 0, 0), 0);
 
 
@@ -69,11 +69,11 @@ void Scene02::update(float delta, const float& width, const float& height)
 
 void Scene02::imGuiRender()
 {
-	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
 	//ImGui::SetNextWindowSize(ImVec2(250, 400));

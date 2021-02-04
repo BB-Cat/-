@@ -1,1 +1,116 @@
-﻿  3dgp.vcxproj -> C:\Users\2190404\Desktop\GraphicsEngine - Backup\BACKUP-GRAPHICS-ENGINE\engine\Debug\3dgp.exe
+﻿  SceneManager.cpp
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(184): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(193): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(194): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'SceneSelect': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scenemanager.cpp(24): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<SceneSelect,std::default_delete<_Ty>> std::make_unique<SceneSelect,SceneManager*const >(SceneManager *const &&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=SceneSelect
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'SceneLoad': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scenemanager.cpp(145): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<SceneLoad,std::default_delete<_Ty>> std::make_unique<SceneLoad,SceneManager*const ,int&>(SceneManager *const &&,int &)' のリファレンスを確認してください
+          with
+          [
+              _Ty=SceneLoad
+          ]
+  SceneLoad.cpp
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(184): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(193): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(194): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\window.h(28): warning C4244: '引数': 'const LONG' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(10): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(11): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\lighting.h(46): warning C4316: 'Lighting': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene14.h(38): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(84): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(84): warning C4244: '引数': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene04': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(104): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene04,std::default_delete<_Ty>> std::make_unique<Scene04,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene04
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene07': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(113): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene07,std::default_delete<_Ty>> std::make_unique<Scene07,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene07
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene08': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(116): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene08,std::default_delete<_Ty>> std::make_unique<Scene08,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene08
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene09': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(119): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene09,std::default_delete<_Ty>> std::make_unique<Scene09,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene09
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene10': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(122): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene10,std::default_delete<_Ty>> std::make_unique<Scene10,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene10
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene11': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(125): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene11,std::default_delete<_Ty>> std::make_unique<Scene11,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene11
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene12': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(128): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene12,std::default_delete<_Ty>> std::make_unique<Scene12,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene12
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene13': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(131): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene13,std::default_delete<_Ty>> std::make_unique<Scene13,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene13
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene16': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(140): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene16,std::default_delete<_Ty>> std::make_unique<Scene16,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene16
+          ]
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): warning C4316: 'Scene17': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\sceneload.cpp(143): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<Scene17,std::default_delete<_Ty>> std::make_unique<Scene17,SceneManager*&>(SceneManager *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=Scene17
+          ]
+  Scene13.cpp
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(184): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(193): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(194): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\window.h(28): warning C4244: '引数': 'const LONG' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(10): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(11): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\lighting.h(46): warning C4316: 'Lighting': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\texture.h(15): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(34): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(37): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(60): warning C4244: '初期化中': 'float' から 'UINT' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(161): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(162): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(172): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(173): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(292): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(294): warning C4101: 'temp': ローカル変数は 1 度も使われていません。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(347): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(349): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(377): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(379): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(402): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(404): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(840): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(841): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(842): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+  コードを生成中...
+  3dgp.vcxproj -> C:\Users\2190404\Desktop\GraphicsEngine - Backup\BACKUP-GRAPHICS-ENGINE\engine\Debug\3dgp.exe

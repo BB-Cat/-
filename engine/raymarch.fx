@@ -7,6 +7,7 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_view;
 	row_major float4x4 m_proj;
 	float4 m_camera_position;
+	row_major float4x4 m_inverseVP;
 };
 
 cbuffer constant: register(b2)
@@ -18,6 +19,7 @@ cbuffer constant: register(b2)
 }
 
 
+#define MAX_SPHERES (30)
 //constant buffer for raymarch scene
 cbuffer constant: register(b7)
 {
@@ -34,17 +36,23 @@ cbuffer constant: register(b7)
 	float4		m_directional_light;
 
 	//sphere data 
-	float4		m_position_and_radius[12];
-	float4		m_local_colors[12];
-	float4		m_local_speculars[12];
+	float4		m_position_and_radius[MAX_SPHERES];
+	float4		m_local_colors[MAX_SPHERES];
+	float4		m_local_speculars[MAX_SPHERES];
 
 }
 
 //raymarch functions
 #define MAX_STEPS 100
+
+#ifndef _RTCLOUDS
 #define MAX_DIST 50
+#else
+#define MAX_DIST 5000
+#endif
+
 #define SURF_DIST 0.001
-#define MAX_SPHERES 12
+//#define MAX_SPHERES 30
 static const float PI = 3.14159265f;
 
 struct Ray
@@ -62,6 +70,8 @@ Ray createRay(float3 origin, float3 direction)
 	return ray;
 }
 
+
+#ifndef _RTCLOUDS
 struct RayHit
 {
 	float3 position;
@@ -79,6 +89,30 @@ RayHit createRayHit()
 	hit.normal = float3(0, 0, 0);
 	return hit;
 }
+#else
+struct RayHit
+{
+	float3 position;
+	float distance;
+	float far_distance;
+	float3 normal;
+	float3 albedo;
+	float3 specular;
+	float3 total_through;
+};
+
+RayHit createRayHit()
+{
+	RayHit hit;
+	hit.position = float3(0, 0, 0);
+	hit.distance = MAX_DIST * 100;
+	hit.normal = float3(0, 0, 0);
+	hit.far_distance = 0;
+	hit.total_through = 0;
+	return hit;
+}
+#endif
+
 
 void intersectGroundPlane(Ray ray, inout RayHit bestHit)
 {
@@ -94,6 +128,9 @@ void intersectGroundPlane(Ray ray, inout RayHit bestHit)
 		bestHit.specular = 0.03;
 	}
 }
+
+#ifndef _RTCLOUDS
+
 
 void intersectSphere(Ray ray, inout RayHit bestHit, int sphereID)
 {
@@ -152,17 +189,122 @@ float3 shade(inout Ray ray, RayHit hit)
 	}
 	else
 	{
-		////signal the shader to sample skybox
-		//return -1;
-
 		ray.energy = 0;
-
-		ray.direction * 0.5f + 0.5f;
+		ray.direction = normalize(ray.direction);
 		float theta = acos(ray.direction.y) / PI;
-		float phi = atan2(ray.direction.x + 1.0, -ray.direction.z) / PI * 0.5;
+		float phi = atan2(ray.direction.x + 1.388/*adjustment for aspect ratio*/, ray.direction.z) / PI;
+
 		return Texture.SampleLevel(TextureSampler, float2(phi, theta), 0).rgb;
 	}
 }
+
+#else
+
+float sphereRayDist(float3 ro, float3 rd, float4 sphere, out float max_t)
+{
+	float3 d = ro - sphere.xyz;
+	float p1 = -dot(rd, d);
+
+	float p2sqr = p1 * p1 - dot(d, d) + sphere.w * sphere.w;
+	if (p2sqr < 0) return MAX_DIST * 100.0;
+	float p2 = sqrt(p2sqr);
+	float t;
+
+	if (p1 - p2 > 0)
+	{
+		t = p1 - p2;
+		max_t = p1 + p2;
+	}
+	else
+	{
+		t = p1 + p2;
+		max_t = p1 - p2;
+	}
+
+	return t;
+}
+
+void intersectSphereOR(Ray ray, inout RayHit bestHit, float4 sphere)
+{
+	float max_t = 0;
+	float t = sphereRayDist(ray.origin, ray.direction, sphere, max_t);
+
+
+	bestHit.far_distance = max(bestHit.far_distance, max_t);
+
+	if (t < max_t)
+	{
+		float3 hitpos = ray.origin + t * ray.direction;
+		float3 posnormal = normalize(hitpos - sphere.xyz);
+
+		if (t > 0 && t < bestHit.distance)
+		{
+			bestHit.distance = t;
+			bestHit.position = hitpos;
+			bestHit.normal = posnormal;
+			bestHit.albedo = 0;
+			bestHit.specular = 0;
+		}
+
+		float d = max(0, -dot(ray.direction, posnormal));
+		bestHit.total_through += pow(d, 3) * sphere.w * 2;
+	}
+}
+
+void intersectSphereAND(Ray ray, inout RayHit bestHit, float4 sphere)
+{
+	float max_t = 0;
+	float t = sphereRayDist(ray.origin, ray.direction, sphere, max_t);
+
+
+	bestHit.far_distance = max(bestHit.far_distance, max_t);
+
+	if (t > 0 && t > bestHit.distance && bestHit.distance < MAX_DIST)
+	{
+		bestHit.distance = t;
+		bestHit.position = ray.origin + t * ray.direction;
+		bestHit.normal = normalize(bestHit.position - sphere.xyz);
+		bestHit.albedo = 0;
+		bestHit.specular = 0;
+
+		//bestHit.total_through ;
+	}
+}
+
+//void intersectSphere(Ray ray, inout RayHit bestHit)
+//{
+//	if(bestHit.position) bestHit.position = 0;
+//}
+
+RayHit trace(Ray ray, float4 sphere[MAX_SPHERES])
+{
+	RayHit bestHit = createRayHit();
+
+	//intersectSphere(ray, bestHit, sphere);
+	intersectSphereOR(ray, bestHit, sphere[0]);
+	intersectSphereOR(ray, bestHit, sphere[1]);
+	intersectSphereOR(ray, bestHit, sphere[2]);
+	intersectSphereOR(ray, bestHit, sphere[3]);
+	intersectSphereOR(ray, bestHit, sphere[4]);
+
+	return bestHit;
+}
+
+//RayHit trace(Ray ray, float4 sphere[MAX_SPHERES])
+//{
+//	RayHit bestHit = createRayHit();
+//
+//	//intersectSphere(ray, bestHit, sphere);
+//	intersectSphereOR(ray, bestHit, sphere[0]);
+//	intersectSphereOR(ray, bestHit, sphere[1]);
+//	intersectSphereOR(ray, bestHit, sphere[2]);
+//	intersectSphereOR(ray, bestHit, sphere[3]);
+//	intersectSphereOR(ray, bestHit, sphere[4]);
+//
+//	return bestHit;
+//}
+
+#endif
 
 //Ray createCameraRay(float2 uv, float3 campos)
 //{

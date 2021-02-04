@@ -26,13 +26,17 @@ void CameraManager::release()
 	}
 }
 
-void CameraManager::update(const float& delta, const int& width, const int& height, bool exclude_Y_movement)
+void CameraManager::update(const float& delta, bool exclude_Y_movement)
 {
 	updateInput();
 
+	Vec2 screen = AppWindow::getScreenSize();
+	float width = screen.x;
+	float height = screen.y;
+
 	Matrix4x4 worldcam;
 	worldcam.setIdentity();
-	cb_world cc;
+	cb_camera cc;
 	cc.m_world.setIdentity();
 	Matrix4x4 temp;
 
@@ -137,9 +141,13 @@ void CameraManager::update(const float& delta, const int& width, const int& heig
 	worldcam.inverse();
 	cc.m_view = worldcam;
 
-
 	float depth = 2500.0f;
 	cc.m_projection.setPerspectiveFovLH(1.0f, ((float)width / (float)height), 0.1f, depth);
+
+	//calculate the inverse view projection matrix for screen to world conversions
+	cc.m_inverseVP = cc.m_view * cc.m_projection;
+	cc.m_inverseVP.inverse();
+
 	m_world_constant_buffer->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &cc);
 
 	//update the frustum for the current frame
@@ -206,7 +214,7 @@ void CameraManager::setWorldBuffer()
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setConstantWVPBufferCS(m_world_constant_buffer);
 }
 
-void CameraManager::setDirectionalLightWVPBuffer(Vec3 light_dir, const int& width, const int& height, const int& orthoID)
+void CameraManager::setDirectionalLightWVPBuffer(Vec3 light_dir, const int& orthoID)
 {
 	cb_world_dirlight cc;
 	cc.m_world.setIdentity();
@@ -246,12 +254,12 @@ void CameraManager::setDirectionalLightWVPBuffer(Vec3 light_dir, const int& widt
 
 void CameraManager::createWorldBuffers()
 {
-	cb_world cc;
+	cb_camera cc;
 	cb_world_dirlight cc2;
 
 	if (m_world_constant_buffer == nullptr)
 	{
-		m_world_constant_buffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(cb_world));
+		m_world_constant_buffer = GraphicsEngine::get()->getRenderSystem()->createConstantBuffer(&cc, sizeof(cb_camera));
 	}
 
 	if (m_lightcam_constant_buffer == nullptr)

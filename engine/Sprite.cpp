@@ -7,6 +7,7 @@
 #include "ConstantBufferSystem.h"
 #include "Texture.h"
 #include "Blend.h"
+#include "AppWindow.h"
 #include "../include/DirectXTK-master/Inc/WICTextureLoader.h"
 
 
@@ -19,6 +20,12 @@ Sprite::Sprite(const wchar_t* full_path):Resource(full_path)
 Sprite::Sprite(TexturePtr tex):Resource(L"")
 {
 	m_tex = tex;
+	init();
+}
+
+Sprite::Sprite(Shaders shader):Resource(L"")
+{
+	m_shader = shader;
 	init();
 }
 
@@ -123,9 +130,14 @@ void Sprite::renderWorldSpaceSprite(Vec3 scale, Vec3 position, Vec3 rotation,
 }
 
 void Sprite::renderScreenSpaceSprite(Vec2 scale, Vec2 screen_position, float rotation, 
-	Vec2 sprite_pos, Vec2 sprite_size, Vec2 origin)
+	Vec2 sprite_pos, Vec2 sprite_size, Vec2 origin, float transparency)
 {
 	if (scale.x == 0.0f || scale.y == 0.0f) return;
+
+	//Vec2 screensize = AppWindow::getScreenSize();
+	//float aspect = screensize.x / screensize.y;
+
+	//float sprite_aspect = sprite_size.y / sprite_size.x;
 
 	VertexMesh vertices[] =
 	{
@@ -147,6 +159,8 @@ void Sprite::renderScreenSpaceSprite(Vec2 scale, Vec2 screen_position, float rot
 	vertices[2].m_texcoord = Vec2(left, bottom);
 	vertices[3].m_texcoord = Vec2(right, bottom);
 
+
+
 	float modX = origin.x / sprite_size.x;
 	float modY = origin.y / sprite_size.y;
 
@@ -157,13 +171,12 @@ void Sprite::renderScreenSpaceSprite(Vec2 scale, Vec2 screen_position, float rot
 
 	Matrix4x4 temp;
 	temp.setIdentity();
-	temp = applyTransformations(temp, scale, Vec3(0, 0, rotation), screen_position);
+	temp = applyTransformations(temp, scale, Vec3(0, 0, rotation), Vec2(0, 0));
 
 	for (int i = 0; i < 4; i++)
 	{
-		vertices[i].m_position = (temp.getTranslation() + vertices[i].m_position) * 2.0f - 1.0f;
+		vertices[i].m_position = ((temp * vertices[i].m_position + screen_position) * 2.0f - 1.0f);
 	}
-
 
 	D3D11_MAPPED_SUBRESOURCE msr;
 	DeviceContextPtr context = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
@@ -174,7 +187,37 @@ void Sprite::renderScreenSpaceSprite(Vec2 scale, Vec2 screen_position, float rot
 	GraphicsEngine::get()->getShaderManager()->setPipeline(Shaders::SCREENSPACE_TEXTURE);
 	context->setDiffuseTexPS(m_tex);
 
-	//BlendMode::get()->SetBlend(BlendType::ALPHA);
+	Material_Obj mat;
+	mat.m_transparency = transparency;
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetObjectLightPropertyBuffer(mat);
+
+	BlendMode::get()->SetBlend(BlendType::ALPHA);
+	context->setDepthStencilState(m_dss);
+	context->setRasterState(m_rs);
+
+	context->setVertexBuffer(sizeof(VertexMesh), m_buffer, m_layout);
+	context->drawTriangleStrip(4, 0);
+}
+
+void Sprite::renderScreenSpaceShader(bool use_tex)
+{
+	VertexMesh vertices[] =
+	{
+		VertexMesh(Vec3(-1.0f, 1.0f, 0), Vec2(0, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, 1.0f, 0), Vec2(1, 1), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(-1.0f, -1.0f, 0), Vec2(0, 0), Vec3(0.0f, 0.0f, -1.0f)),
+		VertexMesh(Vec3(1.0f, -1.0f, 0), Vec2(1, 0), Vec3(0.0f, 0.0f, -1.0f))
+	};
+
+	D3D11_MAPPED_SUBRESOURCE msr;
+	DeviceContextPtr context = GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext();
+	context->m_device_context->Map(m_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr);
+	memcpy(msr.pData, vertices, sizeof(vertices));
+	context->m_device_context->Unmap(m_buffer, 0);
+
+	GraphicsEngine::get()->getShaderManager()->setPipeline(m_shader);
+	if(use_tex)	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setDiffuseTexPS(m_tex);
+
 	context->setDepthStencilState(m_dss);
 	context->setRasterState(m_rs);
 

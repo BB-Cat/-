@@ -419,6 +419,21 @@
     <Filter Include="Shaders\Shader Files\GeometryTest1">
       <UniqueIdentifier>{f2a4df60-e236-4c08-966c-f44461168644}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Scenes\17">
+      <UniqueIdentifier>{0da9d349-94e8-42da-963b-58870e31e00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Scenes\SceneLoad">
+      <UniqueIdentifier>{4b2adfc5-e418-478c-bf6a-f5f16e2b528a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\25 ScreenSpace Sprite\LoadScreen">
+      <UniqueIdentifier>{5dbd45f1-9ba0-40e5-94c9-4a08ebd0ecaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\19 VolumetricClouds\Raytrace Sphere Clouds">
+      <UniqueIdentifier>{4f5e3ca1-23bf-4e63-9754-51606af3048a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shader Files\25 ScreenSpace Sprite\RTSpheres">
+      <UniqueIdentifier>{f58914da-f3a1-472d-843b-37127c0cdbe9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -699,6 +714,12 @@
     </ClCompile>
     <ClCompile Include="TextureComputeShader.cpp">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene17.cpp">
+      <Filter>Sources\Scenes\17</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoad.cpp">
+      <Filter>Sources\Scenes\SceneLoad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1062,6 +1083,12 @@
     <ClInclude Include="TextureComputeShader.h">
       <Filter>Sources\GameEngine\GraphicsEngine\RenderSystem\ComputeShader</Filter>
     </ClInclude>
+    <ClInclude Include="Scene17.h">
+      <Filter>Sources\Scenes\17</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoad.h">
+      <Filter>Sources\Scenes\SceneLoad</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FlatShaderVS.hlsl">
@@ -1364,6 +1391,12 @@
     <FxCompile Include="ComputeRayMarchSpheres.hlsl">
       <Filter>ComputeShaders</Filter>
     </FxCompile>
+    <FxCompile Include="LoadScreenPS.hlsl">
+      <Filter>Shaders\Shader Files\25 ScreenSpace Sprite\LoadScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="RTSpheresPS.hlsl">
+      <Filter>Shaders\Shader Files\25 ScreenSpace Sprite\RTSpheres</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="General.fx">
@@ -1392,6 +1425,18 @@
     </None>
     <None Include="raymarch.fx">
       <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="hex.fx">
+      <Filter>Shaders\Includes</Filter>
+    </None>
+    <None Include="SceneSelectPS.hlsl">
+      <Filter>Shaders\Shader Files\25 ScreenSpace Sprite\LoadScreen</Filter>
+    </None>
+    <None Include="RTSphereCloudsPS.hlsl">
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\Raytrace Sphere Clouds</Filter>
+    </None>
+    <None Include="RTSphereCloudsVS.hlsl">
+      <Filter>Shaders\Shader Files\19 VolumetricClouds\Raytrace Sphere Clouds</Filter>
     </None>
   </ItemGroup>
 </Project>

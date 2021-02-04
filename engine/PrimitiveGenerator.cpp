@@ -355,7 +355,6 @@ bool PrimitiveGenerator::initPrimitiveCube()
 		size_vertex_list, shader_byte_code, (UINT)size_shader);
 	m_cube_ib = GraphicsEngine::get()->getRenderSystem()->createIndexBuffer(&index_list[0], size_index_list);
 
-
 	if (m_cube_vb == nullptr || m_cube_ib == nullptr) return false;
 	return true;
 }

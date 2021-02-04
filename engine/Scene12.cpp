@@ -56,7 +56,7 @@ Scene12::Scene12(SceneManager* sm) : Scene(sm)
 	m_cloud_props.m_speed = 0.7f;
 	m_cloud_props.m_move_dir = Vec3(0.5f, 0, 0);
 
-	m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
+	//m_tex3D = std::shared_ptr<Texture3D>(new Texture3D("Perlin32x.txt"));
 
 	m_global_light_rotation = Vec2(70 * 0.01745f, 70 * 0.01745f);
 	m_global_light_strength = 0.85f;
@@ -69,6 +69,7 @@ Scene12::Scene12(SceneManager* sm) : Scene(sm)
 
 	//アクターマネジャーの初期化を確認
 	ActorManager::get();
+	if(ActorManager::get()->isNoPlayer()) ActorManager::get()->setPlayer(std::shared_ptr<Player>(new Player(true)));
 	ActorManager::get()->setActivePlayerPosition(Vec3(0, 20.0f, 20));
 }
 
@@ -77,10 +78,10 @@ Scene12::~Scene12()
 
 }
 
-void Scene12::update(float delta, const float& width, const float& height)
+void Scene12::update(float delta)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
@@ -126,10 +127,10 @@ void Scene12::imGuiRender()
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	
-	ImGui::NewLine();
-
-	if (ImGui::Button("Show Hitboxes", ImVec2(200, 20))) m_show_hitboxes = !m_show_hitboxes;
+	//ImGui::NewLine();
+	//if (ImGui::Button("Show Hitboxes", ImVec2(200, 20))) m_show_hitboxes = !m_show_hitboxes;
 	ImGui::End();
 
 	if (m_first_time)
@@ -144,7 +145,7 @@ void Scene12::imGuiRender()
 		ImGui::BeginPopupModal("Level Creator Popup");
 		ImGui::TextWrapped("Here you can test the scene you made in the scene creator.");
 		ImGui::NewLine();
-		ImGui::TextWrapped("I am still building an AABB heirarchy system, so the collisions in the scene are not correct yet.");
+		ImGui::TextWrapped("I am still building an AABB heirarchy system, so the collisions in the scene are NOT correct right now, but the collision code is already working for cubes, capsules, spheres and ray picking.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

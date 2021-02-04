@@ -14,14 +14,14 @@ private:
     Vec3 m_light_color;
     Vec3 m_ambient_light_color;
 
-    SpritePtr sprite;
+    SpritePtr m_sprite;
     TexturePtr sky;
     //ComputeShaderPtr m_compute_raymarch;
     TextureComputeShaderPtr m_compute_raymarch;
 
 
     int m_tracecount = 1;
-    int m_spherecount = 5;
+    int m_spherecount = 15;
     bool m_stop_update = false;
     cb_compute_raymarch m_raymarch_buffer;
 
@@ -29,7 +29,7 @@ public:
     Scene16(SceneManager*);
     ~Scene16();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 
 

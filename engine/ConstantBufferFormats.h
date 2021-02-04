@@ -5,12 +5,13 @@
 #include <DirectXMath.h>
 
 __declspec(align(16))
-struct cb_world
+struct cb_camera
 {
 	Matrix4x4 m_world;
 	Matrix4x4 m_view;
 	Matrix4x4 m_projection;
 	Vector4D m_camera_position;
+	Matrix4x4 m_inverseVP;
 };
 
 #define NUM_SHADOW_MAPS (3)
@@ -89,8 +90,8 @@ struct cb_tess
 __declspec(align(16))
 struct cb_time
 {
-	float m_time; //millisecond timer
-	float m_elapsed; //time since the last frame
+	float m_time = 0; //millisecond timer
+	float m_elapsed = 0; //time since the last frame
 };
 
 __declspec(align(16))
@@ -166,8 +167,12 @@ struct cb_cloud
 	float		m_darkness_threshold;
 	float		m_light_absorption_towards_sun;
 	float		m_light_absorption_through_cloud;
+
+	int applebottoms;
 };
 
+
+#define MAX_SPHERES (30)
 __declspec(align(16))
 struct cb_compute_raymarch
 {
@@ -184,7 +189,7 @@ struct cb_compute_raymarch
 	Vector4D		m_light_dir = { 0.25, -0.5, 0.25, 1 };
 
 	//sphere data 
-	Vector4D		m_sphere_pos_and_radius[12] = { 0 };
-	Vector4D		m_local_colors[12] = { 0.7 };
-	Vector4D		m_local_speculars[12] = { 0.6 };
+	Vector4D		m_sphere_pos_and_radius[30] = { 0 };
+	Vector4D		m_local_colors[30] = { 0.7 };
+	Vector4D		m_local_speculars[30] = { 0.6 };
 };

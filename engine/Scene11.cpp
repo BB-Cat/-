@@ -46,10 +46,10 @@ Scene11::~Scene11()
 
 }
 
-void Scene11::update(float delta, const float& width, const float& height)
+void Scene11::update(float delta)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height, AppWindow::getMouseState(true));
+	CameraManager::get()->update(delta, AppWindow::getMouseState(true));
 
 	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 	m_scene_light_dir.normalize();
@@ -67,11 +67,11 @@ void Scene11::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
 	////create the test window
@@ -105,7 +105,7 @@ void Scene11::imGuiRender()
 
 		ImGui::OpenPopup("Level Creator Popup");
 		ImGui::BeginPopupModal("Level Creator Popup");
-		ImGui::TextWrapped("This scene is for creating scenes out of primitives. You can change shaders, size, material and other things.  You can save a scene and load it later too.");
+		ImGui::TextWrapped("This scene is for creating scenes out of prefabs. You can change shaders, size, material and other things.  You can save a scene and load it later too.  It is a bit confusing to use for people besides me...");
 		//ImGui::NewLine();
 		//ImGui::TextWrapped("I am still building an AABB heirarchy system, so the collisions in the scene are not correct yet.");
 

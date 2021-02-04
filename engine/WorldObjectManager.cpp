@@ -791,8 +791,8 @@ void WorldObjectManager::imGuiRender()
 
 
 	// OBJECT LIST //
-	ImGui::SetNextWindowSize(ImVec2(150, 250));
-	ImGui::SetNextWindowPos(ImVec2(0, 65));
+	ImGui::SetNextWindowSize(ImVec2(150, 210));
+	ImGui::SetNextWindowPos(ImVec2(0, 102));
 	ImGui::SetNextWindowBgAlpha(0.4f);
 	ImGui::Begin("Scene Objects");
 

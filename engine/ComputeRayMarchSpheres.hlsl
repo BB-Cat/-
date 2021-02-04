@@ -1,8 +1,5 @@
 #include "raymarch.fx"
 
-
-
-
 //input
 struct InputData
 {
@@ -20,6 +17,7 @@ RWStructuredBuffer<OutputData> output : register(u0);
 
 //‰ü‘¢‚·‚é‚Ü‚Å‚±‚±‚Åaspect ratio‚Ì’è‹`‚ð‚µ‚Ä‚¢‚é
 #define ASPECT 1.388
+//#define fov 0.9;
 
 [numthreads(1024, 1, 1)]
 void CS_main(int3 id : SV_DispatchThreadID)
@@ -28,39 +26,12 @@ void CS_main(int3 id : SV_DispatchThreadID)
 	float2 uv = (coords - 0.5) * 2;
 
 	float3 color;
-	
-	//float3 ro = m_camera_position.xyz;
-	////float3 rd = mul(m_world, float4(uv.x * ASPECT, uv.y, 1.0, 0.0f)).xyz;
-	//float3 rd = float3(uv.x * ASPECT, uv.y, 1.0);
-	//rd = normalize(rd);
-	//normalize(float3(uv.x * ASPECT, uv.y, 1.0));
-
-	//float4 res = rayMarchSpheres(ro, rd);
-	//float d = res.w;
-	//float3 p = ro + rd * d;
-
-	//if (d >= MAX_DIST)
-	//{
-	//	rd * 0.5f + 0.5f;
-	//	float theta = acos(rd.y) / PI;
-	//	float phi = atan2(rd.x + 1.0, -rd.z) / PI * 0.5;
-	//	color = Texture.SampleLevel(TextureSampler, float2(phi, theta), 0).rgb;
-	//	output[id.x].position1 = float4(color, 1);
-	//}
-	//else
-	//{
-	//	float diffuse = getLightSpheres(p);
-	//	color = saturate(res.rgb * diffuse);
-
-	//	output[id.x].position1 = float4(color, 1);
-	//}
-
-	//===============================================--
-
 
 	Ray ray;
-	ray.origin = float3(0, 3.0, 0);
-	ray.direction = normalize(float3(uv.x * ASPECT, uv.y - 0.5, 1.0));
+	ray.origin = float3(0, 3.0, -1.0);
+	ray.direction = float3(uv.x * ASPECT, uv.y - 0.5, 1.0);
+	ray.direction = normalize(ray.direction);
+	//ray.direction.xy *= fov;
 	ray.energy = float3(1, 1, 1);
 
 
@@ -77,15 +48,6 @@ void CS_main(int3 id : SV_DispatchThreadID)
 		if (!any(ray.energy)) break;
 	}
 
-	//if (result.x < 0)
-	//{
-	//	ray.direction * 0.5f + 0.5f;
-	//	float theta = acos(ray.direction.y) / PI;
-	//	float phi = atan2(ray.direction.x + 1.0, -ray.direction.z) / PI * 0.5;
-	//	result = Texture.SampleLevel(TextureSampler, float2(phi, theta), 0).rgb;
-	//}
-
-
 	output[id.x].position1 = float4(result, 1);
-
+	//output[id.x].position1 = float4(1,1,1, 1);
 }

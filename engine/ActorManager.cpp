@@ -12,8 +12,8 @@ ActorManager::ActorManager()
 	m_actor_lists.push_back(Faction(L"Enemy"));
 	m_actor_lists.push_back(Faction(L"Ambient"));
 
-	m_player = std::shared_ptr<Player>(new Player(true));
-	getFaction(L"Player")->m_actors.push_back(m_player);
+	//m_player = std::shared_ptr<Player>(new Player(true));
+	//getFaction(L"Player")->m_actors.push_back(m_player);
 }
 
 ActorManager* ActorManager::get()
@@ -33,6 +33,14 @@ void ActorManager::release()
 
 	delete instance; 
 	instance = nullptr;
+}
+
+void ActorManager::setPlayer(std::shared_ptr<Player> player)
+{
+	//getFaction(L"Player")->m_actors.clear();
+	//getFaction(L"Player")->m_name.clear();
+	m_player = player;
+	getFaction(L"Player")->m_actors.push_back(m_player);
 }
 
 void ActorManager::updateAll(float delta)

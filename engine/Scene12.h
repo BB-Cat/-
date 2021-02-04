@@ -33,7 +33,7 @@ public:
     Scene12(SceneManager*);
     ~Scene12();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 
     //virtual void outputSceneData(std::string filename);

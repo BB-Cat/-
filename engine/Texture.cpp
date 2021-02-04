@@ -10,8 +10,12 @@ Texture::Texture(const wchar_t* full_path): Resource(full_path)
 
 	using DirectX::CreateWICTextureFromFile;
 
+	EnterCriticalSection(&GraphicsEngine::get()->getRenderSystem()->m_critical_section);
+
 	CreateWICTextureFromFile(GraphicsEngine::get()->getRenderSystem()->m_d3d_device,
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->m_device_context, full_path, &m_texture, &m_shader_res_view);
+
+	LeaveCriticalSection(&GraphicsEngine::get()->getRenderSystem()->m_critical_section);
 
 	if (m_texture == nullptr) throw (int)BB_ERROR::TEXTURE_INVALID;
 

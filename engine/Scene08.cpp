@@ -194,10 +194,10 @@ Scene08::~Scene08()
 
 }
 
-void Scene08::update(float delta, const float& width, const float& height)
+void Scene08::update(float delta)
 {
 	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	//m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
 
@@ -218,11 +218,11 @@ void Scene08::imGuiRender()
 	//  Create the scene interface window
 	//-----------------------------------------------------
 
-	ImGui::SetNextWindowSize(ImVec2(215, 45));
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
 	ImGui::SetNextWindowBgAlpha(0.6f);
 	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	ImGui::End();
 
 
@@ -384,7 +384,7 @@ void Scene08::imGuiRender()
 		ImGui::OpenPopup("Cloud Popup");
 		ImGui::BeginPopupModal("Cloud Popup");
 
-		ImGui::TextWrapped("This scene uses 3D textures to create a volumetric cloud.  This is an early test so it is slow.");
+		ImGui::TextWrapped("This scene uses 3D textures to create a volumetric cloud. There are buttons to see presets at the top of the screen.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

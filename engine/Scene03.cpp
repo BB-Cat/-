@@ -31,9 +31,9 @@ Scene03::~Scene03()
 
 }
 
-void Scene03::update(float delta, const float& width, const float& height)
+void Scene03::update(float delta)
 {
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	m_timer++;
 }
@@ -52,6 +52,7 @@ void Scene03::imGuiRender()
 	//ImGui::Text("display the mouse");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.05f, 0, 2);
 	if (ImGui::Button("Toggle Wireframe", ImVec2(200, 30))) m_rast = !m_rast;
 	if (ImGui::Button("Write Text File", ImVec2(200, 30))) m_terrain->outputFiles();

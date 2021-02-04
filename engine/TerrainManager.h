@@ -23,7 +23,7 @@ struct SeamRenderVectors
 	std::vector<TerrainPtr>	low;
 };
 
-#define LOD_THRESHHOLD_HIGH (2)
+#define LOD_THRESHHOLD_HIGH (1)
 #define LOD_THRESHHOLD_MID (4)
 //#define LOD_THRESHHOLD_LOW (4)
 

@@ -367,7 +367,7 @@ void ConstantBufferSystem::updateAndSetPSCloudBuffer(const cb_cloud& c)
 	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setCloudBufferPS(m_cloud_cb);
 }
 
-void ConstantBufferSystem::updateAndSetCSRaymarchBuffer(const cb_compute_raymarch& r)
+void ConstantBufferSystem::updateAndSetPSCSRaymarchBuffer(const cb_compute_raymarch& r)
 {
 	cb_compute_raymarch temp = r;
 
@@ -375,5 +375,5 @@ void ConstantBufferSystem::updateAndSetCSRaymarchBuffer(const cb_compute_raymarc
 	m_raymarch_cb->update(GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext(), &temp);
 
 	//send the updated buffer to the pixel shader
-	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRaymarchBufferCS(m_raymarch_cb);
+	GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRaymarchBufferPSCS(m_raymarch_cb);
 }

@@ -17,6 +17,7 @@
 #include "Terrain.h"
 #include "Vector2D.h"
 #include "TerrainManager.h"
+#include "TextureComputeShader.h"
 
 #include <iostream>
 #include <fstream>  
@@ -47,42 +48,29 @@ Scene13::Scene13(SceneManager* sm) : Scene(sm)
 	////////////////////////////////
 	//compile the compute shaders //
 
-	UINT pixelcount = 512 * 512 * 4;
+	//UINT pixelcount = 512 * 512 * 4;
+	//void* shader_byte_code = nullptr;
+	//size_t size_shader = 0;
+	//GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeNoiseTex.hlsl", "CS_main", &shader_byte_code, &size_shader);
+	//m_compute_noisetex = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
+	//	sizeof(Vector4D), nullptr, pixelcount);
+	//GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
+
+	Vec2 imagesize = Vec2(512, 512);
+	UINT pixelcount = imagesize.x * imagesize.y * 4;
 	void* shader_byte_code = nullptr;
 	size_t size_shader = 0;
 	GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeNoiseTex.hlsl", "CS_main", &shader_byte_code, &size_shader);
-	m_compute_noisetex = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
-		sizeof(Vector4D), nullptr, pixelcount);
+	m_compute_noisetex = GraphicsEngine::get()->getRenderSystem()->createTextureComputeShader(shader_byte_code, size_shader, imagesize);
 	GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-
-
-	//GraphicsEngine::get()->getRenderSystem()->compileComputeShader(L"ComputeHeightmap.hlsl", "CS_main", &shader_byte_code, &size_shader);
-	//m_compute_terrain = GraphicsEngine::get()->getRenderSystem()->createComputeShader(shader_byte_code, size_shader, sizeof(Vector4D),
-	//	sizeof(VertexMesh), nullptr, 34 * 34 * 1024);
-	//GraphicsEngine::get()->getRenderSystem()->releaseCompiledShader();
-	////////////////////////////////
-
-
-
-	//runTerrainComputeShader();
-
-	//std::vector<VertexMesh> temp;
-	//temp.resize(34 * 34);
-	//for (int i = 0; i < 1024; i++)
-	//{
-	//	memcpy(&temp[0], &m_verts[34 * 34 * i], 34 * 34 * sizeof(VertexMesh));
-	//	TerrainPtr t(new Terrain(temp));
-	//	m_terrain[i] = t;
-	//	temp.clear();
-	//	temp.resize(34 * 34);
-	//}
 
 	initTerrainBuffers();
 	initRasterizers();
 	initTextures();
 	initNoiseBuffer();
 
-
+	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetCSNoiseBuffer(m_noise);
+	makeComputeShaderTexture();
 }
 
 Scene13::~Scene13()
@@ -95,16 +83,16 @@ Scene13::~Scene13()
 	
 }
 
-void Scene13::update(float delta, const float& width, const float& height)
+void Scene13::update(float delta)
 {
-	CameraManager::get()->update(delta, width, height);
+	CameraManager::get()->update(delta);
 
 	GraphicsEngine::get()->getConstantBufferSystem()->updateAndSetCSNoiseBuffer(m_noise);
 
 	//this is a hotfix for an issue where the d3ddevice is released when the texture compute shader makes a new SRV right before making new terrain
 	if (m_create_terrain_timer == -1)
 	{
-		makeComputeShaderTexture();
+		if(m_change) makeComputeShaderTexture();
 	}
 	else if (m_create_terrain_timer) m_create_terrain_timer--;
 	else if (m_create_terrain_timer == 0)
@@ -123,75 +111,83 @@ void Scene13::imGuiRender()
 	//=====================================================
 	//  Create the scene interface window
 	//-----------------------------------------------------
-	ImGui::SetNextWindowSize(ImVec2(300, 800));
+
 	ImGui::SetNextWindowPos(ImVec2(0, 20));
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::Begin("Return", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::Button("Main Menu", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
+	ImGui::End();
 
-	ImVec2 size = ImVec2(200, 30);
+	ImGui::SetNextWindowPos(ImVec2(215, 20));
+	ImGui::SetNextWindowBgAlpha(0.2f);
 
-	//create the test window
-	ImGui::Begin("Scene Settings");
-	ImGui::Text("Press 1 key to display the mouse");
+	ImGui::Begin("Explanation", 0, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration);
+	ImGui::Text("Press ESC key to display the mouse or control the camera");
+	ImGui::End();
 
-	if (m_srv != nullptr)
+
+
+
+	ImVec2 size = ImVec2(200, 20);
+
+	if (m_create_terrain_timer == -1)
 	{
-		ImTextureID t = m_srv;/* Lets make a shader resource view out of the image data we generated and display it here */;
-		ImGui::Image(t, ImVec2(300, 300));
+		ImGui::SetNextWindowPos(ImVec2(700, 20));
+		//create the test window
+		ImGui::SetNextWindowBgAlpha(0.6f);
+		ImGui::Begin("TexDisplay", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+
+		if (m_srv != nullptr)
+		{
+			ImTextureID t = m_srv;/* Lets make a shader resource view out of the image data we generated and display it here */;
+			ImGui::Image(t, ImVec2(300, 300));
+		}
+
+		ImGui::End();
 	}
 
-	if (ImGui::Button("Scene Select", size)) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::SetNextWindowPos(ImVec2(610, 555));
+	ImGui::SetNextWindowSize(ImVec2(410, 200));
 
-
-
+	ImGui::Begin("Scene Settings", 0, ImGuiWindowFlags_NoTitleBar);
+	
 	ImGui::Text("Noise settings");
 
-	//if (ImGui::CollapsingHeader("Voronoi Noise"))
-	//{
-	//	ImGui::DragInt("Octaves", &m_int_vor_octave, 0.05f, 0.00f, 5.0f);
-	//	m_noise.m_vor_octaves = m_int_vor_octave;
-	//	ImGui::DragFloat("Amplitude", &m_noise.m_vor_amplitude, 0.005f, 0.00f, 5.0f);
-	//	ImGui::DragFloat("Gain", &m_noise.m_vor_gain, 0.005f, -10.00f, 10.0f);
-	//	ImGui::DragFloat("Lacunarity", &m_noise.m_vor_lacunarity, 0.005f, -10.00f, 10.0f);
-	//	ImGui::DragFloat("Voronoi Cell Size", &m_noise.m_vor_cell_size, 0.01f, 0.001f);
-	//}
 	if (ImGui::CollapsingHeader("Perlin Noise"))
 	{
 		ImGui::PushID("Perlin");
-		ImGui::DragInt("Octaves", &m_int_per_octave, 0.05f, 0.00f, 5.0f);
+		if (ImGui::DragInt("Octaves", &m_int_per_octave, 0.05f, 0.00f, 5.0f)) m_change = true;
 		m_noise.m_per_octaves = m_int_per_octave;
-		ImGui::DragFloat("Amplitude", &m_noise.m_per_amplitude, 0.005f, 0.00f, 5.0f);
-		ImGui::DragFloat("Gain", &m_noise.m_per_gain, 0.005f, -10.00f, 10.0f);
-		ImGui::DragFloat("Lacunarity", &m_noise.m_per_lacunarity, 0.005f, -10.00f, 10.0f);
-		ImGui::DragFloat("Perlin Cell Size", &m_noise.m_per_cell_size, 0.01f, 0.001f);
+		if(ImGui::DragFloat("Amplitude", &m_noise.m_per_amplitude, 0.005f, 0.00f, 5.0f)) m_change = true;
+		if(ImGui::DragFloat("Gain", &m_noise.m_per_gain, 0.005f, -10.00f, 10.0f)) m_change = true;
+		if(ImGui::DragFloat("Lacunarity", &m_noise.m_per_lacunarity, 0.005f, -10.00f, 10.0f)) m_change = true;
+		if(ImGui::DragFloat("Perlin Cell Size", &m_noise.m_per_cell_size, 0.01f, 0.001f)) m_change = true;
 		ImGui::PopID();
 	}
-	if (ImGui::CollapsingHeader("Ridged Fractal Noise"))
+	else if (ImGui::CollapsingHeader("Ridged Fractal Noise"))
 	{
 		ImGui::PushID("Ridged");
-		ImGui::DragInt("Octaves", &m_int_ridge_per_octave, 0.05f, 0.00f, 5.0f);
+		if(ImGui::DragInt("Octaves", &m_int_ridge_per_octave, 0.05f, 0.00f, 5.0f)) m_change = true;
 		m_noise.m_ridged_per_octaves = m_int_ridge_per_octave;
-		ImGui::DragFloat("Amplitude", &m_noise.m_ridged_per_amplitude, 0.005f, 0.00f, 5.0f);
-		ImGui::DragFloat("Gain", &m_noise.m_ridged_per_gain, 0.005f, -10.00f, 10.0f);
-		ImGui::DragFloat("Lacunarity", &m_noise.m_ridged_per_lacunarity, 0.005f, -10.00f, 10.0f);
-		ImGui::DragFloat("Ridge Cell Size", &m_noise.m_ridged_per_cell_size, 0.01f, 0.001f);
+		if(ImGui::DragFloat("Amplitude", &m_noise.m_ridged_per_amplitude, 0.005f, 0.00f, 5.0f)) m_change = true;
+		if(ImGui::DragFloat("Gain", &m_noise.m_ridged_per_gain, 0.005f, -10.00f, 10.0f)) m_change = true;
+		if(ImGui::DragFloat("Lacunarity", &m_noise.m_ridged_per_lacunarity, 0.005f, -10.00f, 10.0f)) m_change = true;
+		if(ImGui::DragFloat("Ridge Cell Size", &m_noise.m_ridged_per_cell_size, 0.01f, 0.001f)) m_change = true;
 		ImGui::PopID();
 	}
-
-	if (ImGui::CollapsingHeader("General Settings"))
+	else
 	{
-		ImGui::InputFloat("Set Seed", &m_noise.m_seed);
-		//ImGui::DragFloat("X Scale", &m_noise.m_xscale, 0.01f); //float m_yscale;
-		ImGui::DragFloat("Y Scale", &m_noise.m_yscale, 0.01f); //float m_xscale;
-		ImGui::DragFloat("Cell Size", &m_noise.m_compute_cell_size, 0.01f, 0.001f); //float m_compute_cell_size;
+		if(ImGui::InputFloat("Set Seed", &m_noise.m_seed)) m_change = true;
+		//if(ImGui::DragFloat("Cell Size", &m_noise.m_compute_cell_size, 0.01f, 0.001f)) m_change = true; //float m_compute_cell_size;
 		VectorToArray v(&m_noise.m_noise_type);
-		ImGui::SliderFloat4("Noise Types", v.setArray(), 0, 1.0f, "%.3f", ImGuiSliderFlags_::ImGuiSliderFlags_Logarithmic);
+		float* vals = v.setArray();
+		ImGui::Text("Perlin Concentration");
+		if(ImGui::SliderFloat(" ", &vals[0], 0, 1.0f, "%.2f")) m_change = true;
+		ImGui::Text("Ridged Concentration");
+		if (ImGui::SliderFloat("  ", &vals[2], 0, 1.0f, "%.2f")) m_change = true;
 	}
-
-	ImGui::NewLine();
-	ImGui::NewLine();
-
-
-
-
 	//if (ImGui::Button("LD Shader")) m_active_shader = Shaders::TERRAIN_LD_TOON;
 
 	if (m_first_time)
@@ -204,10 +200,22 @@ void Scene13::imGuiRender()
 		ImGui::OpenPopup("Compute Shader Popup");
 		ImGui::BeginPopupModal("Compute Shader Popup");
 		//ImGui::Image(t, ImVec2(300, 300));
+		ImGui::TextWrapped("This scene generates terrain using the GPU and noise functions.  Change the noise settings to something interesting, then press 'Test Terrain.'");
+		ImGui::NewLine();
+		ImGui::TextWrapped("If you move around, new terrain will be created.  Sometimes there will be a mistake when loading.  I need to adjust my thread code which was changed recently, and then the issue will be fixed.");
+		
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
 		ImGui::EndPopup();
 	}
 
+	ImGui::End();
+
+	ImGui::SetNextWindowBgAlpha(0.6f);
+	ImGui::SetNextWindowPos(ImVec2(800, 340));
+	//ImGui::SetNextWindowSize(ImVec2(310, 160));
+
+	ImGui::Begin("Scene Control", 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+	
 	if (m_tman == nullptr)
 	{
 		if (ImGui::Button("Test Terrain", size))
@@ -235,6 +243,7 @@ void Scene13::imGuiRender()
 		if (ImGui::Button("Show Normals", size)) m_active_shader = Shaders::TERRAIN_TEST;
 		if (ImGui::Button("LOD Shader", size)) m_active_shader = -1;
 
+		ImGui::NewLine();
 		if (ImGui::Button("Reset Terrain", size))
 		{
 			delete m_tman;
@@ -262,19 +271,39 @@ void Scene13::mainRenderPass(float delta)
 
 void Scene13::makeComputeShaderTexture()
 {
-	//temporary function for testing compute shader functionality
+	////temporary function for testing compute shader functionality
+	//m_compute_noisetex->setXDispatchCount(256);
+	//m_compute_noisetex->setYDispatchCount(1);
+	//m_compute_noisetex->runComputeShader();
+
+	////make sure we are releasing data properly
+	//if (m_srv != nullptr) m_srv->Release();
+	//m_srv = m_compute_noisetex->createTextureSRVFromOutput(Vec2(512, 512));
+
+
+	////m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));
+
+	////m_compute_noisetex->unmapCPUReadable();
+
+		//temporary function for testing compute shader functionality
+	Vec2 texsize = Vec2(512, 512);
+	int numthreadsx = 1024;
+
+	int dispatch_count = texsize.x * texsize.y / numthreadsx;
+
+	TextureComputeShader* temp;
+
 	m_compute_noisetex->setXDispatchCount(256);
 	m_compute_noisetex->setYDispatchCount(1);
-	m_compute_noisetex->runComputeShader();
 
-	//make sure we are releasing data properly
+	//set the shader
+	m_compute_noisetex->setComputeShader();
+
+	//m_compute_raymarch->runComputeShader();
+	m_compute_noisetex->runComputeShaderNoSet();
+
 	if (m_srv != nullptr) m_srv->Release();
-	m_srv = m_compute_noisetex->createTextureSRVFromOutput(Vec2(512, 512));
-
-
-	//m_compute_noisetex->createTextureSRVFromOutput(Vector2D(512, 512));
-
-	//m_compute_noisetex->unmapCPUReadable();
+	m_srv = m_compute_noisetex->getTexture();
 }
 
 void Scene13::runTerrainComputeShader()
@@ -797,9 +826,9 @@ void Scene13::initNoiseBuffer()
 	m_noise.m_per_octaves = 2;
 	m_noise.m_per_cell_size = 1.0f;
 
-	m_noise.m_compute_cell_size = 1000;
+	m_noise.m_compute_cell_size = 1300;
 	m_noise.m_xscale = 10;
-	m_noise.m_yscale = 200;
+	m_noise.m_yscale = 250;
 	m_noise.m_seed = 1;
 
 	m_noise.m_ridged_per_amplitude = 2.5f;

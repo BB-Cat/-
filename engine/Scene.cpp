@@ -5,7 +5,7 @@
 #include "GBuffer.h"
 #include "AppWindow.h"
 
-void Scene::render(float delta, const float& width, const float& height)
+void Scene::render(float delta)
 {
 
 	/* this needs to be changed. we only need one shadow map texture total for all 3 cascades combined. */
@@ -13,7 +13,7 @@ void Scene::render(float delta, const float& width, const float& height)
 	for (int i = 0; i < 3; i++)
 	{
 		GraphicsEngine::get()->getRenderSystem()->getImmediateDeviceContext()->setRenderTargetShadowMap(i);
-		CameraManager::get()->setDirectionalLightWVPBuffer(m_scene_light_dir, width, height, i);
+		CameraManager::get()->setDirectionalLightWVPBuffer(m_scene_light_dir, i);
 		shadowRenderPass(delta);
 	}
 

@@ -15,8 +15,9 @@ Scene07::Scene07(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(FREE);
-	CameraManager::get()->setCamPos(Vec3(0, 0.0f, -5.0f));
-	CameraManager::get()->setCamRot(Vec2(0,0));
+	CameraManager::get()->setCamPos(Vec3(2.0, 3.8f, -4.23f));
+	CameraManager::get()->setSpeed(0.2f);
+	CameraManager::get()->setCamRot(Vec2(0.688f, -0.76f));
 
 	m_sky = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\SkySphere\\sphere.fbx", true, nullptr, D3D11_CULL_FRONT);
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\cube.fbx", true, nullptr, D3D11_CULL_BACK);
@@ -55,14 +56,9 @@ Scene07::~Scene07()
 
 }
 
-void Scene07::update(float delta, const float& width, const float& height)
+void Scene07::update(float delta)
 {
-	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
-
-	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
-	m_scene_light_dir.normalize();
-	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
+	CameraManager::get()->update(delta);
 
 	if (m_tex == nullptr)
 	{
@@ -97,7 +93,7 @@ void Scene07::imGuiRender()
 	ImGui::Begin("Noise Window");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
-
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	//if (ImGui::Button("Move Forward", ImVec2(100, 20)))
 	//{
 	//	m_is_move = 1;
@@ -132,6 +128,7 @@ void Scene07::imGuiRender()
 	{
 		ImGui::Text("Noise settings");
 
+		ImGui::PushID("Vor");
 		if (ImGui::CollapsingHeader("Voronoi Noise"))
 		{
 			ImGui::DragInt("Octaves", &m_int_vor_octave, 0.05f, 0.00f, 5.0f);
@@ -146,6 +143,8 @@ void Scene07::imGuiRender()
 			ImGui::SameLine();
 			if (ImGui::Button("Decrease Lacunarity", ImVec2(150, 30))) m_noise.m_vor_lacunarity /= 2;
 		}
+		ImGui::PopID();
+		ImGui::PushID("Per");
 
 		if (ImGui::CollapsingHeader("Perlin Noise"))
 		{
@@ -161,7 +160,7 @@ void Scene07::imGuiRender()
 			ImGui::SameLine();
 			if (ImGui::Button("Decrease Lacunarity", ImVec2(150, 30))) m_noise.m_per_lacunarity /= 2;
 		}
-
+		ImGui::PopID();
 		//m_noise.lacunarity = m_noise.lacunarity * (m_noise.lacunarity <= 1.0f) + 1.0f * (m_noise.lacunarity > 1.0f);
 
 		if (ImGui::CollapsingHeader("Cell Size"))
@@ -212,7 +211,7 @@ void Scene07::imGuiRender()
 		ImGui::OpenPopup("Noise Popup");
 		ImGui::BeginPopupModal("Noise Popup");
 
-		ImGui::TextWrapped("This scene generates noise on the GPU. You can save it to a 3D texture file.");
+		ImGui::TextWrapped("This scene generates noise which is used for volume rendering. You can save it to a 3D texture file. I made this scene before I understood compute shaders, so the texture creation is very slow.  I want to make a compute shader version to make it faster.");
 
 		//ImGui::Image(t, ImVec2(300, 300));
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;

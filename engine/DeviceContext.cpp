@@ -129,6 +129,11 @@ void DeviceContext::setVertexBuffer(UINT size_vertex, ID3D11Buffer* buffer, ID3D
 void DeviceContext::setIndexBuffer(const IndexBufferPtr& index_buffer)
 {
 	//if the same index buffer is attempting to be set again, return
+	if (index_buffer->m_buffer == nullptr)
+	{
+		OutputDebugString(L"A nullptr index buffer attempted to set to the device context. \n");
+		return;
+	}
 	if (m_current_ib == index_buffer->m_buffer) return;
 
 	m_device_context->IASetIndexBuffer(index_buffer->m_buffer, DXGI_FORMAT_R32_UINT, 0);
@@ -466,6 +471,8 @@ void DeviceContext::setConstantTimeBuffer(const MyConstantBufferPtr& buffer)
 {
 		m_device_context->VSSetConstantBuffers(3, 1, &buffer->m_buffer);
 		m_device_context->GSSetConstantBuffers(3, 1, &buffer->m_buffer);
+		//TEMP
+		m_device_context->PSSetConstantBuffers(7, 1, &buffer->m_buffer);
 }
 
 void DeviceContext::setDSHeightBuffer(const MyConstantBufferPtr& buffer)
@@ -493,9 +500,10 @@ void DeviceContext::setCloudBufferPS(const MyConstantBufferPtr& buffer)
 	m_device_context->PSSetConstantBuffers(6, 1, &buffer->m_buffer);
 }
 
-void DeviceContext::setRaymarchBufferCS(const MyConstantBufferPtr& buffer)
+void DeviceContext::setRaymarchBufferPSCS(const MyConstantBufferPtr& buffer)
 {
 	m_device_context->CSSetConstantBuffers(7, 1, &buffer->m_buffer);
+	m_device_context->PSSetConstantBuffers(7, 1, &buffer->m_buffer);
 }
 
 void DeviceContext::setGBufferSRVs()

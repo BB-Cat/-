@@ -52,6 +52,8 @@ public:
 
 	float getPercentCompletion();
 
+
+	int getFrame() { return m_frame; }
 	//get the percentage completion of the animation
 	float getPercent() { return (float)(m_frame) / (float)(m_skeletons.size()); }
 

@@ -138,7 +138,7 @@ public:
 
 	void setCloudBufferPS(const MyConstantBufferPtr& buffer);
 
-	void setRaymarchBufferCS(const MyConstantBufferPtr& buffer);
+	void setRaymarchBufferPSCS(const MyConstantBufferPtr& buffer);
 
 	//////////////////////////////////
 

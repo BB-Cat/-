@@ -12,6 +12,8 @@ class Scene15 : public Scene
 {
 private:
     bool m_first_time = true;
+    bool m_is_play = false;
+    float m_play_speed = 1.5f;
 
     int m_highlighted_frame = 0;
     int m_highlighted_hitbox = -1;
@@ -40,7 +42,7 @@ public:
     Scene15(SceneManager*);
     ~Scene15();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 
     //virtual void outputSceneData(std::string filename);

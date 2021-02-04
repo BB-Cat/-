@@ -28,8 +28,9 @@ Scene15::Scene15(SceneManager* sm) : Scene(sm)
 {
 	AppWindow::toggleDeferredPipeline(false);
 	CameraManager::get()->setCamState(CAMERA_STATE::FREE);
-	CameraManager::get()->setCamPos(Vec3(0, 5, -5));
-	CameraManager::get()->setSpeed(0.5f);
+	CameraManager::get()->setCamPos(Vec3(2.29f, 2.54f, -3.66f));
+	CameraManager::get()->setCamRot(Vec2(0.254f, -0.797f));
+	CameraManager::get()->setSpeed(0.2f);
 
 	Lighting::get()->updateSceneLight(Vec3(0.4, 0.6, 0), Vec3(1, 1, 0.8), 1.0f, Vec3(0.2, 0.2, 0.4));
 
@@ -43,27 +44,29 @@ Scene15::Scene15(SceneManager* sm) : Scene(sm)
 
 	m_model = GraphicsEngine::get()->getSkinnedMeshManager()->createSkinnedMeshFromFile(L"..\\Assets\\CharacterRough\\lp.fbx", true, nullptr, D3D11_CULL_BACK);
 	m_model->setAnimationCategory(Animation::Type::Player);
-	m_model->loadAnimation(nullptr, Animation::Player::Idle, L"..\\Assets\\CharacterRough\\lp_idle.fbx", true, true, 0, false, false);
-	m_model->loadAnimation(nullptr, Animation::Player::Idle2, L"..\\Assets\\CharacterRough\\lp_idle2.fbx", true, true, 0, false, false);
-	m_model->loadAnimation(nullptr, Animation::Player::Idle3, L"..\\Assets\\CharacterRough\\lp_idle3.fbx", true, true, 0, false, false);
+	//m_model->loadAnimation(nullptr, Animation::Player::Idle, L"..\\Assets\\CharacterRough\\lp_idle.fbx", true, true, 0, false, false);
+	//m_model->loadAnimation(nullptr, Animation::Player::Idle2, L"..\\Assets\\CharacterRough\\lp_idle2.fbx", true, true, 0, false, false);
+	//m_model->loadAnimation(nullptr, Animation::Player::Idle3, L"..\\Assets\\CharacterRough\\lp_idle3.fbx", true, true, 0, false, false);
 
-	m_model->loadAnimation(nullptr, Animation::Player::Walk, L"..\\Assets\\CharacterRough\\lp_walk.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::WalkBackward, L"..\\Assets\\CharacterRough\\lp_walkback.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::Run, L"..\\Assets\\CharacterRough\\lp_run.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::Stop, L"..\\Assets\\CharacterRough\\lp_stop.fbx");
-	m_model->loadAnimation(nullptr, Animation::Player::Jump, L"..\\Assets\\CharacterRough\\lp_jump.fbx", false, true, 0, true, 0.99f);
-	m_model->loadAnimation(nullptr, Animation::Player::LandToIdle, L"..\\Assets\\CharacterRough\\lp_land.fbx", false, true);
-	m_model->loadAnimation(nullptr, Animation::Player::LandHard, L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, true);
-	m_model->loadAnimation(nullptr, Animation::Player::LandToRun, L"..\\Assets\\CharacterRough\\lp_land_to_run.fbx", false, true);
-	m_model->loadAnimation(nullptr, Animation::Player::Roll, L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, true);
-	m_model->loadAnimation(nullptr, Animation::Player::DodgeBack, L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, true, 0.8f);
-	m_model->loadAnimation(nullptr, Animation::Player::Attack1, L"..\\Assets\\CharacterRough\\lp_slash_downward.fbx", false, true, 0.5f);
-	m_model->loadAnimation(nullptr, Animation::Player::Attack2, L"..\\Assets\\CharacterRough\\lp_slash_horizontal.fbx", false, true);
+	//m_model->loadAnimation(nullptr, Animation::Player::Walk, L"..\\Assets\\CharacterRough\\lp_walk.fbx");
+	//m_model->loadAnimation(nullptr, Animation::Player::WalkBackward, L"..\\Assets\\CharacterRough\\lp_walkback.fbx");
+	//m_model->loadAnimation(nullptr, Animation::Player::Run, L"..\\Assets\\CharacterRough\\lp_run.fbx");
+	//m_model->loadAnimation(nullptr, Animation::Player::Stop, L"..\\Assets\\CharacterRough\\lp_stop.fbx");
+	//m_model->loadAnimation(nullptr, Animation::Player::Jump, L"..\\Assets\\CharacterRough\\lp_jump.fbx", false, true, 0, true, 0.99f);
+	//m_model->loadAnimation(nullptr, Animation::Player::LandToIdle, L"..\\Assets\\CharacterRough\\lp_land.fbx", false, true);
+	//m_model->loadAnimation(nullptr, Animation::Player::LandHard, L"..\\Assets\\CharacterRough\\lp_land_hard.fbx", false, true);
+	//m_model->loadAnimation(nullptr, Animation::Player::LandToRun, L"..\\Assets\\CharacterRough\\lp_land_to_run.fbx", false, true);
+	//m_model->loadAnimation(nullptr, Animation::Player::Roll, L"..\\Assets\\CharacterRough\\lp_roll.fbx", false, true);
+	//m_model->loadAnimation(nullptr, Animation::Player::DodgeBack, L"..\\Assets\\CharacterRough\\lp_dodge_back.fbx", false, true, 0.8f);
+	m_model->loadAnimation(nullptr, Animation::Player::Attack1, L"..\\Assets\\CharacterRough\\lp_slash_downward.fbx", true, true);
+	m_model->loadAnimation(nullptr, Animation::Player::Attack2, L"..\\Assets\\CharacterRough\\lp_slash_horizontal.fbx", true, true);
+	m_model->loadAnimation(nullptr, Animation::Player::Attack3, L"..\\Assets\\CharacterRough\\lp_slash_backhand.fbx", true, true);
+	m_model->loadAnimation(nullptr, Animation::Player::Attack4, L"..\\Assets\\CharacterRough\\lp_slash_roundabout.fbx", true, true);
+	m_model->loadAnimation(nullptr, Animation::Player::Attack5, L"..\\Assets\\CharacterRough\\lp_running_slash.fbx", true, true);
 
-	m_model->setBlendAnimation(Animation::Player::Run);
+	//m_model->setBlendAnimation(Animation::Player::Attack1);
 	//アニメーションの初期設定
 	m_model->setAnimation(-1);
-
 	m_model->setAnimation(-1);
 }
 
@@ -72,17 +75,16 @@ Scene15::~Scene15()
 
 }
 
-void Scene15::update(float delta, const float& width, const float& height)
+void Scene15::update(float delta)
 {
-	CameraManager::get()->setSpeed(m_speed);
-	CameraManager::get()->update(delta, width, height);
-
-	m_scene_light_dir = Vec3(sinf(m_global_light_rotation.x), m_global_light_rotation.y, cosf(m_global_light_rotation.x));
-	m_scene_light_dir.normalize();
-	Lighting::get()->updateSceneLight(m_scene_light_dir, m_light_color, m_global_light_strength, m_ambient_light_color);
-
-
+	CameraManager::get()->update(delta);
 	m_timer++;
+
+	if (m_is_play && m_model->getActiveAnimation() != nullptr)
+	{
+		m_model->getActiveAnimation()->update(delta * m_play_speed);
+		m_highlighted_frame = m_model->getActiveAnimation()->getFrame();
+	}
 }
 
 void Scene15::imGuiRender()
@@ -97,46 +99,54 @@ void Scene15::imGuiRender()
 	ImGui::Begin("Animation List");
 
 	if (ImGui::Button("Scene Select", ImVec2(200, 30))) p_manager->changeScene(SceneManager::SCENESELECT, false);
+	if (ImGui::Button("Show Explanation", ImVec2(200, 30))) m_first_time = true;
 	//ImGui::DragInt("LOD", &m_toggle_HD, 0.005f, 0, 2);
 
 	ImGui::NewLine();
 	ImGui::NewLine();
 
 	ImVec2 buttonsize = ImVec2(200, 20);
-	if (ImGui::Button("Walk", buttonsize))
+	if (ImGui::Button("Attack1", buttonsize))
 	{
-		m_model->setAnimation(Animation::Player::Walk);
+		m_model->setAnimation(Animation::Player::Attack1);
 		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
 	}
-	if (ImGui::Button("Run", buttonsize))
-	{
-		m_model->setAnimation(Animation::Player::Run);
-		m_anm = m_model->getActiveAnimation();
-	}
-	if (ImGui::Button("Jump", buttonsize))
-	{
-		m_model->setAnimation(Animation::Player::Jump);
-		m_anm = m_model->getActiveAnimation();
-	}
-	if (ImGui::Button("Roll", buttonsize))
-	{
-		m_model->setAnimation(Animation::Player::Roll);
-		m_anm = m_model->getActiveAnimation();
-	}
-	if (ImGui::Button("Land", buttonsize))
-	{
-		m_model->setAnimation(Animation::Player::LandToIdle);
-		m_anm = m_model->getActiveAnimation();
-	}
-	if (ImGui::Button("Attack", buttonsize))
+	if (ImGui::Button("Attack2", buttonsize))
 	{
 		m_model->setAnimation(Animation::Player::Attack2);
 		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
+	}
+	if (ImGui::Button("Attack3", buttonsize))
+	{
+		m_model->setAnimation(Animation::Player::Attack3);
+		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
+	}
+	if (ImGui::Button("Attack4", buttonsize))
+	{
+		m_model->setAnimation(Animation::Player::Attack4);
+		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
+	}
+	if (ImGui::Button("Attack5", buttonsize))
+	{
+		m_model->setAnimation(Animation::Player::Attack5);
+		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
 	}
 	if (ImGui::Button("Stop", buttonsize))
 	{
 		m_model->setAnimation(-1);
 		m_anm = m_model->getActiveAnimation();
+		m_highlighted_frame = 0;
+		m_highlighted_hitbox = -1;
 	}
 
 	ImGui::Text("Frame");
@@ -145,12 +155,18 @@ void Scene15::imGuiRender()
 	{
 		m_model->setAnimationFrame(m_highlighted_frame);
 	}
+	if (ImGui::Button("Play Animation", buttonsize)) m_is_play = !m_is_play;
+
+	ImGui::Text("Play Speed");
+	ImGui::SliderFloat("3", &m_play_speed, 1.0f, 2.0f);
 
 	if (m_anm != nullptr)
 	{
 
 		if (ImGui::CollapsingHeader("Animation Editor"))
 		{
+			hb_vec = m_anm->getHitboxes();
+
 			if (ImGui::Button("Add Capsule Collider", buttonsize))
 			{
 				float frames[] = {m_highlighted_frame, m_highlighted_frame };
@@ -159,9 +175,8 @@ void Scene15::imGuiRender()
 				std::shared_ptr<Collider> p = std::shared_ptr<Collider>(new CapsuleCollider(0.5f, 1.0f));
 
 				m_anm->addHitbox(std::shared_ptr<AnmHitbox>(new AnmHitbox(frames, p, damage)));
+				m_highlighted_hitbox = hb_vec.size() - 1;
 			}
-
-			hb_vec = m_anm->getHitboxes();
 
 			for (int i = 0; i < hb_vec.size(); i++)
 			{
@@ -189,7 +204,7 @@ void Scene15::imGuiRender()
 
 	if (m_highlighted_hitbox >= 0)
 	{
-		ImGui::SetNextWindowSize(ImVec2(250, 100));
+		ImGui::SetNextWindowSize(ImVec2(300, 250));
 		ImGui::SetNextWindowPos(ImVec2(700, 20));
 
 		ImGui::Begin("Hitbox");
@@ -240,7 +255,7 @@ void Scene15::imGuiRender()
 		ImGui::OpenPopup("Animation Test Popup");
 		ImGui::BeginPopupModal("Animation Test Popup");
 
-		ImGui::TextWrapped("This scene is to confirm animations.  You can test animation blending with the blend slider.");
+		ImGui::TextWrapped("This scene is for making hitbox data frame by frame for attacks.  Choose an animation, then 'Add capsule collider,' and click on the new button.  You can adjust the hitbox's location, rotation, active frames, and more. ");
 
 		if (ImGui::Button("Okay", ImVec2(100, 30))) m_first_time = false;
 		ImGui::EndPopup();

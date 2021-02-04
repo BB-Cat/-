@@ -24,7 +24,7 @@ public:
 	~CameraManager();
 	static void release();
 	
-	void update(const float& delta, const int& width, const int& height, bool exclude_Y_movement = false);
+	void update(const float& delta, bool exclude_Y_movement = false);
 	void beginLookAt(const Vec3& target, float seconds);
 	void cancelLookAt();
 	void beginMoveTo(Vec3 target, float seconds);
@@ -35,7 +35,7 @@ public:
 	void createWorldBuffers();
 	void setWorldBuffer();
 	//orthoID determines which projection to activate for the next shadowmap pass
-	void setDirectionalLightWVPBuffer(Vec3 light_dir, const int& width, const int& height, const int& orthoID);
+	void setDirectionalLightWVPBuffer(Vec3 light_dir, const int& orthoID);
 	void setSpeed(float s) { m_speed = s; }
 
 public:

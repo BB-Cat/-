@@ -11,13 +11,14 @@
 class Scene13 : public Scene
 {
 private:
-    bool m_first_time = false;
-    bool m_show_wire = true;
-    int m_active_shader = Shaders::TERRAIN_TEST;
+    bool m_first_time = true;
+    bool m_show_wire = false;
+    int m_active_shader = -1;
     std::vector<VertexMesh> m_verts;
     TerrainPtr m_terrain[1024];
     TerrainManager* m_tman;
     int m_create_terrain_timer = -1;
+    bool m_change = false;
 
     IndexBufferPtr m_hd, m_md, m_ld;
     IndexBufferPtr m_LOD_seam_high;
@@ -31,7 +32,7 @@ private:
     IndexBufferPtr m_LOD_lowToMid;
 
     ComputeShaderPtr m_compute_terrain;
-    ComputeShaderPtr m_compute_noisetex;
+    TextureComputeShaderPtr m_compute_noisetex;
     ID3D11ShaderResourceView* m_srv;
     ID3D11RasterizerState* m_rs;
     ID3D11RasterizerState* m_rs2;
@@ -48,7 +49,7 @@ public:
     Scene13(SceneManager*);
     ~Scene13();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
 
     void makeComputeShaderTexture();

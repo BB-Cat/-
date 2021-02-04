@@ -4,6 +4,7 @@
 
 Mesh::Mesh(const wchar_t* full_path, D3D11_CULL_MODE culltype) : Resource(full_path)
 {
+	ID3D11Device* device = GraphicsEngine::get()->getRenderSystem()->m_d3d_device;
 	HRESULT hr;
 
 	D3D11_RASTERIZER_DESC rsDesc;
@@ -13,7 +14,7 @@ Mesh::Mesh(const wchar_t* full_path, D3D11_CULL_MODE culltype) : Resource(full_p
 	rsDesc.FrontCounterClockwise = false;
 	rsDesc.DepthClipEnable = TRUE;
 	rsDesc.AntialiasedLineEnable = TRUE;
-	hr = GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateRasterizerState(&rsDesc, &m_wire_rast);
+	hr = device->CreateRasterizerState(&rsDesc, &m_wire_rast);
 	if (FAILED(hr))	assert(0 && "Error loading the wireframe rasterizer");
 
 	ZeroMemory(&rsDesc, sizeof(rsDesc));
@@ -27,7 +28,7 @@ Mesh::Mesh(const wchar_t* full_path, D3D11_CULL_MODE culltype) : Resource(full_p
 	rsDesc.ScissorEnable = false;
 	rsDesc.MultisampleEnable = false;
 	rsDesc.AntialiasedLineEnable = false;
-	hr = GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateRasterizerState(&rsDesc, &m_solid_rast);
+	hr = device->CreateRasterizerState(&rsDesc, &m_solid_rast);
 	if (FAILED(hr))	assert(0 && "Error loading the solid fill rasterizer");
 
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -36,7 +37,7 @@ Mesh::Mesh(const wchar_t* full_path, D3D11_CULL_MODE culltype) : Resource(full_p
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	dsDesc.StencilEnable = FALSE;
-	hr = GraphicsEngine::get()->getRenderSystem()->m_d3d_device->CreateDepthStencilState(&dsDesc, &m_depth_stencil);
+	hr = device->CreateDepthStencilState(&dsDesc, &m_depth_stencil);
 
 }
 

@@ -26,7 +26,7 @@ public:
     Scene02(SceneManager*);
     ~Scene02();
 
-    virtual void update(float delta, const float& width, const float& height) override;
+    virtual void update(float delta) override;
     virtual void imGuiRender() override;
    // virtual void render(float delta) override;
 private:

@@ -13,12 +13,13 @@ protected:
 
     Vec3 m_scene_light_dir;
 
+
 public:
     Scene(SceneManager* manager) :m_timer(0), m_state(0), m_scene_light_dir(Vec3(0.3f, -0.4f, 0.3f)), p_manager(manager) {};
     virtual ~Scene() {};
 
-    virtual void update(float delta, const float& width, const float& height) = 0;
-    virtual void render(float delta, const float& width, const float& height);
+    virtual void update(float delta) = 0;
+    virtual void render(float delta);
     virtual void imGuiRender() = 0;
 private:
     //shader pass for shadow mapping

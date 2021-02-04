@@ -102,6 +102,11 @@ private:
 	ShaderPtr m_debug_grid;
 
 	ShaderPtr m_screenspace;
+	ShaderPtr m_screenspace_loadscreen;
+	ShaderPtr m_screenspace_selectscreen;
+
+	ShaderPtr m_rt_sphere;
+	ShaderPtr m_rt_sphere_clouds;
 
 	//FINAL PASS VS PS SHADERS
 	ShaderPtr m_final_basic;

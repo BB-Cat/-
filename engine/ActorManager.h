@@ -41,6 +41,9 @@ public:
 
 	static void release();
 
+	//マルチスレッドで初期化したプレイヤーインスタンスをマネージャーに渡す
+	void setPlayer(std::shared_ptr<Player> player);
+
 	//全てのアクターの更新関数を行う
 	void updateAll(float delta);
 	//一つのカテゴリーのアクターの更新を行う
@@ -69,6 +72,8 @@ public:
 	void startActivePlayerFall();
 	//現在起動状態しているプレイヤーオブジェクトの回転情報を取得
 	Vec3 getActivePlayerDirection();
+
+	bool isNoPlayer() { return m_player == nullptr; }
 
 public:
 	//現在起動状態しているプレイヤーオブジェクトのimguiウインドーを描画する

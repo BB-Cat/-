@@ -79,7 +79,7 @@ Window::Window()
 	LONG border_width = 20;
 	LONG border_height = 43;
 
-	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW,
+	m_hwnd = ::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"BB Engine", L"BB Engine", WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME,
 		CW_USEDEFAULT, CW_USEDEFAULT, SCREEN_WIDTH + border_width, SCREEN_HEIGHT + border_height, NULL, NULL, NULL, NULL);
 
 	//if the creation of the window fails throw an exception
