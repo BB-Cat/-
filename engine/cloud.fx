@@ -1,4 +1,4 @@
-#ifndef _RTCLOUDS
+//#ifndef _RTCLOUDS
 
 Texture3D Texture: register(t0);
 Texture3D DetailTexture: register(t1);
@@ -6,7 +6,7 @@ Texture3D DetailTexture: register(t1);
 Texture2D BlueNoise: register(t2);
 SamplerState TextureSampler: register(s0);
 
-#endif
+//#endif
 
 //cloud property settings
 cbuffer constant: register(b6)

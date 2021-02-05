@@ -287,6 +287,7 @@
     <ClInclude Include="AnmHitbox.h" />
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="BubbleEmitter.h" />
+    <ClInclude Include="Clouds.h" />
     <ClInclude Include="Colliders.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="ComputeShader.h" />

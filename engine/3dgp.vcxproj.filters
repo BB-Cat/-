@@ -434,6 +434,9 @@
     <Filter Include="Shaders\Shader Files\25 ScreenSpace Sprite\RTSpheres">
       <UniqueIdentifier>{f58914da-f3a1-472d-843b-37127c0cdbe9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameWorld\Clouds">
+      <UniqueIdentifier>{fe41d755-86a9-4d5e-b7e6-ec3117495361}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppWindow.cpp">
@@ -1088,6 +1091,9 @@
     </ClInclude>
     <ClInclude Include="SceneLoad.h">
       <Filter>Sources\Scenes\SceneLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Clouds.h">
+      <Filter>Sources\GameWorld\Clouds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,7 +24,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 {
 	float2 coord = input.texcoord * 2.0 - 1.0;
 	coord.x *= 1.388;
-	coord = (coord) + float2(0.15 * cos(m_time * 0.2), 0.15 * sin(m_time * 0.2));
+	coord = (coord) + float2(0.3 * cos(m_time * 0.2), 0.15 * sin(m_time * 0.1));
 
 	// get polar coordinates    
 	float a = atan2(coord.y, coord.x);
@@ -32,7 +32,7 @@ float4 psmain(PS_INPUT input) : SV_TARGET
 	float r = length(coord);
 
 	// pack and animate    
-	float2 uvR = float2(1.0 / r + m_time * 0.01, b / 3.1415927);
+	float2 uvR = float2(1.0 / r + m_time * 0.03, b / 3.1415927);
 	//uvR = float2(sin(uvR.x), -cos(uvR.y)) * m_time / 30;
 	float2 uv = float2(atan2(coord.y, coord.x), 0.4 / (r)) + m_time / 30.0;
 

@@ -4,6 +4,7 @@
 #include "TextRenderer.h"
 #include "Texture3D.h"
 #include "ConstantBufferFormats.h"
+#include "Clouds.h"
 
 class Scene17 : public Scene
 {
@@ -32,6 +33,10 @@ private:
     cb_cloud m_preset3;
     cb_cloud m_preset4;
 
+    cloud_struct m_clouds;
+    int m_spherecount = 15;
+    cb_compute_raymarch m_raymarch_buffer;
+
 public:
     Scene17(SceneManager*);
     ~Scene17();
@@ -42,4 +47,6 @@ public:
 private:
     virtual void shadowRenderPass(float delta) override;
     virtual void mainRenderPass(float delta) override;
+
+    void generateCloud();
 };

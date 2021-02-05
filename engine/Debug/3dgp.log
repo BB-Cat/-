@@ -85,7 +85,7 @@ c:\program files (x86)\microsoft visual studio 14.0\vc\include\memory(1630): war
           [
               _Ty=Scene17
           ]
-  Scene13.cpp
+  Scene17.cpp
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(184): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(193): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\constantbufferformats.h(194): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
@@ -93,24 +93,61 @@ c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\w
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(10): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\anmhitbox.h(11): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\lighting.h(46): warning C4316: 'Lighting': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(552): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(567): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(21): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(22): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(23): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(24): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(51): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(67): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(70): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(80): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(81): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(82): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(83): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(118): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(120): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(148): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(170): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(208): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(208): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(210): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(226): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(249): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(266): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(298): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(350): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(351): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(373): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(374): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(411): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(412): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(419): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(420): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(421): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(427): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(446): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(447): warning C4244: '*=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(461): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(462): warning C4244: '*=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(507): warning C4244: 'return': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(512): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(517): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(522): warning C4244: 'return': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(527): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(532): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(546): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(547): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(548): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(562): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(563): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(581): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(582): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\noise.h(583): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
 c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\texture.h(15): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(34): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(37): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(60): warning C4244: '初期化中': 'float' から 'UINT' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(161): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(162): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(172): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(173): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(292): warning C4244: '初期化中': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(294): warning C4101: 'temp': ローカル変数は 1 度も使われていません。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(347): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(349): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(377): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(379): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(402): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(404): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(840): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(841): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene13.cpp(842): warning C4244: '=': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene17.cpp(27): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene17.cpp(68): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+c:\users\2190404\desktop\graphicsengine - backup\backup-graphics-engine\engine\scene17.cpp(115): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
   コードを生成中...
   3dgp.vcxproj -> C:\Users\2190404\Desktop\GraphicsEngine - Backup\BACKUP-GRAPHICS-ENGINE\engine\Debug\3dgp.exe

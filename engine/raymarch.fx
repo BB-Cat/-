@@ -1,5 +1,12 @@
+#ifndef _RTCLOUDS
+
 Texture2D<float4> Texture: register(t0);
 SamplerState TextureSampler: register(s0);
+
+#else
+#include "cloud.fx"
+#endif
+
 
 cbuffer constant: register(b0)
 {
@@ -98,7 +105,7 @@ struct RayHit
 	float3 normal;
 	float3 albedo;
 	float3 specular;
-	float3 total_through;
+	float total_through;
 };
 
 RayHit createRayHit()
@@ -173,7 +180,6 @@ float3 shade(inout Ray ray, RayHit hit)
 
 		float3 specular = float3(0.6, 0.6, 0.6);
 
-
 		ray.origin = hit.position + hit.normal * 0.001;
 		ray.direction = reflect(ray.direction, hit.normal);
 		ray.energy *= hit.specular;
@@ -224,9 +230,13 @@ float sphereRayDist(float3 ro, float3 rd, float4 sphere, out float max_t)
 	return t;
 }
 
-void intersectSphereOR(Ray ray, inout RayHit bestHit, float4 sphere)
+float3 shade(inout Ray ray, RayHit hit);
+
+
+void intersectSphereLight(Ray ray, inout RayHit bestHit, int sphereID)
 {
 	float max_t = 0;
+	float4 sphere = m_position_and_radius[sphereID];
 	float t = sphereRayDist(ray.origin, ray.direction, sphere, max_t);
 
 
@@ -246,14 +256,86 @@ void intersectSphereOR(Ray ray, inout RayHit bestHit, float4 sphere)
 			bestHit.specular = 0;
 		}
 
+
+		//sample the cloud density through the sphere
 		float d = max(0, -dot(ray.direction, posnormal));
-		bestHit.total_through += pow(d, 3) * sphere.w * 2;
+		float center_bias = pow(d, 3);
+
+		float through_dist = d * sphere.w * 2;
+		float step_size = through_dist / 5.0;
+		float3 p = hitpos;
+
+		float3 light_dir = float3(0, -1, 0);
+
+		for (int i = 0; i < 5; i++)
+		{
+			bestHit.total_through += 0.2 * Texture.SampleLevel(TextureSampler, p / 200, 0).x * center_bias;
+			p += ray.direction * step_size;
+		}
+
+		//we need: start position of lightray, the direction of the light
+
+		//bestHit.total_through = shade(ray, bestHit);
+		//bestHit.total_through += pow(d, 3) * sphere.w * 2;
 	}
 }
 
-void intersectSphereAND(Ray ray, inout RayHit bestHit, float4 sphere)
+void intersectSphereOR(Ray ray, inout RayHit bestHit, int sphereID)
 {
 	float max_t = 0;
+	float4 sphere = m_position_and_radius[sphereID];
+	float t = sphereRayDist(ray.origin, ray.direction, sphere, max_t);
+
+
+	bestHit.far_distance = max(bestHit.far_distance, max_t);
+
+	if (t < max_t)
+	{
+		float3 hitpos = ray.origin + t * ray.direction;
+		float3 posnormal = normalize(hitpos - sphere.xyz);
+
+		if (t > 0 && t < bestHit.distance)
+		{
+			bestHit.distance = t;
+			bestHit.position = hitpos;
+			bestHit.normal = posnormal;
+			bestHit.albedo = 0;
+			bestHit.specular = 0;
+		}
+
+
+		//sample the cloud density through the sphere
+		float d = max(0, -dot(ray.direction, posnormal));
+		float center_bias = pow(d, 3);
+
+		float through_dist = d * sphere.w * 2;
+		float step_size = through_dist / 5.0;
+		float3 p = hitpos;
+
+		float3 light_dir = float3(0, -1, 0);
+
+		for (int i = 0; i < 5; i++)
+		{
+			bestHit.total_through += 0.2 * Texture.SampleLevel(TextureSampler, p / 200, 0).x * center_bias;
+
+			RayHit lightHit = createRayHit();
+			Ray lightRay = createRay(p, -light_dir);
+
+
+			p += ray.direction * step_size;
+		}
+
+		//we need: start position of lightray, the direction of the light
+
+		//bestHit.total_through = shade(ray, bestHit);
+		//bestHit.total_through += pow(d, 3) * sphere.w * 2;
+	}
+}
+
+void intersectSphereAND(Ray ray, inout RayHit bestHit, int sphereID)
+{
+	float max_t = 0;
+	float4 sphere = m_position_and_radius[sphereID];
 	float t = sphereRayDist(ray.origin, ray.direction, sphere, max_t);
 
 
@@ -271,38 +353,54 @@ void intersectSphereAND(Ray ray, inout RayHit bestHit, float4 sphere)
 	}
 }
 
-//void intersectSphere(Ray ray, inout RayHit bestHit)
-//{
-//	if(bestHit.position) bestHit.position = 0;
-//}
-
-RayHit trace(Ray ray, float4 sphere[MAX_SPHERES])
+RayHit traceLight(Ray ray)
 {
 	RayHit bestHit = createRayHit();
 
-	//intersectSphere(ray, bestHit, sphere);
-	intersectSphereOR(ray, bestHit, sphere[0]);
-	intersectSphereOR(ray, bestHit, sphere[1]);
-	intersectSphereOR(ray, bestHit, sphere[2]);
-	intersectSphereOR(ray, bestHit, sphere[3]);
-	intersectSphereOR(ray, bestHit, sphere[4]);
+	for (int i = 0; i < m_params.y; i++)
+	{
+		intersectSphereOR(ray, bestHit, i);
+	}
 
 	return bestHit;
 }
 
-//RayHit trace(Ray ray, float4 sphere[MAX_SPHERES])
-//{
-//	RayHit bestHit = createRayHit();
-//
-//	//intersectSphere(ray, bestHit, sphere);
-//	intersectSphereOR(ray, bestHit, sphere[0]);
-//	intersectSphereOR(ray, bestHit, sphere[1]);
-//	intersectSphereOR(ray, bestHit, sphere[2]);
-//	intersectSphereOR(ray, bestHit, sphere[3]);
-//	intersectSphereOR(ray, bestHit, sphere[4]);
-//
-//	return bestHit;
-//}
+
+RayHit trace(Ray ray)
+{
+	RayHit bestHit = createRayHit();
+
+	int a = 0;
+	for (int i = 0; i < m_params.y; i++)
+	{
+		intersectSphereOR(ray, bestHit, i);
+	}
+
+	return bestHit;
+}
+
+float3 shade(inout Ray ray, RayHit hit)
+{
+	//if (hit.distance < MAX_DIST)
+	//{
+	//	float3 specular = float3(0.6, 0.6, 0.6);
+
+	//	ray.origin = hit.position + hit.normal * 0.001;
+	//	ray.direction = reflect(ray.direction, hit.normal);
+	//	ray.energy *= hit.specular;
+
+	//	bool shadow = false;
+	//	Ray shadowRay = createRay(hit.position + hit.normal * 0.001, -m_directional_light.xyz);
+	//	RayHit shadowHit = trace(shadowRay);
+	//	if (!(shadowHit.distance > MAX_DIST)) return float3(0, 0, 0);
+
+
+	//	return saturate(dot(hit.normal, m_directional_light.xyz) * -1) * hit.albedo;
+
+	//}
+
+	return 1;
+}
 
 #endif
 
